@@ -1,0 +1,538 @@
+{
+  "Level one": [
+      {
+          "classIdOrExerciseId": 78,
+          "classOrExerciseName": "Incline Push-Up",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "HBPPE1",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 79,
+          "classOrExerciseName": "Push-Up",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "HBPPE2",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 80,
+          "classOrExerciseName": "Pseudo Planche Push-Up",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "HBPPE3",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 81,
+          "classOrExerciseName": "Bench Dip",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "HBPPE4",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 82,
+          "classOrExerciseName": "Negative Parallel Bar Dip",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "HBPPE5",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 83,
+          "classOrExerciseName": "Parallel Bar Dip",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "HBPPE6",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 108,
+          "classOrExerciseName": "Scapular Shrug",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "SPLPE1",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 109,
+          "classOrExerciseName": "Forearm Plank",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "SPLPE2",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 110,
+          "classOrExerciseName": "Plank",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "SPLPE3",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 111,
+          "classOrExerciseName": "Single Arm Plank",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "SPLPE4",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 112,
+          "classOrExerciseName": "Planche Lean",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "SPLPE5",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 113,
+          "classOrExerciseName": "Elevated Planche Lean",
+          "category": "Push",
+          "subCategory": "1",
+          "orderingType": 15,
+          "image": "SPLPE6",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      }
+  ],
+  "Level two": [
+      {
+          "classIdOrExerciseId": 84,
+          "classOrExerciseName": "Single Bar Dip",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "HBPPE7",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 85,
+          "classOrExerciseName": "Under Grip Single Bar Dip",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "HBPPE8",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 86,
+          "classOrExerciseName": "Korean Dip",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "HBPPE9",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 87,
+          "classOrExerciseName": "Under Grip Korean Dip",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "HBPPE10",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 88,
+          "classOrExerciseName": "Russian Dip",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "HBPPE11",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 89,
+          "classOrExerciseName": "L Russian Dip",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "HBPPE12",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 90,
+          "classOrExerciseName": "Ring Dip",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "HBPPE13",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 91,
+          "classOrExerciseName": "Bulgarian Ring Dip",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "HBPPE14",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 114,
+          "classOrExerciseName": "Elevated Planche Lean Bounce",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "SPLPE7",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 115,
+          "classOrExerciseName": "Frog Stand",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "SPLSE1",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 116,
+          "classOrExerciseName": "Advanced Frog Stand",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "SPLSE2",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 117,
+          "classOrExerciseName": "Tuck Planche",
+          "category": "Push",
+          "subCategory": "2",
+          "orderingType": 15,
+          "image": "SPLSE3",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      }
+  ],
+  "Level three": [
+      {
+          "classIdOrExerciseId": 92,
+          "classOrExerciseName": "Box Headstand Push-Up",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "HBPPE15",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 93,
+          "classOrExerciseName": "Negative Headstand Push-Up",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "HBPPE16",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 94,
+          "classOrExerciseName": "Free Headstand Push-Up",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "HBPPE17",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 95,
+          "classOrExerciseName": "Elevated Headstand Push-Up",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "HBPPE18",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 96,
+          "classOrExerciseName": "Wall Handstand Push-Up",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "HBPPE19",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 97,
+          "classOrExerciseName": "Super Pseudo Planche Push-Up ",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "HBPPE20",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 98,
+          "classOrExerciseName": "Planche Dip",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "HBPPE21",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 99,
+          "classOrExerciseName": "Tuck Planche Push-Up",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "HBPPE22",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 118,
+          "classOrExerciseName": "Open Planche",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "SPLSE4",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 119,
+          "classOrExerciseName": "Open Planche Single Leg Extension",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "SPLSE5",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 120,
+          "classOrExerciseName": "Open Planche Double Leg Extension",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "SPLSE6",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 121,
+          "classOrExerciseName": "Half Straddle Planche",
+          "category": "Push",
+          "subCategory": "3",
+          "orderingType": 15,
+          "image": "SPLSE7",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      }
+  ],
+  "Level four": [
+      {
+          "classIdOrExerciseId": 100,
+          "classOrExerciseName": "Elevated Half Handstand Chest Roll",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "HBPSE1",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 101,
+          "classOrExerciseName": "Headstand Chest Roll",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "HBPSE2",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 102,
+          "classOrExerciseName": "Headstand Push-Up Chest Roll",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "HBPSE3",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 103,
+          "classOrExerciseName": "Half Handstand Chest Roll ",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "HBPSE4",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 104,
+          "classOrExerciseName": "Handstand Chest Roll",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "HBPSE5",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 105,
+          "classOrExerciseName": "Handstand Chest Roll with Negative Hollow Back Press",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "HBPSE6",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 106,
+          "classOrExerciseName": "Half Hollow Back Press",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "HBPSE7",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 107,
+          "classOrExerciseName": "Hollow Back Press",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "HBPSE8",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 122,
+          "classOrExerciseName": "Half Straddle Planche Single Leg Extension",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "SPLSE8",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 123,
+          "classOrExerciseName": "Half Straddle Planche Double Leg Extension",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "SPLSE9",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 124,
+          "classOrExerciseName": "Scissoring Straddle Planche",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "SPLSE10",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      },
+      {
+          "classIdOrExerciseId": 125,
+          "classOrExerciseName": "Straddle Planche",
+          "category": "Push",
+          "subCategory": "4",
+          "orderingType": 15,
+          "image": "SPLSE11",
+          "mediaId": null,
+          "description": null,
+          "relatedWorkouts": null
+      }
+  ]
+}

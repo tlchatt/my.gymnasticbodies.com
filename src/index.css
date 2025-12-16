@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+p{
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+*{
+  box-sizing: border-box;
+}
+
+html, body, .root {
+  height: 100%;
+  margin: 0;
+}
+
+
+.sc-AxhCb.jhlvex.BeaconContainer.is-configDisplayRight.is-mobile.BeaconContainer-enter-done {
+  z-index: 1350;
+}
+
+#fav-modal-input-with-icon-grid{
+  padding: 12px 14px;
+  padding-right: 28px;
+}

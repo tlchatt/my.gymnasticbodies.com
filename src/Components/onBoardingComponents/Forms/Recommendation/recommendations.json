@@ -1,0 +1,41 @@
+{
+  "intro": {
+    "mediaId": "7vwtBFME",
+    "summary": "This plan will give you the tools to use your own body in a way that strengthens joints and loosens up tight areas.",
+    "title": "Intro Plan",
+    "url": "/introduction-plan",
+    "planId": 1,
+    "levelAccesTag": 1235
+  },
+  "levelOne": {
+    "mediaId": "URm3GV96",
+    "summary": "Level 1 bundles our popular Foundation One course with great warm-up, active mobility, and injury prevention videos. Train at your own pace and enjoy a structured workout routine. Most students can complete Foundation One in six months, but you’ll want to keep revisiting it to maintain your hard-earned mobility, core and basic strength.",
+    "title": "Level One",
+    "planId": 2,
+    "selectedIndex": 1,
+    "levelAccesTag": 1215
+  },
+  "levelTwo": {
+    "mediaId": "irCqtSO2",
+    "summary": "Level Two bundles Foundation Two with great warm-up, active mobility, and injury prevention videos. The warm-up, flexibility, and prehab components will push active mobility progress while Foundation Two provides challenging strength training. This plan is best for students who enjoy a structured workout routine and want to challenge themselves.",
+    "title": "Level Two",
+    "planId": 3,
+    "levelAccesTag": 1219
+  },
+  "levelThree": {
+    "mediaId": "irCqtSO2",
+    "summary": "Level Three bundles Foundation Three with great warm-up, active mobility, and injury prevention videos. The warm-up, flexibility, and prehab components will push active mobility progress while Foundation Two provides challenging strength training. This plan is best for students who enjoy a structured workout routine and want to challenge themselves.",
+    "title": "Level Three",
+    "url": "/level-two-and-three",
+    "planId": 4,
+    "levelAccesTag": 1223
+  },
+  "levelFour": {
+    "mediaId": "uLC1kwNE",
+    "summary": "Level Four allows you to train at your own pace and takes most students at least six months to complete. This plan is best for students who enjoy a structured workout routine and want to do develop advanced skills commonly found in gymnastics and calisthenics.",
+    "title": "Level Four",
+    "url": "/level-four",
+    "planId": 5,
+    "levelAccesTag": 1227
+  }
+}

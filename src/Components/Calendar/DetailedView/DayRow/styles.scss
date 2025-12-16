@@ -1,0 +1,9 @@
+.gf-hide-scrollbar{
+  overflow: scroll;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    height: 0px;
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+}

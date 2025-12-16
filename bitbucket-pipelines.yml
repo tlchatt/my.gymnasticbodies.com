@@ -1,0 +1,95 @@
+image: node:14.17.6
+
+
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Build
+          script:
+            - yarn install --network-timeout 1000000
+            - yarn build
+            - REACT_APP_API='https://api.gymnasticbodies.com' REACT_APP_IS_PRODUCTION='production' yarn run build
+          artifacts:
+            - build/**
+      - step:
+          name: Deploy to S3
+          deployment: production
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.4.3
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'my.react'
+                ACL: "public-read"
+                LOCAL_PATH: "build"
+      - step:
+          name: Invalidate Cloudfront Cache
+          script:
+            - pipe: atlassian/aws-cloudfront-invalidate:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                DISTRIBUTION_ID: 'E2TAHYRIUSC1ZN'
+    Develop:
+      - step:
+          name: Build
+          script:
+            - yarn install --network-timeout 1000000
+            - yarn build
+            - REACT_APP_API='https://api-test.gymnasticbodies.com' yarn run build
+          artifacts:
+            - build/**
+      - step:
+          name: Deploy to S3
+          deployment: production
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.4.3
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'my.react-testing'
+                ACL: "public-read"
+                LOCAL_PATH: "build"
+      - step:
+          name: Invalidate Cloudfront Cache
+          script:
+            - pipe: atlassian/aws-cloudfront-invalidate:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                DISTRIBUTION_ID: 'E1KQMIVMY2A66G'
+    Staging:
+      - step:
+          name: Build
+          script:
+            - yarn
+            - yarn build
+            - REACT_APP_API='https://api-test.gymnasticbodies.com' REACT_APP_TESTING='true' yarn run build
+          artifacts:
+            - build/**
+      - step:
+          name: Deploy to S3
+          deployment: production
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.4.3
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'my.internal-testing'
+                ACL: "public-read"
+                LOCAL_PATH: "build"
+      - step:
+          name: Invalidate Cloudfront Cache
+          script:
+            - pipe: atlassian/aws-cloudfront-invalidate:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                DISTRIBUTION_ID: 'E2NDG89QP09SYX'

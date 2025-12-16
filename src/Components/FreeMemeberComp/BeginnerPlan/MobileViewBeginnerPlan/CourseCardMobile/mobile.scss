@@ -1,0 +1,103 @@
+.gf-grid-levels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 1fr 0.4fr;
+  grid-template-rows: 0.2fr 0.8fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "gf-sampler-image-container gf-sampler-image-container gf-grid-data-section gf-grid-data-section gf-icon"
+    "gf-sampler-image-container gf-sampler-image-container gf-grid-data-section gf-grid-data-section gf-icon";
+  width: 100%;
+  // padding-top: 0;
+  padding: 12px;
+
+  @media only screen and (max-width: 428px) {
+    padding: 8px 4px;
+
+    .gf-grid-data-section {
+      margin: 0;
+    }
+  }
+
+  &.gf-no-icon{
+    grid-template-areas:
+    "gf-sampler-image-container gf-sampler-image-container gf-grid-data-section gf-grid-data-section"
+    "gf-sampler-image-container gf-sampler-image-container gf-grid-data-section gf-grid-data-section";
+    grid-template-columns: repeat(3, 1fr) 1fr;
+    padding-right: 0;
+  }
+
+  &.gf-with-title {
+    grid-template-areas:
+    "gf-sampler-title gf-sampler-title gf-sampler-title gf-sampler-title gf-sampler-title"
+    "gf-sampler-image-container gf-sampler-image-container gf-grid-data-section gf-grid-data-section gf-icon"
+    "gf-sampler-image-container gf-sampler-image-container gf-grid-data-section gf-grid-data-section gf-icon";
+    grid-template-rows: 0.2fr 0.2fr 0.8fr;
+    grid-template-columns: repeat(2, 0.7fr) 1fr 1fr 0.4fr;
+    padding: 8px;
+    padding-top: 2px;
+
+    @media only screen and (max-width: 428px) {
+      grid-template-rows: 0.2fr 0.2fr 0.7fr;
+      padding: 2px 8px;
+    }
+
+  }
+
+  .gf-sampler-title{
+    grid-area: gf-sampler-title;
+  }
+
+
+
+  .gf-grid-data-section {
+    width: 100%;
+  }
+
+  .gf-grid-title-sections {
+    grid-area: gf-grid-title-sections;
+  }
+
+  .gf-sampler-image-container {
+    grid-area: gf-sampler-image-container;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  .gf-grid-data-section {
+    grid-area: gf-grid-data-section;
+    width: 100%;
+    // max-width: 145px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 8px;
+
+    @media only screen and (max-width: 428px) {
+      margin: 0;
+    }
+  }
+
+  .gf-icon {
+    grid-area: gf-icon;
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+    flex-direction: column;
+    &.gf-icon-jc-center{
+      justify-content: center;
+    }
+  }
+}
+
+.gf-sub-container{
+  display: flex;
+  justify-content: center;
+
+  .gf-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+  }
+}

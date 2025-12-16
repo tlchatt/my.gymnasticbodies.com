@@ -1,0 +1,18 @@
+.gf-blueprints{
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1.25px solid white;
+    margin: 0 8px;
+    position: relative;
+    bottom: -24px;
+    height: fit-content;
+    @media only screen and (max-device-width : 375px) {
+      bottom: -18px;
+    }
+  }
+}
+.MuiListItemText-root{
+  margin: 0 !important;
+}

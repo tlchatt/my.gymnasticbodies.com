@@ -1,0 +1,32 @@
+@keyframes show {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+@keyframes hide {
+  0% {
+      opacity: 1;
+  }
+  99% {
+  }
+  100% {
+      opacity: 0;
+  }
+}
+
+
+.fadeOut{
+  animation: hide 490ms linear;
+  animation-fill-mode: forwards;
+}
+.fadeIn{
+  animation: show 490ms linear;
+  animation-fill-mode: forwards;
+}
+
+.display-none{
+  display: none;
+}
