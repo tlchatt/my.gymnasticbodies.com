@@ -40,7 +40,7 @@ const Interceptor = props => {
                   'Authorization': 'Bearer ' + localStorage.getItem('refreshToken')
                 }
               }
-
+              
               let res = fetch(API + '/auth/refreshToken', config)
                 .then(res => res.json()).then(res => {
                   originalReq.headers['Authorization'] = 'Bearer ' + res.authorizationToken;
@@ -57,7 +57,7 @@ const Interceptor = props => {
                 }).catch(err => {
                   // in the event there is an error getting a new token from backend then log user out entierly.
                   // This also covers possibility for expired refresh token
-                  dispatch(fourceLogoutFail());
+                  // dispatch(fourceLogoutFail());
                 });
 
               resolve(res);
