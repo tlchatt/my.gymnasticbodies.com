@@ -11,7 +11,7 @@ import { SET_PROGRESSION } from './LegacyAction';
 import axios from 'axios'
 const NEWAPI = process.env.REACT_APP_API_NEW
 
-export const getBeginnerLevel = () => (dispatch, getState) => {
+export const getBeginnerLevel = () => (dispatch, getState) => {/* incomplete, has failover directly to lukeData */
   console.log('getBeginnerLevel = () => `/myschedule/beginner/view/weekly/users/$')
   const state = getState();
   const { webToken, UserId } = state.login;
@@ -221,7 +221,6 @@ export const selectBeginenrWorkout = (dateIndex, dateKey, workoutId) => (dispatc
     Sentry.captureException(error);
   });
 }
-
 export const logAllBeginnerWorkout = (dateIndex, dateKey, courseIds = []) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, timezone, levelId } = state.login;
@@ -271,7 +270,6 @@ export const logAllBeginnerWorkout = (dateIndex, dateKey, courseIds = []) => (di
     Sentry.captureException(error);
   });
 }
-
 export const removeBeginnerWorkoutLog = (dateIndex, dateKey, courseId) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, timezone, levelId } = state.login;
@@ -313,7 +311,6 @@ export const removeBeginnerWorkoutLog = (dateIndex, dateKey, courseId) => (dispa
     Sentry.captureException(error);
   });
 }
-
 const levelObj = {
   0: {
     userLevel: 'Beginner',
@@ -344,12 +341,9 @@ const levelObj = {
     levelId: 10
   }
 }
-
 function between(x, min, max) {
   return x >= min && x <= max;
 }
-
-
 export const continutePreviosLevel = (levelId) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId } = state.login;
@@ -373,7 +367,6 @@ export const continutePreviosLevel = (levelId) => (dispatch, getState) => {
       Sentry.captureException(error);
     });
 }
-
 export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, timezone, userLevel } = state.login;
@@ -385,6 +378,11 @@ export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) =>
 
   Axios(AxiosConfig('post', `/myschedule/choose/level/${leveld}/users/${UserId}?workoutOrPlanId=${workoutOrPlanId}&date=${currentDate}`, webToken))
     .then(res => {
+      console.log('setLevelPath .then', res)
+      if (res.status != 200) {
+        console.log('setLevelPath dispatch(setLevelPathNew());')
+        dispatch(setLevelPathNew(leveld, workoutOrPlanId));
+      }
       dispatch({
         type: actionTypes.SET_USER_LEVEL,
         payload: {
@@ -392,7 +390,9 @@ export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) =>
           showAllOpen: between(leveld, 1, 4),
         }
       })
-    }).then(() => {
+    })
+    .then(() => {
+      console.log('setLevelPath .then()')
       if (isCallback) {
         isCallback();
       }
@@ -402,10 +402,48 @@ export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) =>
         dispatch(getLevelPLan());
       }
     }).catch(error => {
-      Sentry.captureException(error);
+      console.log('setLevelPath .catch error', error)
+      console.log('setLevelPath dispatch(setLevelPathNew());')
+      dispatch(setLevelPathNew(leveld, workoutOrPlanId));
+
     });
 }
-
+export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState) => {
+  console.log('setLevelPathNew = (leveld, workoutOrPlanId)', leveld, workoutOrPlanId)
+  const state = getState();
+  const { webToken, UserId, timezone, userLevel } = state.login;
+  const currentDate = moment().tz(timezone).format('YYYY-MM-DD');
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+  let data = {
+    userId: UserId,
+    currentDate: currentDate,
+    type: 'levelPath',
+    data: {
+      workoutOrPlanId: workoutOrPlanId,
+      leveld: leveld,
+    }
+  }
+  Axios.post(NEWAPI + '/api/user', data, config)
+    .then(res => {
+      dispatch({
+        type: actionTypes.SET_USER_LEVEL,
+        payload: {
+          ...levelObj[leveld],
+          showAllOpen: between(leveld, 1, 4),
+        }
+      })
+    }).then(() => {
+      if (between(leveld, 1, 4)) {
+        dispatch(getLevelPLan());
+      }
+    }).catch(error => {
+      console.error('setLevelPathNew failure')
+    });
+}
 const processUserWorkout = workout => {
   if (workout.type === 'Class') {
     let workOutData = { ...workout.workout, showRefresh: showRefreshArray.includes(workout.workout.trainingType) };
@@ -498,15 +536,12 @@ export const proccesLegacyCoursesNew = (data) => {
   }
   return { chosenProgs: chosenProgs, isLegacy: true, category: groupName };
 }
-
 const checkGroup = workouts => {
   const first = workouts[0].group;
   return workouts.every(item => item.group === first) ? first : '';
 }
-
 const showRefreshArray = ['Warm-Up', 'Mobility', 'Stretch'];
-
-export const getLevelPLan = () => (dispatch, getState) => {//userLevel: "Advanced One"
+export const getLevelPLan = () => (dispatch, getState) => {/*  has failover directly to getLevelPLanNew */
   const state = getState();
   const { webToken, UserId, levelId } = state.login;
   console.log('getLevelPLan = () =>  `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}` ',)
@@ -2998,12 +3033,11 @@ export const getLevelPLan = () => (dispatch, getState) => {//userLevel: "Advance
       })
     }).catch(error => {
       // Sentry.captureException(error);
-      console.log('getLevelPLan dispatch(getLevelPLanNew());')
-      dispatch(getLevelPLanNew());
+      console.log('getLevelPLan dispatch(getLevelPlanNew());')
+      dispatch(getLevelPlanNew());
     });
 }
-
-export const getLevelPLanNew = () => (dispatch, getState) => {//userLevel: "Advanced One"
+export const getLevelPlanNew = () => (dispatch, getState) => {//userLevel: "Advanced One"
   const state = getState();
   const { webToken, UserId, levelId } = state.login;
   console.log('getLevelPLanNew = () =>  `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}` ',)
@@ -7947,9 +7981,9 @@ export const getLevelPLanNew = () => (dispatch, getState) => {//userLevel: "Adva
   let keys = Object.keys(workoutSchedule);
   keys.forEach(k => {
     let workouts = workoutSchedule[k] ? workoutSchedule[k] : [];
-
     workoutSchedule[k] = workouts.map(processUserWorkoutNew);
   })
+  console.log('workoutSchedule')
   dispatch({
     type: actionTypes.SET_LEVELS,
     payload: { userSchedule: workoutSchedule }
@@ -7979,7 +8013,6 @@ export const clearOutDay = (dayIndex, isBeginner = false) => (dispatch, getState
       Sentry.captureException(error);
     });
 }
-
 export const clearOutDayBeginner = (dayIndex) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId } = state.login;
@@ -8005,7 +8038,6 @@ export const clearOutDayBeginner = (dayIndex) => (dispatch, getState) => {
       Sentry.captureException(error);
     });
 }
-
 export const generateWorkoutLevels = (workoutId, dateIndex, dateKey) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, levelId, timezone } = state.login;
@@ -8028,7 +8060,6 @@ export const generateWorkoutLevels = (workoutId, dateIndex, dateKey) => (dispatc
     Sentry.captureException(error);
   });
 }
-
 export const refreshWMS = (scheduleId, trainingType, dateIndex, dateKey) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, levelId, timezone } = state.login;
@@ -8067,7 +8098,6 @@ export const refreshWMS = (scheduleId, trainingType, dateIndex, dateKey) => (dis
     Sentry.captureException(error);
   });
 }
-
 // New LegacyActions
 export const ManageDificulty = (workoutIndex, dateKey, dateKeyIndex, exerciseId, type) => (dispatch, getState) => {
   const state = getState();
@@ -8085,7 +8115,6 @@ export const ManageDificulty = (workoutIndex, dateKey, dateKeyIndex, exerciseId,
       Sentry.captureException(error);
     });
 }
-
 export const LogLegacy = (exerciseId, mobilityStatus, autoProg, steps, logList, dateKeyIndex, dateKey, workoutIndex) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, timezone } = state.login;
@@ -8113,7 +8142,6 @@ export const LogLegacy = (exerciseId, mobilityStatus, autoProg, steps, logList, 
       Sentry.captureException(error);
     });
 }
-
 export const SaveNotesLevels = (notes, exerciseId, masterySteps, dateKeyIndex) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, timezone } = state.login;
@@ -8142,7 +8170,6 @@ export const SaveNotesLevels = (notes, exerciseId, masterySteps, dateKeyIndex) =
       Sentry.captureException(error);
     });
 }
-
 export const GetAllWorkoutInfo = (dateKey, workoutIndex, dateKeyIndex) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, timezone } = state.login;

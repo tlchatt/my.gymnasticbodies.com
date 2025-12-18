@@ -220,6 +220,7 @@ export const LoginNew = (username, password) => dispatch => {
         "iat": 1765833638,
         "cid": 411847
       }
+      decodedGoal.cid = res.data.user.id
 
       const expirationDate = new Date(new Date().getTime() + 60 * 60 * 24 * 7);
       const refreshExpireTime = new Date(new Date().getTime() + 60 * 60 * 24 * 7);
