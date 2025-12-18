@@ -148,12 +148,18 @@ const Suggestion = (props) => {
   // Event Handlers
   const handleChooseLevel = () => {
     if (guidedPlanAccessLevels.length > 0 && guidedPlanAccessLevels.indexOf(suggestedLevel.index - 1) >= 0) {
+      
       dispatch(setLevelPath(suggestedLevel.index - 1, props.handleClose))
+      
       if (location.pathname !== '/') {
+        
         history.push("/")
+      }else{
+        dispatch(props.handleClose)
       }
     }
     else {
+      console.log("here1")
       dispatch(openOhNo());
     }
   }

@@ -449,6 +449,111 @@ const getNewAuthToken = (refreshToken) => dispatch => {
   })
 
 }
+const getNewAuthTokenNew = (refreshToken) => dispatch => {
+  let newAuthConfig = {
+    method: 'get',
+    url: `${API}/auth/refreshToken`,
+    headers: {
+      'Authorization': `Bearer ${refreshToken}`,
+    },
+  };
+
+  axios(newAuthConfig).then(res => {
+    const newAuthToken = res.data.authorizationToken;
+    const decoded = jwt.decode(newAuthToken)
+
+
+    const expirationDate = new Date(new Date().getTime() + (decoded.exp - decoded.iat) * 1000);
+    const { timezone } = res.data;
+
+    localStorage.setItem('authToken', newAuthToken);
+    localStorage.setItem('AuthExpirationDate', expirationDate);
+    localStorage.setItem('timezone', timezone);
+
+    let userDataConfig = {
+      method: 'get',
+      url: `${API}/welcome/users`,
+      headers: {
+        'Authorization': `Bearer ${newAuthToken}`,
+      },
+    };
+
+    if (res.data.isFreeMember && (!res.data.isAllAccessUser && !res.data.hasCourseProduct)) {
+      userDataConfig = {
+        ...userDataConfig,
+        method: 'GET',
+        url: `${API}/welcome/v1/users`,
+      }
+
+      axios(userDataConfig)
+        .then(res => dispatch(
+          LoginAsync(
+            newAuthToken,
+            decoded,
+            {
+              ...res.data,
+              showAllAccessSite: true,
+              isFreeMember: true
+            },
+            timezone)
+        ))
+        .catch(err => {
+          dispatch(
+            LoginAsync(
+              newAuthToken,
+              decoded,
+              {
+                ...res.data,
+                showAllAccessSite: true,
+                isFreeMember: true
+              },
+              timezone)
+          )
+          //dispatch(loginFail())
+          // Sentry.captureException(err);
+        });
+    }
+    else {
+      userDataConfig = {
+        ...userDataConfig,
+        method: 'GET',
+        url: `${API}/welcome/v1/users`,
+      }
+
+      axios(userDataConfig)
+        .then(res => dispatch(
+          LoginAsync(
+            newAuthToken,
+            decoded,
+            {
+              ...res.data,
+              showAllAccessSite: true,
+              isFreeMember: false
+            },
+            timezone)
+        ))
+        .catch(err => {
+          dispatch(
+            LoginAsync(
+              newAuthToken,
+              decoded,
+              {
+                ...res.data,
+                showAllAccessSite: true,
+                isFreeMember: false
+              },
+              timezone)
+          )
+          //dispatch(loginFail())
+          //Sentry.captureException(err);
+        });
+    }
+  }).catch(err => {
+    dispatch(loginFail())
+    Sentry.captureException(err);
+  })
+
+}
 
 export const Logout = () => {
   localStorage.removeItem('authToken');
