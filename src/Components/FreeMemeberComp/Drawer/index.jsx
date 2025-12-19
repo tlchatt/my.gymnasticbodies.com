@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -165,10 +165,13 @@ function between(x, min, max) {
 }
 
 export default function MiniDrawer(props) {
+  console.log('MiniDrawer props', props)
   const classes = useStyles();
   const [open, setOpen] = React.useState(props.isMobile ? false : true);
   const userNameFullName = useSelector(state => state.login.name)
   const levelId = useSelector(state => state.login.levelId)
+  const postAWS = useSelector(state => state.login.postAWS)
+  console.log('useSelector(state => state.login.levelId)', useSelector(state => state.login))
 
   const location = useLocation();
   const history = useHistory();
@@ -191,7 +194,7 @@ export default function MiniDrawer(props) {
         componentId: OpenDrawerRedux.componentId
       })
     }
-   }, [OpenDrawerRedux.componentId, OpenDrawerRedux.open])
+  }, [OpenDrawerRedux.componentId, OpenDrawerRedux.open])
 
 
   const handleCloseDrawer = () => {
@@ -248,138 +251,197 @@ export default function MiniDrawer(props) {
     }
   }
 
-
-
-  const firstSection = [
-    {
-      text: 'White Board',
-      cb: () => isSinnglePoint && !isFreeMember ? dispatch(openOhNo()) : handleOpenDrawer('SwitchToAuto'),
-      imageName: 'bluewhiteboard.png',
-      extraWidth: true,
-      ids: [9],
-      isActive: () => {
-        if (location.pathname === '/') {
-          if (openDrawer.open && openDrawer.componentId !== 'SwitchToAuto') {
-            return false
+  let firstSection
+  if (postAWS) {
+    firstSection = [
+      {
+        text: 'Guided Plans',
+        cb: () => handleCallBackFunction('GuidedPlans'),
+        imageName: 'GuidedPlans.png',
+        ids: [0, 1, 2, 3, 4],
+        isActive: () => {
+          if (location.pathname === '/') {
+            if (openDrawer.open && openDrawer.componentId !== 'GuidedPlans') {
+              return false
+            }
+            if ([0, 1, 2, 3, 4].indexOf(levelId) > -1) {
+              return true
+            }
+            if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
+              return true
+            }
           }
-          if (9 === levelId) {
-            return true
+          else {
+            if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
+              return true
+            }
           }
-          if (openDrawer.open && openDrawer.componentId === 'SwitchToAuto') {
+          return false;
+        }
+      },
+     
+      {
+        text: 'Fitness Placement Quiz',
+        cb: () => handleCallBackFunction('FitnessQuiz'),
+        imageName: 'Quiz.png',
+        ids: [],
+        isActive: () => {
+          if (openDrawer.componentId === 'FitnessQuiz') {
             return true;
           }
+          return false;
         }
-        else {
-          if (openDrawer.open && openDrawer.componentId === 'SwitchToAuto') {
-            return true
-          }
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Guided Plans',
-      cb: () => handleCallBackFunction('GuidedPlans'),
-      imageName: 'GuidedPlans.png',
-      ids: [0, 1, 2, 3, 4],
-      isActive: () => {
-        if (location.pathname === '/') {
-          if (openDrawer.open && openDrawer.componentId !== 'GuidedPlans') {
-            return false
-          }
-          if ([0, 1, 2, 3, 4].indexOf(levelId) > -1) {
-            return true
-          }
-          if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
-            return true
-          }
-        }
-        else {
-          if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
-            return true
-          }
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Build Your Own Workout',
-      cb: () => handleCallBackFunction('BuildYourOwn'),
-      imageName: 'BYO.png',
-      ids: [10],
-      drawerId: 'BuildYourOwn',
-      isActive: () => {
-        if (location.pathname === '/') {
-          if (openDrawer.open && openDrawer.componentId !== 'BuildYourOwn') {
-            return false
-          }
-          if ([10].indexOf(levelId) > -1) {
-            return true
-          }
-          if (openDrawer.open && openDrawer.componentId === 'BuildYourOwn') {
-            return true
-          }
-        }
-        else {
-          if (openDrawer.open && openDrawer.componentId === 'BuildYourOwn') {
-            return true
-          }
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Thrive Nutrition',
-      cb: () => handleCallBackFunction('Thrive', isThriveUser),
-      imageName: 'nutrition.png',
-      ids: [],
-      isActive: () => {
-        if (openDrawer.componentId === 'Thrive' && isThriveUser) {
-          return true;
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Workout History',
-      cb: () => handleCallBackFunction('History'),
-      imageName: 'history.png',
-      ids: [],
-      isActive: () => {
-        if (openDrawer.componentId === 'History') {
-          return true;
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Fitness Placement Quiz',
-      cb: () => handleCallBackFunction('FitnessQuiz'),
-      imageName: 'Quiz.png',
-      ids: [],
-      isActive: () => {
-        if (openDrawer.componentId === 'FitnessQuiz') {
-          return true;
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Information',
-      imageName: 'info.png',
-      cb: () => {
-        handleCloseDrawer();
-        history.push('/information')
       },
-      ids: [],
-      isActive: () => {
-        if (location.pathname === '/information' && !openDrawer.componentId) {
-          return true;
+      {
+        text: 'Information',
+        imageName: 'info.png',
+        cb: () => {
+          handleCloseDrawer();
+          history.push('/information')
+        },
+        ids: [],
+        isActive: () => {
+          if (location.pathname === '/information' && !openDrawer.componentId) {
+            return true;
+          }
+          return false;
         }
-        return false;
       }
-    }
-  ]
+    ]
+  }
+  else {
+    firstSection = [
+      {
+        text: 'White Board',
+        cb: () => isSinnglePoint && !isFreeMember ? dispatch(openOhNo()) : handleOpenDrawer('SwitchToAuto'),
+        imageName: 'bluewhiteboard.png',
+        extraWidth: true,
+        ids: [9],
+        isActive: () => {
+          if (location.pathname === '/') {
+            if (openDrawer.open && openDrawer.componentId !== 'SwitchToAuto') {
+              return false
+            }
+            if (9 === levelId) {
+              return true
+            }
+            if (openDrawer.open && openDrawer.componentId === 'SwitchToAuto') {
+              return true;
+            }
+          }
+          else {
+            if (openDrawer.open && openDrawer.componentId === 'SwitchToAuto') {
+              return true
+            }
+          }
+          return false;
+        }
+      },
+      {
+        text: 'Guided Plans',
+        cb: () => handleCallBackFunction('GuidedPlans'),
+        imageName: 'GuidedPlans.png',
+        ids: [0, 1, 2, 3, 4],
+        isActive: () => {
+          if (location.pathname === '/') {
+            if (openDrawer.open && openDrawer.componentId !== 'GuidedPlans') {
+              return false
+            }
+            if ([0, 1, 2, 3, 4].indexOf(levelId) > -1) {
+              return true
+            }
+            if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
+              return true
+            }
+          }
+          else {
+            if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
+              return true
+            }
+          }
+          return false;
+        }
+      },
+      {
+        text: 'Build Your Own Workout',
+        cb: () => handleCallBackFunction('BuildYourOwn'),
+        imageName: 'BYO.png',
+        ids: [10],
+        drawerId: 'BuildYourOwn',
+        isActive: () => {
+          if (location.pathname === '/') {
+            if (openDrawer.open && openDrawer.componentId !== 'BuildYourOwn') {
+              return false
+            }
+            if ([10].indexOf(levelId) > -1) {
+              return true
+            }
+            if (openDrawer.open && openDrawer.componentId === 'BuildYourOwn') {
+              return true
+            }
+          }
+          else {
+            if (openDrawer.open && openDrawer.componentId === 'BuildYourOwn') {
+              return true
+            }
+          }
+          return false;
+        }
+      },
+      {
+        text: 'Thrive Nutrition',
+        cb: () => handleCallBackFunction('Thrive', isThriveUser),
+        imageName: 'nutrition.png',
+        ids: [],
+        isActive: () => {
+          if (openDrawer.componentId === 'Thrive' && isThriveUser) {
+            return true;
+          }
+          return false;
+        }
+      },
+      {
+        text: 'Workout History',
+        cb: () => handleCallBackFunction('History'),
+        imageName: 'history.png',
+        ids: [],
+        isActive: () => {
+          if (openDrawer.componentId === 'History') {
+            return true;
+          }
+          return false;
+        }
+      },
+      {
+        text: 'Fitness Placement Quiz',
+        cb: () => handleCallBackFunction('FitnessQuiz'),
+        imageName: 'Quiz.png',
+        ids: [],
+        isActive: () => {
+          if (openDrawer.componentId === 'FitnessQuiz') {
+            return true;
+          }
+          return false;
+        }
+      },
+      {
+        text: 'Information',
+        imageName: 'info.png',
+        cb: () => {
+          handleCloseDrawer();
+          history.push('/information')
+        },
+        ids: [],
+        isActive: () => {
+          if (location.pathname === '/information' && !openDrawer.componentId) {
+            return true;
+          }
+          return false;
+        }
+      }
+    ]
+  }
+
 
   return (
     <>
@@ -441,29 +503,29 @@ export default function MiniDrawer(props) {
                     [classes.isActiveClosed]:
                       ('My Courses' === props.userChoosenLevel || location.pathname === '/my-courses') && !openDrawer.componentId && location.pathname !== '/information' && !open,
                   })}>
-                <img
-                  className={
-                    clsx(
-                      classes.iconImg,
-                      {
-                        [classes.extraWidth]: open,
-                        [classes.extraWidthClosed]: !open,
-                      }
-                    )
-                  }
-                  src={`https://gymfit-images.s3.amazonaws.com/General/SPP.svg`}
-                  alt={'My Courses'}
-                  style={{maxWidth: 56}}
-                />
-              </ListItemIcon>
-              <Collapse in={open}>
-                <ListItemText
-                  style={{ color: 'white', whiteSpace: 'normal', textAlign: 'center', minWidth: 208, textShadow: 'rgb(0 0 0 / 55%) 1px 1px 8px' }}
-                  primaryTypographyProps={{ variant: "body2", style: { fontSize: 16 } }}
-                  primary='My Courses'
-                />
-              </Collapse>
-            </ListItem>
+                  <img
+                    className={
+                      clsx(
+                        classes.iconImg,
+                        {
+                          [classes.extraWidth]: open,
+                          [classes.extraWidthClosed]: !open,
+                        }
+                      )
+                    }
+                    src={`https://gymfit-images.s3.amazonaws.com/General/SPP.svg`}
+                    alt={'My Courses'}
+                    style={{ maxWidth: 56 }}
+                  />
+                </ListItemIcon>
+                <Collapse in={open}>
+                  <ListItemText
+                    style={{ color: 'white', whiteSpace: 'normal', textAlign: 'center', minWidth: 208, textShadow: 'rgb(0 0 0 / 55%) 1px 1px 8px' }}
+                    primaryTypographyProps={{ variant: "body2", style: { fontSize: 16 } }}
+                    primary='My Courses'
+                  />
+                </Collapse>
+              </ListItem>
               : null
           }
           {firstSection.map((section, index) => (
@@ -486,17 +548,17 @@ export default function MiniDrawer(props) {
                   }
                   src={`https://gymfit-images.s3.amazonaws.com/General/${section.imageName}`}
                   alt={section.text}
-                  style={{...section.styles}}
+                  style={{ ...section.styles }}
                 />
               </ListItemIcon>
               <Collapse in={open}>
-                <ListItemText style={{ color: 'white', whiteSpace: 'normal', textAlign: 'center', minWidth: 208 , textShadow:'rgb(0 0 0 / 55%) 1px 1px 8px'}} primaryTypographyProps={{ variant: "body2", style: { fontSize: 16 } }} primary={section.text} />
+                <ListItemText style={{ color: 'white', whiteSpace: 'normal', textAlign: 'center', minWidth: 208, textShadow: 'rgb(0 0 0 / 55%) 1px 1px 8px' }} primaryTypographyProps={{ variant: "body2", style: { fontSize: 16 } }} primary={section.text} />
               </Collapse>
             </ListItem>
           ))}
         </List>
       </Drawer>
-      <TestingDrawer {...openDrawer} toggle={handleCloseDrawer} isDrawerOpen={open}/>
+      <TestingDrawer {...openDrawer} toggle={handleCloseDrawer} isDrawerOpen={open} />
     </>
   );
 }

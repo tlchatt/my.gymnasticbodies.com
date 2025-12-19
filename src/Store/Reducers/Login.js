@@ -31,6 +31,7 @@ const LoginSuccess = (state, action) => {
     showAllAccessSite: action.userState.showAllAccessSite,
     isFreeMember: action.userState.isFreeMember,
     guidedPlanAccessLevels: action.userState.guidedPlanAccessLevels,
+    postAWS: action.userData.postAWS,
   });
 }
 
@@ -51,7 +52,7 @@ const WelcomeSuccess = (state, action) => {
 
 
 const LoginStart = (state) => {
-  return updateObject(state, {loading: true})
+  return updateObject(state, { loading: true })
 }
 
 const LoginFailed = (state) => {
@@ -82,7 +83,7 @@ const UpdateUserLevelId = (state, action) => {
 
 
 const UpdateToken = (state, action) => {
-  return updateObject(state, {webToken: action.webToken} )
+  return updateObject(state, { webToken: action.webToken })
 }
 
 const SetUserLevel = (state, action) => {
@@ -98,7 +99,7 @@ export const LoginReducer = (state = initailState, action) => {
     case actionTypes.LOGIN_SUCESS: return LoginSuccess(state, action);
     case actionTypes.LOGIN_FAIL: return LoginFailed(state);
     case actionTypes.LOGIN_FAIL_CLEAR: return LoginFailedClear(state);
-    case actionTypes.LOGOUT: return updateObject({}, {...initailState, didTryAutoLogin: true });
+    case actionTypes.LOGOUT: return updateObject({}, { ...initailState, didTryAutoLogin: true });
     case actionTypes.UPDATE_USER_PLAN: return UpdateUserPlan(state, action.planData);
     case actionTypes.SET_DID_TRY_AL: return updateObject(state, { didTryAutoLogin: true })
     case actionTypes.SET_NEW_AUTH: return UpdateToken(state, action);

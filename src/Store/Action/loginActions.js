@@ -113,8 +113,8 @@ const LoginAsync = (webToken, data, userState, timezone) => {
       3,
       4
     ],*/
-     "userLevel": "White Board",
-       "userLevel": "Intermediate Two",
+    "userLevel": "White Board",
+    "userLevel": "Intermediate Two",
     "levelId": 2
     //"levelId": 9,
     // "userLevel": "Beginner",
@@ -149,11 +149,11 @@ const LoginAsync = (webToken, data, userState, timezone) => {
     //"cid": 411847
   }
   console.log('LoginAsync userState', userState)
-  console.log('LoginAsync lukeState', lukeState)
+  //console.log('LoginAsync lukeState', lukeState)
 
-  
+
   console.log('LoginAsync userData', data)
-  console.log('LoginAsync lukeData', lukeData)
+  //console.log('LoginAsync lukeData', lukeData)
   // userState.userLevel = lukeState.userLevel
   //userState.contactId = lukeState.contactId
   // data.cid = lukeData.cid
@@ -221,7 +221,7 @@ export const LoginNew = (username, password) => dispatch => {
         "cid": 411847
       }
       decodedGoal.cid = res.data.user.id
-
+      decodedGoal.postAWS = true
       const expirationDate = new Date(new Date().getTime() + 60 * 60 * 24 * 7);
       const refreshExpireTime = new Date(new Date().getTime() + 60 * 60 * 24 * 7);
 
@@ -263,6 +263,7 @@ export const LoginNew = (username, password) => dispatch => {
         "userLevel": "Advanced One",
         "levelId": 3
       }
+      resGoal2.postAWS = true
       dispatch(
         LoginAsync(
           authToken,
