@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
+import Axios from 'axios'
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
@@ -57,6 +58,7 @@ const PassWordReset = (props) => {
   const [PassWordTwo, setPassWordTwo] = useState('');
   const [fail, setFail] = useState({ isFaield: false, message: '', variation: 'error' });
   const API = process.env.REACT_APP_API;
+  const NEWAPI = process.env.REACT_APP_API_NEW
   let form;
 
   useEffect(() => {
@@ -64,12 +66,13 @@ const PassWordReset = (props) => {
       .then(res => {
         setDone(false);
       }).catch(err => {
-        Sentry.captureException(err);
-        setFail({ isFaield: true, message: 'Invalid Reset Link.', variation: 'error' });
-        setTimeout(() => {
-          setFail({ isFaield: false, message: '', variation: 'error' })
-          setRedirect(true);
-        }, 2500);
+        setDone(false);
+        // Sentry.captureException(err);
+        // setFail({ isFaield: true, message: 'Invalid Reset Link.', variation: 'error' });
+        // setTimeout(() => {
+        //   setFail({ isFaield: false, message: '', variation: 'error' })
+        //   setRedirect(true);
+        // }, 2500);
       })
   }, [props.match.params.id, props.match.params.token, API]);
 
@@ -80,12 +83,12 @@ const PassWordReset = (props) => {
   );
 
   const handlePasswordOne = (e) => {
-    if ( e.target.value.match(/^[a-zA-Z0-9!$#]*$/i) && e.target.value.length <= 20 ) {
+    if (e.target.value.match(/^[a-zA-Z0-9!$#]*$/i) && e.target.value.length <= 20) {
       setPassWordOne(e.target.value);
     }
   }
   const handlePasswordTwo = (e) => {
-    if ( e.target.value.match(/^[a-zA-Z0-9!$#]*$/i) && e.target.value.length <= 20 ) {
+    if (e.target.value.match(/^[a-zA-Z0-9!$#]*$/i) && e.target.value.length <= 20) {
       setPassWordTwo(e.target.value);
     }
   }
@@ -124,12 +127,36 @@ const PassWordReset = (props) => {
           }, 2500);
         })
         .catch(err => {
-          console.log(err);
-          Sentry.captureException(err);
-          setFail({ isFaield: true, message: 'Failed to Save Password', variation: 'error' });
-          setTimeout(() => {
-            setFail({ isFaield: false, message: '', variation: 'error' })
-          }, 2500);
+          // console.log(err);
+          const config = {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+          console.log("passwordResetDto:", passwordResetDto)
+          let data = {
+            userId: props.match.params.id,
+            password: PassWordOne,
+            confirmPassword: PassWordTwo,
+            token: props.match.params.token
+          }
+
+          Axios.post(NEWAPI + '/api/user', data, config)
+            .then(res => {
+              setDone(true);
+              setFail({ isFaield: true, message: 'Password Saved.', variation: 'success' });
+              setTimeout(() => {
+                setFail({ isFaield: false, message: '', variation: 'success' })
+                setRedirect(true)
+              }, 2500);
+            }).catch(error => {
+              Sentry.captureException(err);
+              setFail({ isFaield: true, message: 'Failed to Save Password', variation: 'error' });
+              setTimeout(() => {
+                setFail({ isFaield: false, message: '', variation: 'error' })
+              }, 2500);
+            });
+
         });
     }
   }
@@ -149,7 +176,7 @@ const PassWordReset = (props) => {
               Please enter and confirm your new password below.
             </Typography>
             <Typography variant="body1" align="center">
-              Up to 20 charactars, A-Z, a-z, 0-9 and allowed special charactars are: !$#
+              Min 9 characters, Up to 20 characters, A-Z, a-z, 0-9 and allowed special characters are: !$#
             </Typography>
           </Box>
         </Box>

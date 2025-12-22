@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import Axios from 'axios'
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
@@ -56,38 +57,54 @@ const EmailForm = () => {
   let form;
   const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
   const API = process.env.REACT_APP_API;
-
+  const NEWAPI = process.env.REACT_APP_API_NEW
   const handleChange = (e) => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setEmail({email: e.target.value, valid: pattern.test( e.target.value )});
+    setEmail({ email: e.target.value, valid: pattern.test(e.target.value) });
   }
 
   const handleClick = (e) => {
     e.preventDefault();
-
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
     if (email.email !== '') {
       setWait(true);
       axios.get(`${API}/password/lost-password-mail?email=${email.email}`)
-      .then(res => {
-        setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
-        setTimeout(() => {
-          setFail({ isFaield: false, message: '', variation: 'success' });
-          setWait(false);
-        }, 2500);
-      })
-      .catch(err => {
-        setFail({ isFaield: true, message: 'Failed to Send Email. Please Try Again.', variation: 'error' })
-        Sentry.captureException(err);
-        setTimeout(() => {
-          setFail({ isFaield: false, message: '', variation: 'error' })
-          setWait(false);
-        }, 2500);
-      })
+        .then(res => {
+          setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
+          setTimeout(() => {
+            setFail({ isFaield: false, message: '', variation: 'success' });
+            setWait(false);
+          }, 2500);
+        })
+        .catch(err => {
+          let data = { email: email.email }
+          Axios.post(NEWAPI + '/api/user', data, config)
+            .then(res => {
+              setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
+              setTimeout(() => {
+                setFail({ isFaield: false, message: '', variation: 'success' });
+                setWait(false);
+              }, 2500);
+            }).catch(error => {
+              console.error('EmailForm failure')
+              setFail({ isFaield: true, message: 'Failed to Send Email. Please Try Again.', variation: 'error' })//new user alert!
+              Sentry.captureException(err);
+              setTimeout(() => {
+                setFail({ isFaield: false, message: '', variation: 'error' })
+                setWait(false);
+              }, 2500);
+            });
+
+        })
     }
 
     else {
       setFail({ isFaield: true, message: 'Please enter an Email.', variation: 'error' });
-      setTimeout(() => setFail({isFaield: false, message: '', variation:'error'}), 2500);
+      setTimeout(() => setFail({ isFaield: false, message: '', variation: 'error' }), 2500);
     }
   }
 
@@ -133,7 +150,7 @@ const EmailForm = () => {
     )
   }
   else {
-    form = (<CircularProgress style={{margin: 'auto', marginTop: '36px'}}/>)
+    form = (<CircularProgress style={{ margin: 'auto', marginTop: '36px' }} />)
   }
 
   return (
@@ -144,15 +161,15 @@ const EmailForm = () => {
             Forgot your Password?
           </Typography>
         </Box>
-        <Divider className={classes.divider}/>
+        <Divider className={classes.divider} />
         <Box mt={1}>
-          <Typography  variant="body1" align="center">
+          <Typography variant="body1" align="center">
             No worries, enter your email and we'll send you a link to reset your password.
           </Typography>
         </Box>
       </Box>
       {form}
-      <SnackBar open={fail.isFaield} message={fail.message} variation={fail.variation}/>
+      <SnackBar open={fail.isFaield} message={fail.message} variation={fail.variation} />
     </form>
   );
 };
