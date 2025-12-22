@@ -72,7 +72,25 @@ const EmailForm = () => {
     }
     if (email.email !== '') {
       setWait(true);
-      axios.get(`${API}/password/lost-password-mail?email=${email.email}`)
+      let data = { email: email.email }
+      setWait(true);
+      Axios.post(NEWAPI + '/api/user', data, config)
+        .then(res => {
+          setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
+          setTimeout(() => {
+            setFail({ isFaield: false, message: '', variation: 'success' });
+            setWait(false);
+          }, 2500);
+        }).catch(error => {
+          console.error('EmailForm failure')
+          setFail({ isFaield: true, message: 'Failed to Send Email. Please Try Again.', variation: 'error' })//new user alert!
+          Sentry.captureException(err);
+          setTimeout(() => {
+            setFail({ isFaield: false, message: '', variation: 'error' })
+            setWait(false);
+          }, 2500);
+        });
+      /*axios.get(`${API}/password/lost-password-mail?email=${email.email}`)
         .then(res => {
           setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
           setTimeout(() => {
@@ -82,6 +100,7 @@ const EmailForm = () => {
         })
         .catch(err => {
           let data = { email: email.email }
+          setWait(true);
           Axios.post(NEWAPI + '/api/user', data, config)
             .then(res => {
               setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
@@ -99,7 +118,7 @@ const EmailForm = () => {
               }, 2500);
             });
 
-        })
+        })*/
     }
 
     else {
