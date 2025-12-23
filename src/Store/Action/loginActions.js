@@ -195,7 +195,7 @@ export const LoginNew = (username, password) => dispatch => {
       const decoded = jwt.decode(authToken);
       console.log('decoded', decoded)
       let decodedGoal = {
-        "fname": "Gregg Wiley",
+        "fname": "",
         "sub": username,
         "lname": "",
         "tz": moment.tz.guess(),
@@ -222,6 +222,7 @@ export const LoginNew = (username, password) => dispatch => {
       }
       decodedGoal.cid = res.data.user.id
       decodedGoal.postAWS = true
+      decodedGoal.fname = res.data.user.name
       const expirationDate = new Date(new Date().getTime() + 60 * 60 * 24 * 7);
       const refreshExpireTime = new Date(new Date().getTime() + 60 * 60 * 24 * 7);
 
@@ -245,7 +246,7 @@ export const LoginNew = (username, password) => dispatch => {
 
       console.log('login else')
       let resGoal2 = { ///welcome/v1/users luke
-        "fname": "Gregg Wiley",
+        "fname": "",
         "lname": "",
         "contactId": 411847,
         "emailId": moment.tz.guess(),
@@ -263,6 +264,7 @@ export const LoginNew = (username, password) => dispatch => {
         "userLevel": "Advanced One",
         "levelId": 3
       }
+      resGoal2.fname = res.data.user.name
       resGoal2.postAWS = true
       dispatch(
         LoginAsync(

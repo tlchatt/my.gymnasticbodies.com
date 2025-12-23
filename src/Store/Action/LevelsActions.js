@@ -13013,7 +13013,7 @@ export const getLevelPlanNew = () => (dispatch, getState) => {//userLevel: "Adva
   }
   data = levelId == 1 ? { ...intermediateOne } : levelId == 2 ? { ...intermediateTwo } : levelId == 3 ? { ...advancedOne } : { ...advancedTwo };
   let resLevelId
-  console.log('getLevelPLanNew = () =>  `/api/user` ',)
+  console.log('getLevelPLanNew = () =>  `/api/user/userStatus` ',)
   Axios.get(NEWAPI + '/api/user/userStatus', config)
     .then(res => {
       console.log("res in getLevelPlanNew:",res)
