@@ -428,7 +428,7 @@ export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState)
       leveld: leveld,
     }
   }
-  Axios.post(NEWAPI + '/api/user', data, config)
+  Axios.post(NEWAPI + '/api/user/userStatus', data, config)
     .then(res => {
       console.log("res in setLevelPathNew is:", res)
       let returnData = res.data[0]?.data;
@@ -13014,7 +13014,7 @@ export const getLevelPlanNew = () => (dispatch, getState) => {//userLevel: "Adva
   data = levelId == 1 ? { ...intermediateOne } : levelId == 2 ? { ...intermediateTwo } : levelId == 3 ? { ...advancedOne } : { ...advancedTwo };
   let resLevelId
   console.log('getLevelPLanNew = () =>  `/api/user` ',)
-  Axios.get(NEWAPI + '/api/user', config)
+  Axios.get(NEWAPI + '/api/user/userStatus', config)
     .then(res => {
       console.log("res in getLevelPlanNew:",res)
       let workoutSchedule = data ? _.cloneDeep(data) : {};

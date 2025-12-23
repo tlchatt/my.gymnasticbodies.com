@@ -141,7 +141,7 @@ const PassWordReset = (props) => {
             token: props.match.params.token
           }
 
-          Axios.post(NEWAPI + '/api/user', data, config)
+          Axios.post(NEWAPI + '/api/user/resetPassword', data, config)
             .then(res => {
               setDone(true);
               setFail({ isFaield: true, message: 'Password Saved.', variation: 'success' });
