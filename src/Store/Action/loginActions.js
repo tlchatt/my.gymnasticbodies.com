@@ -504,7 +504,7 @@ export const authCheckState = (props) => dispatch => {
       decodedGoal.cid = userId
       decodedGoal.postAWS = true
       let resGoal2 = { ///welcome/v1/users luke
-        "fname": "Gregg Wiley",
+        "fname": "",
         "lname": "",
         "contactId": 411847,
         "emailId": moment.tz.guess(),
@@ -522,6 +522,7 @@ export const authCheckState = (props) => dispatch => {
         "userLevel": levelObj[userLevelID]?.userLevel ? levelObj[userLevelID]?.userLevel : "Advanced One",
         "levelId": userLevelID ? userLevelID : 3
       }
+      resGoal2.fname = res.data.user.name
       resGoal2.postAWS = true
       let freeMember = false
       dispatch(

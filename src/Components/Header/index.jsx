@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -10,7 +10,7 @@ import {
 import { NavLink } from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
 import axios from 'axios';
-import { connect, useSelector, useDispatch} from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import * as Sentry from "@sentry/react";
 
 import * as actions from '../../Store/Action/index';
@@ -140,16 +140,16 @@ function PrimarySearchAppBar(props) {
             {
               isThriveUser
                 ? <SubMenu icon={true} handleOpen={handleOpenThrive} anchorEl={anchorElThrive} handleClose={handleCloseThrive} >
-                    <MenuItem to="/thrive-profile" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>My Profile</MenuItem>
-                    <Divider />
-                    <MenuItem to="/thrive-lessons" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>Thrive Lessons</MenuItem>
-                    <MenuItem to="/thrive-tasks" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>Thrive Tasks</MenuItem>
-                    <Divider />
+                  <MenuItem to="/thrive-profile" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>My Profile</MenuItem>
+                  <Divider />
+                  <MenuItem to="/thrive-lessons" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>Thrive Lessons</MenuItem>
+                  <MenuItem to="/thrive-tasks" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>Thrive Tasks</MenuItem>
+                  <Divider />
                   <MenuItem className={classes.menuList} onClick={() => {
                     handleCloseThrive()
                     setResetThrive(true)
                   }}>Reset Thrive</MenuItem>
-                  </SubMenu>
+                </SubMenu>
                 : null
             }
             <SubMenu handleOpen={handleOpen} anchorEl={anchorEl} handleClose={handleClose}>
@@ -164,7 +164,7 @@ function PrimarySearchAppBar(props) {
                   window.Beacon('init', 'eac459f5-02ec-46c7-a03e-929012bfa66a')
                   setIsOpen(true)
                 }
-              }}>{ isOpen ? 'Close Support' : 'Open Support' }</MenuItem>
+              }}>{isOpen ? 'Close Support' : 'Open Support'}</MenuItem>
               <MenuItem href="https://www.gymnasticbodies.com/forum/" component={Link} className={classes.menuList}>Forum</MenuItem>
               {
                 isAdmin
