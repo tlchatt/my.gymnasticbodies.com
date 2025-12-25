@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import axios from 'axios'
 import moment from 'moment-timezone'
 import _ from 'lodash'
 import * as Sentry from "@sentry/react";
@@ -8,7 +9,6 @@ import * as actionTypes from '../Action/actionTypes';
 import { AxiosConfig } from '../util'
 import { showToast } from './calendarActions';
 import { SET_PROGRESSION } from './LegacyAction';
-import axios from 'axios'
 const NEWAPI = process.env.REACT_APP_API_NEW
 
 export const getBeginnerLevel = () => (dispatch, getState) => {/* incomplete, has failover directly to lukeData */
@@ -375,12 +375,10 @@ export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) =>
   if (userLevel === "New User" && leveld === 0) {
     workoutOrPlanId = 1;
   }
-
-  Axios(AxiosConfig('post', `/myschedule/choose/level/${leveld}/users/${UserId}?workoutOrPlanId=${workoutOrPlanId}&date=${currentDate}`, webToken))
+  const config = AxiosConfig('post', `/myschedule/choose/level/${leveld}/users/${UserId}?workoutOrPlanId=${workoutOrPlanId}&date=${currentDate}`, webToken)
+  axios(config)
     .then(res => {
-      console.log('setLevelPath .then', res)
       if (res.status != 200) {
-        console.log('setLevelPath dispatch(setLevelPathNew());')
         dispatch(setLevelPathNew(leveld, workoutOrPlanId));
       }
       dispatch({
@@ -403,17 +401,16 @@ export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) =>
       }
     }).catch(error => {
       console.log('setLevelPath .catch error', error)
-      console.log('setLevelPath dispatch(setLevelPathNew());')
       dispatch(setLevelPathNew(leveld, workoutOrPlanId));
 
     });
 }
 export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState) => {
-  console.log('setLevelPathNew = (leveld, workoutOrPlanId)', leveld, workoutOrPlanId)
   const state = getState();
   let resLevelId
   const { webToken, UserId, timezone, userLevel } = state.login;
   const currentDate = moment().tz(timezone).format('YYYY-MM-DD');
+  let type = 'levelPath'
   const config = {
     headers: {
       "Content-Type": "application/json"
@@ -422,15 +419,15 @@ export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState)
   let data = {
     userId: UserId,
     currentDate: currentDate,
-    type: 'levelPath',
+    type: type,
     data: {
       workoutOrPlanId: workoutOrPlanId,
       leveld: leveld,
     }
   }
+
   Axios.post(NEWAPI + '/api/user/userStatus', data, config)
     .then(res => {
-      console.log("res in setLevelPathNew is:", res)
       let returnData = res.data[0]?.data;
       resLevelId = JSON.parse(returnData).leveld;
       dispatch({
@@ -442,7 +439,7 @@ export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState)
       })
     }).then(() => {
       if (between(resLevelId, 1, 4)) {
-        dispatch(getLevelPLan());
+        dispatch(getLevelPLan(type));
       }
     }).catch(error => {
       console.error('setLevelPathNew failure')
@@ -545,7 +542,7 @@ const checkGroup = workouts => {
   return workouts.every(item => item.group === first) ? first : '';
 }
 const showRefreshArray = ['Warm-Up', 'Mobility', 'Stretch'];
-export const getLevelPLan = () => (dispatch, getState) => {/*  has failover directly to getLevelPLanNew */
+export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover directly to getLevelPLanNew */
   const state = getState();
   const { webToken, UserId, levelId } = state.login;
   console.log('getLevelPLan = () =>  `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}` ',)
@@ -3039,10 +3036,10 @@ export const getLevelPLan = () => (dispatch, getState) => {/*  has failover dire
     }).catch(error => {
       // Sentry.captureException(error);
       console.log('getLevelPLan dispatch(getLevelPlanNew());')
-      dispatch(getLevelPlanNew());
+      dispatch(getLevelPlanNew(type));
     });
 }
-export const getLevelPlanNew = () => (dispatch, getState) => {//userLevel: "Advanced One"
+export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "Advanced One"
   const state = getState();
   const { webToken, UserId, levelId } = state.login;
   const config = {
@@ -3051,8 +3048,9 @@ export const getLevelPlanNew = () => (dispatch, getState) => {//userLevel: "Adva
     }
   }
   let userData = {
-    userId: UserId
-    }
+    userId: UserId,
+    type:type ? type : "levelPath"
+  }
   let data = {}
   /*new data*/
   let intermediateOne = {
@@ -3062,7 +3060,8 @@ export const getLevelPlanNew = () => (dispatch, getState) => {//userLevel: "Adva
         "classId": 59600,
         "type": "Class",
         "dayIndex": 1,
-        "workout": {
+        "workout":
+        {
           "className": "7 Minute Warm-Up",
           "trainingType": "Warm-Up",
           "mediaId": "jTRUtQhq.json?exp=1766067687919&sig=64547cb3781a4883e5127a12cb5943ff",
@@ -3076,7 +3075,8 @@ export const getLevelPlanNew = () => (dispatch, getState) => {//userLevel: "Adva
         "classId": 59614,
         "type": "Class",
         "dayIndex": 1,
-        "workout": {
+        "workout":
+        {
           "className": "Weighted Mobility",
           "trainingType": "Mobility",
           "mediaId": "mKoTBi6y.json?exp=1766067687919&sig=dd71ba5d16f64c3466423e7466789d5f",
@@ -13012,11 +13012,13 @@ export const getLevelPlanNew = () => (dispatch, getState) => {//userLevel: "Adva
     "SUNDAY,DECEMBER 21": null
   }
   data = levelId == 1 ? { ...intermediateOne } : levelId == 2 ? { ...intermediateTwo } : levelId == 3 ? { ...advancedOne } : { ...advancedTwo };
-  let resLevelId
-  console.log('getLevelPLanNew = () =>  `/api/user` ',)
-  Axios.get(NEWAPI + '/api/user/userStatus', config)
+  
+  Axios.get(NEWAPI + '/api/user/userStatus', {
+    params: userData
+  }, config)
     .then(res => {
-      console.log("res in getLevelPlanNew:",res)
+      let userLevelId = JSON.parse(res.data.data).leveld
+      localStorage.setItem('userLevelID', userLevelId);
       let workoutSchedule = data ? _.cloneDeep(data) : {};
       let keys = Object.keys(workoutSchedule);
       keys.forEach(k => {

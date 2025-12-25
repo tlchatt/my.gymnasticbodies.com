@@ -55,7 +55,8 @@ const WorkoutPlanner = (props) => {
   const [hideIcons, setHideIcons] = useState(false);
 
   const {
-    closeMainPlayer,
+    //PC
+    closeMainPlayer = () => { setOpenPlayer({}); },
     dateKey,
     dateKeyIndex,
     isPreviousDay,

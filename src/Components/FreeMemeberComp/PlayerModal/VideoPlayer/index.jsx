@@ -38,7 +38,9 @@ const roundsVideos = ['dv3fDTHu', 'p27gF1IA', '3fYLcxKE', 'GSI3BdwX', 'CumrD3vW'
 const VideoPlayer = props => {
   const playerSignedUrl = useSelector(state => state.login.signedUrl);
   const dayView = useSelector(state => state.freeMember.dayView);
-  const { open, singleProg, dateKey, levelsPlayer, withIcons, isBeginnerPlan} = props;
+  // const { open, singleProg, dateKey, levelsPlayer, withIcons, isBeginnerPlan} = props;
+  //PC
+  const { open, singleProg, dateKey, levelsPlayer=true, withIcons, isBeginnerPlan=true} = props;
   const beginnerVideos = useSelector(state => state.levels.userSchedule);
   const byoSchedule = useSelector(state => state.buildYourOwn.userSchedule);
   const [followAlongArray, setFollowAlongArray] = useState([])

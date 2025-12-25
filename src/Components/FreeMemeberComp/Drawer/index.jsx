@@ -165,13 +165,11 @@ function between(x, min, max) {
 }
 
 export default function MiniDrawer(props) {
-  console.log('MiniDrawer props', props)
   const classes = useStyles();
   const [open, setOpen] = React.useState(props.isMobile ? false : true);
   const userNameFullName = useSelector(state => state.login.name)
   const levelId = useSelector(state => state.login.levelId)
   const postAWS = useSelector(state => state.login.postAWS)
-  console.log('useSelector(state => state.login.levelId)', useSelector(state => state.login))
 
   const location = useLocation();
   const history = useHistory();

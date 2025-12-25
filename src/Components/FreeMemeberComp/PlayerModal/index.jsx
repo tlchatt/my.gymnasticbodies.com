@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import { makeStyles, Typography, Grid} from '@material-ui/core';
+import { makeStyles, Typography, Grid } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 // import './testing.scss'
@@ -67,12 +67,16 @@ const PlayerModal = props => {
   const theme = useTheme();
   const phoneScreen = useMediaQuery(theme.breakpoints.down(426));
   const classes = useSytles(phoneScreen);
-  const { open, isFollowAlong, isIndividualVideo} = props;
+  const { open, isFollowAlong, isIndividualVideo } = props;
 
-  const title = props.levelsPlayer && !isIndividualVideo
+  // let title = props.levelsPlayer && !isIndividualVideo
+  //   ? `${props.trainingType} - ${props.className} `
+  //   : `${isIndividualVideo ? props.trainingType +' - ' : '' }${props.exerciseName} - ${props.repsOrSecs}`;
+
+  //PC
+  let title = props.levelsPlayer || !isIndividualVideo
     ? `${props.trainingType} - ${props.className} `
-    : `${isIndividualVideo ? props.trainingType +' - ' : '' }${props.exerciseName} - ${props.repsOrSecs}`;
-
+    : `${isIndividualVideo ? props.trainingType + ' - ' : ''}${props.exerciseName} - ${props.repsOrSecs}`;
 
   return (
     <React.Fragment>
@@ -88,7 +92,7 @@ const PlayerModal = props => {
         scroll='body'
       >
         <MuiDialogTitle disableTypography className={classes.modalHead}>
-          <Typography variant="h6">{isFollowAlong ? 'Follow Along' : title }</Typography>
+          <Typography variant="h6">{isFollowAlong ? 'Follow Along' : title}</Typography>
           <IconButton aria-label="close" className={classes.closeButton} onClick={props.handleClose}>
             <CloseIcon />
           </IconButton>

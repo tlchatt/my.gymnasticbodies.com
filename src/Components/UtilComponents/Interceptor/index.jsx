@@ -40,7 +40,6 @@ const Interceptor = props => {
                   'Authorization': 'Bearer ' + localStorage.getItem('refreshToken')
                 }
               }
-              
               let res = fetch(API + '/auth/refreshToken', config)
                 .then(res => res.json()).then(res => {
                   originalReq.headers['Authorization'] = 'Bearer ' + res.authorizationToken;

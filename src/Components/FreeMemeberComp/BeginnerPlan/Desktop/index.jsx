@@ -17,7 +17,7 @@ const areAllSameBool = (arr, name) => {
   return arr.every(item => item[name] === first) ? first : false;
 }
 
-const DekstopViewBeginnerPlan = (props) => {
+const DekstopViewBeginnerPlans = (props) => {
   // props
   const { weekDays, currentDayIndex, setGenerateWorkout, isMobile, userSchedule } = props;
 
@@ -145,4 +145,4 @@ const DekstopViewBeginnerPlan = (props) => {
   )
 }
 
-export default DekstopViewBeginnerPlan;
+export default DekstopViewBeginnerPlans;

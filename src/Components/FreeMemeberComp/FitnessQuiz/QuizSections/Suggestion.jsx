@@ -159,7 +159,6 @@ const Suggestion = (props) => {
       }
     }
     else {
-      console.log("here1")
       dispatch(openOhNo());
     }
   }

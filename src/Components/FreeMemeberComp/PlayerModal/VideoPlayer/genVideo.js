@@ -2,23 +2,30 @@ const utilFunctions =  {
   createFollowAlongPlaylist: async ( dayView, dateKey, arrayToProccess, singleProg, preVideo, leftRightArray, roundsVideos ) => {
     const workout = arrayToProccess.map(workout => {
       let sets = 0;
-      if (workout.repsOrSecs.charAt(workout.repsOrSecs.length - 1) === 's') {
+      if (workout?.repsOrSecs?.charAt(workout?.repsOrSecs?.length - 1) === 's') {
         sets = parseInt(workout.repsOrSecs) / 5;
       }
       else {
-        sets = parseInt(workout.repsOrSecs)
+        // PC - sets = parseInt(workout.repsOrSecs)
+        sets = parseInt(workout.repsOrSecs ? workout.repsOrSecs : "0")
       }
 
-      if (workout.videos.length > 1) {
+      if (workout?.videos?.length > 1) {
         return {
           video: workout.videos[0].mediaId,
           videoB: workout.videos[1].mediaId,
           sets: sets,
         }
+      }else{
+        //PC
+        return {
+          video: workout.mediaId,
+          sets: sets,
+        }
       }
 
       return {
-        video: workout.videos[0].mediaId,
+        video: workout?.videos[0]?.mediaId,
         sets: sets,
       }
     })

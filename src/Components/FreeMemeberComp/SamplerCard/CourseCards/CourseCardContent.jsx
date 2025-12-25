@@ -62,11 +62,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function CourseCardContent(props) {
   const classes = useStyles();
-
   return (
     <>
       <div className={clsx(classes.subCardContent, { [classes.extraMargin]: props.extraMargin })}>
-        <CardActionArea className={classes.cardImageAction} onClick={props.playVideo} disabled={props.isPreviousDay}>
+        {/* PC */}
+        {/* <CardActionArea className={classes.cardImageAction} onClick={props.playVideo} disabled={props.isPreviousDay}> */}
+        <CardActionArea className={classes.cardImageAction} onClick={props.playVideo} disabled={false}>
           <CardMedia
             className={classes.media}
             image={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.image}`}

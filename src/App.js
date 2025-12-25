@@ -44,7 +44,7 @@ import AlertNotice from './HOC/Alert';
 const db = firebase.database();
 
 function App(props) {
-  console.log('App props', props)
+  // console.log('App props', props)
   let routes;
   const { checkLogin } = props;
 

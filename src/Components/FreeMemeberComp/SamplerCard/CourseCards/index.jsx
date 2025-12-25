@@ -105,7 +105,6 @@ export default function CourseCards(props) {
       props.openPlayerModal(props)
     }
   };
-
   return (
     <Card className={classes.root} elevation={3} square>
       <CardHeader
