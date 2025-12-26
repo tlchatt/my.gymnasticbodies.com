@@ -5,11 +5,39 @@ import * as Sentry from "@sentry/react";
 import moment from 'moment-timezone'
 import { showToast } from './calendarActions'
 import { AxiosConfig } from '../util'
-import { levelObj } from './LevelsActions';
 
 const API = process.env.REACT_APP_API;
 const NEWAPI = process.env.REACT_APP_API_NEW
-
+const levelObj = {
+  0: {
+    userLevel: 'Beginner',
+    levelId: 0
+  },
+  1: {
+    userLevel: 'Intermediate One',
+    levelId: 1
+  },
+  2: {
+    userLevel: 'Intermediate Two',
+    levelId: 2
+  },
+  3: {
+    userLevel: 'Advanced One',
+    levelId: 3
+  },
+  4: {
+    userLevel: 'Advanced Two',
+    levelId: 4
+  },
+  9: {
+    userLevel: 'White Board',
+    levelId: 9
+  },
+  10: {
+    userLevel: 'Build Your Own',
+    levelId: 10
+  }
+}
 const LoginStart = () => {
   return {
     type: actionTypes.LOGN_START
@@ -263,7 +291,7 @@ export const LoginNew = (username, password) => dispatch => {
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('refreshExpireTime', refreshExpireTime);
       localStorage.setItem('timezone', timezone);
-
+      const userLevelID = localStorage.getItem('userLevelID');
       let userConfig = {
         headers: {
           "Content-Type": "application/json",
@@ -275,7 +303,7 @@ export const LoginNew = (username, password) => dispatch => {
       console.log("freeMember:", freeMember)
 
       let resGoal2 = { ///welcome/v1/users luke
-        "fname": res.data.user.name,
+        "fname": res?.data?.user?.name ? res?.data?.user?.name : "User",
         "lname": "",
         "contactId": 411847,
         "emailId": moment.tz.guess(),
@@ -290,8 +318,8 @@ export const LoginNew = (username, password) => dispatch => {
           3,
           4
         ],
-        "userLevel": "Advanced One",
-        "levelId": 3
+        "userLevel": levelObj[userLevelID]?.userLevel ? levelObj[userLevelID]?.userLevel : "Advanced One",
+        "levelId":  userLevelID ? userLevelID : 3
       }
       resGoal2.postAWS = true
       dispatch(
@@ -418,6 +446,7 @@ export const authCheckState = (props) => dispatch => {
   const userName = localStorage.getItem('username');
   const name = localStorage.getItem('name');
 
+  console.log("userLevelID:",userLevelID ? userLevelID : 3)
   if (!authToken || !refreshToken || !refreshExpireTime || !authExpireTime || !timezone) {
     dispatch(setDidTryAL());
     dispatch(Logout());
@@ -445,36 +474,7 @@ export const authCheckState = (props) => dispatch => {
       dispatch(setDidTryAL());
       dispatch(Logout());
     } else {
-      const levelObj = {
-        0: {
-          userLevel: 'Beginner',
-          levelId: 0
-        },
-        1: {
-          userLevel: 'Intermediate One',
-          levelId: 1
-        },
-        2: {
-          userLevel: 'Intermediate Two',
-          levelId: 2
-        },
-        3: {
-          userLevel: 'Advanced One',
-          levelId: 3
-        },
-        4: {
-          userLevel: 'Advanced Two',
-          levelId: 4
-        },
-        9: {
-          userLevel: 'White Board',
-          levelId: 9
-        },
-        10: {
-          userLevel: 'Build Your Own',
-          levelId: 10
-        }
-      }
+      
       let decodedGoal = {
         "fname": name ? name : "User",
         "sub": userName,
