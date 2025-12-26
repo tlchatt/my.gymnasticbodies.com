@@ -522,7 +522,7 @@ export const authCheckState = (props) => dispatch => {
         "userLevel": levelObj[userLevelID]?.userLevel ? levelObj[userLevelID]?.userLevel : "Advanced One",
         "levelId": userLevelID ? userLevelID : 3
       }
-      resGoal2.fname = res.data.user.name
+      resGoal2.fname = name
       resGoal2.postAWS = true
       let freeMember = false
       dispatch(
