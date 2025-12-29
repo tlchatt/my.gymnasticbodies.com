@@ -183,8 +183,8 @@ export default function MiniDrawer(props) {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
 
   const OpenDrawerRedux = useSelector(state => state.OpenDrawer);
-
-
+    console.log('OpenDrawerRedux', OpenDrawerRedux)
+    console.log('openDrawer', openDrawer)
   useEffect(() => {
     if (OpenDrawerRedux.open) {
       setOpenDrawer({
@@ -230,11 +230,11 @@ export default function MiniDrawer(props) {
         handleCloseDrawer();
       }
       else {
+        console.log(' else setOpenDrawer')
         setOpenDrawer({ open: true, componentId: id });
       }
     }
   };
-
 
   const handleDrawer = () => {
     setOpen(!open);

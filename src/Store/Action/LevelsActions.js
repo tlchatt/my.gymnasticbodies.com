@@ -560,7 +560,7 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
           "mediaId": "UCGHRpMp.json?exp=1765848832826&sig=2e3935fef5ceb919cb43c9a26c7e6412",
           "image": "330x220-ExtendedWU.jpg",
           "description": "This 25-minute warm-up will create heat in your body from head to toe, while focusing on active and engaging stretches to increase your flexibility while getting you fired up!",
-          "isLogged": true
+          "isLogged": false
         }
       },
       {
@@ -574,7 +574,7 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
           "mediaId": "cgQuL34L.json?exp=1765848832826&sig=9f2f596733f5601e54d9764ee4d74bdb",
           "image": "330x220-satshoulders.jpg",
           "description": "Follow along with this prehab routine used weekly by Coach Sommer’s athletes to keep your shoulders healthy and strong. All it requires is a couple light dumbbells and a set of rings.",
-          "isLogged": true
+          "isLogged": false
         }
       },
       {
@@ -662,7 +662,7 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
                 "usersWorkoutSettingsId": 5211183,
                 "setsAndReps": "3x1r",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -817,7 +817,7 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
                 "usersWorkoutSettingsId": 5211184,
                 "setsAndReps": "3x1rx10s",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -978,7 +978,7 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
                 "usersWorkoutSettingsId": 5211179,
                 "setsAndReps": "3x3r",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -3169,7 +3169,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211479,
                 "setsAndReps": "3x3r",
                 "order": 1,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -3348,7 +3348,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211480,
                 "setsAndReps": "3x3r",
                 "order": 1,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -3521,7 +3521,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211481,
                 "setsAndReps": "3x3r",
                 "order": 1,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -3743,7 +3743,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211476,
                 "setsAndReps": "3x12s",
                 "order": 1,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -3922,7 +3922,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211477,
                 "setsAndReps": "3x6r",
                 "order": 1,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -4095,7 +4095,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211478,
                 "setsAndReps": "3x3r",
                 "order": 1,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -4287,7 +4287,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211482,
                 "setsAndReps": "3x3r",
                 "order": 1,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -5861,7 +5861,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211530,
                 "setsAndReps": "3x1r",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -6016,7 +6016,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211531,
                 "setsAndReps": "3x1rx10s",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -6177,7 +6177,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211526,
                 "setsAndReps": "3x3r",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -6381,7 +6381,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211525,
                 "setsAndReps": "3x1rx10s",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -6542,7 +6542,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211527,
                 "setsAndReps": "3x2r",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
@@ -6703,7 +6703,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
                 "usersWorkoutSettingsId": 5211528,
                 "setsAndReps": "3x1r",
                 "order": 7,
-                "isLogged": true,
+                "isLogged": false,
                 "notes": null,
                 "workoutInfo": {
                   "Strength": {
