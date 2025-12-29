@@ -73,7 +73,7 @@ function PrimarySearchAppBar(props) {
   const isAdmin = useSelector(state => state.login.isAdmin ? true : false);
   const webToken = useSelector(state => state.login.webToken);
   const userId = useSelector(state => state.login.UserId);
-
+  const postAWS = useSelector(state => state.login.postAWS)
   const [anchorEl, setAnchorEl] = useState(null);
   const handleOpen = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
@@ -154,7 +154,9 @@ function PrimarySearchAppBar(props) {
             }
             <SubMenu handleOpen={handleOpen} anchorEl={anchorEl} handleClose={handleClose}>
               <MenuItem href="https://www.gymnasticbodies.com/my-account/" component={Link} className={classes.menuList}>Manage Subscription</MenuItem>
-              <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem>
+              {!postAWS &&
+                  <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem>
+              }
               <Divider />
               <MenuItem className={classes.menuList} onClick={() => {
                 if (isOpen) {
