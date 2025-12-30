@@ -85,6 +85,7 @@ const LoginFrom = (props) => {
           onChange={(event) => props.handleUserName(event)}
           error={!props.validEmail}
           helperText={props.validEmail ? ''  : 'Please Enter a Valid Email'}
+          inputProps={{ 'data-hj-whitelist': 'true' }}
         />
         <TextField
           variant="outlined"
@@ -97,6 +98,7 @@ const LoginFrom = (props) => {
           id="password"
           autoComplete="current-password"
           onChange={(event) => props.handlePassword(event)}
+          inputProps={{ 'data-hj-whitelist': 'true' }}
         />
         <Button
           type="submit"
