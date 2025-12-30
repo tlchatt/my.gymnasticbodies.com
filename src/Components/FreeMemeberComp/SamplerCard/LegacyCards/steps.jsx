@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from "react-redux";
 import clsx from 'clsx';
 
-import { ManageDificulty } from '../../../../Store/Action/LevelsActions.js'
+import { getLevelPLan, ManageDificulty, ManageDificultyNew } from '../../../../Store/Action/LevelsActions.js'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,27 +41,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Steps = (props) => {
+
   const { min, max } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
 
 
   const {
-    workoutIndex,
-    dateKey,
-    dateKeyIndex,
-    progressionIndex,
-    exerciseId,
-    step,
-    disabled,
-    isMobileView
+    workoutIndex,//2
+    dateKey,//MONDAY,DECEMBER 29
+    dateKeyIndex,//0
+    progressionIndex,//0
+    exerciseId,//1
+    step,//9
+    disabled,//false
+    isMobileView,//undefined
+    section
   } = props;
-
+  
   const [loading, SetLoading] = useState(false);
-
   const handleDifficulty = (type) => {
     SetLoading(true)
-    dispatch(ManageDificulty(workoutIndex, dateKey, dateKeyIndex, exerciseId, type, progressionIndex))
+    console.log("inside handleDifficulty step",step)
+    //Original: 
+    dispatch(ManageDificulty(workoutIndex, dateKey, dateKeyIndex, exerciseId, type, section,step))
+    //PC:
+    dispatch(ManageDificultyNew(workoutIndex, dateKey, dateKeyIndex, exerciseId, type,section,step))
   }
 
   React.useEffect(() => {
@@ -69,8 +74,7 @@ const Steps = (props) => {
       SetLoading(false)
     }
     // eslint-disable-next-line
-  } , [props.step])
-
+  }, [props.step])
   return (
     <ButtonGroup
       // orientation="vertical"
@@ -79,9 +83,10 @@ const Steps = (props) => {
     >
       <Button
         size="small"
-        onClick={ ()=>handleDifficulty('down') }
-        className={clsx([classes.button, classes.decrement ])}
-        disabled={props.disabled || step === min || loading || disabled }
+        onClick={() => handleDifficulty('down')}
+        className={clsx([classes.button, classes.decrement])}
+        //disabled={props.disabled || step === min || loading || disabled }
+        disabled={step === min}
       >
         <ChevronLeftIcon />
       </Button>
@@ -97,9 +102,10 @@ const Steps = (props) => {
       </Button>
       <Button
         size="small"
-        onClick={ ()=>handleDifficulty('up') }
+        onClick={() => handleDifficulty('up')}
         className={clsx([classes.button, classes.increment])}
-        disabled={props.disabled || step === max || loading || disabled}
+        // disabled={props.disabled || step === max || loading || disabled}
+        disabled={step === max}
       >
         <ChevronRightIcon />
       </Button>

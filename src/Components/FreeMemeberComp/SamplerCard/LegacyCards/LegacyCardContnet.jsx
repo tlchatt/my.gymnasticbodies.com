@@ -132,7 +132,6 @@ export default function CourseCardContent(props) {
 
   const workoutInfoObjectkeys = Object.keys(workoutInfo);
 
-
   return (
     <>
       <div className={clsx(classes.subCardContent, { [classes.extraMargin]: props.extraMargin })}>
@@ -143,42 +142,50 @@ export default function CourseCardContent(props) {
           {
             workoutInfoObjectkeys.map((key, index) => {
               return (
-                <div className={classes.innerContent} key={index}>
-                  <CardActionArea
-                    className={classes.cardImageAction}
-                    onClick={() => handleLegacyPlayer(
-                      workoutInfo[key].name,
-                      workoutInfo[key].setsAndReps,
-                      workoutInfo[key].instructions,
-                      workoutInfo[key].focusPoints,
-                      workoutInfo[key].videos[0].videoName,
-                      workoutInfo[key].technicalTips
-                    )}
-                  >
-                    <div className={classes.category}>
-                      <Typography align='center' style={{fontFamily: 'Helvetica Neue, "Open Sans", sans-serif'}} >{key}</Typography>
-                    </div>
-                    <CardMedia
-                      className={classes.media}
-                      image={`https://gymfit-images.s3.amazonaws.com/exercises/${workoutInfo[key].imageName.split('.').join('').toUpperCase()}.jpg`}
-                      title={workoutInfo[key].name}
-                    />
-                    <div className={`${classes.overLay}`}>
-                      <PlayCircleOutlineIcon className={classes.playButtonIcon} />
-                    </div>
-                  </CardActionArea>
-                  <Typography variant='subtitle2' style={{ color: "#FF9435", maxWidth: 160 }} noWrap>
-                    {workoutInfo[key].setsAndReps} - {workoutInfo[key].name}
-                  </Typography>
-                </div>
+                <> 
+                  {console.log("key:", key)}
+                  {console.log("workoutInfo:",workoutInfo)}
+                  {console.log("workoutInfo[key]:",workoutInfo[key])}
+                  {console.log("workoutInfo[key].setsAndReps:",workoutInfo[key].setsAndReps)}
+                  
+                  <div className={classes.innerContent} key={index}>
+                    <CardActionArea
+                      className={classes.cardImageAction}
+                      onClick={() => handleLegacyPlayer(
+                        workoutInfo[key].name,
+                        workoutInfo[key].setsAndReps,
+                        workoutInfo[key].instructions,
+                        workoutInfo[key].focusPoints,
+                        workoutInfo[key].videos[0].videoName,
+                        workoutInfo[key].technicalTips
+                      )}
+                    >
+                      <div className={classes.category}>
+                        <Typography align='center' style={{ fontFamily: 'Helvetica Neue, "Open Sans", sans-serif' }} >{key}</Typography>
+                      </div>
+                      <CardMedia
+                        className={classes.media}
+                        image={`https://gymfit-images.s3.amazonaws.com/exercises/${workoutInfo[key].imageName.split('.').join('').toUpperCase()}.jpg`}
+                        title={workoutInfo[key].name}
+                      />
+                      <div className={`${classes.overLay}`}>
+                        <PlayCircleOutlineIcon className={classes.playButtonIcon} />
+                      </div>
+                    </CardActionArea>
+                    <Typography variant='subtitle2' style={{ color: "#FF9435", maxWidth: 160 }} noWrap>
+                      {workoutInfo[key].setsAndReps} - {workoutInfo[key].name}
+                    </Typography>
+                  </div>
+                </>
               )
             })
           }
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', marginTop: 4}}>
+        <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', marginTop: 4 }}>
           <div>
             <Steps
               step={stepNo}
+              section={section}
               min={1}
               max={9}
               workoutIndex={workoutIndex}
@@ -205,7 +212,7 @@ export default function CourseCardContent(props) {
               style={{ marginLeft: 4 }}
             >
               {notes ? <EditOutlinedIcon /> : <NoteAddOutlinedIcon />}
-              </Button>
+            </Button>
 
             <Popover
               anchorEl={anchorEl}
@@ -222,7 +229,7 @@ export default function CourseCardContent(props) {
 
       </div>
       {showDivider && <Divider orientation="vertical" flexItem />}
-      { isMobileView && <Divider />}
+      {isMobileView && <Divider />}
     </>
   );
 }
