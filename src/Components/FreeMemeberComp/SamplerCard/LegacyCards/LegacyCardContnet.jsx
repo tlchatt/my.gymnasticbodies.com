@@ -142,12 +142,7 @@ export default function CourseCardContent(props) {
           {
             workoutInfoObjectkeys.map((key, index) => {
               return (
-                <> 
-                  {console.log("key:", key)}
-                  {console.log("workoutInfo:",workoutInfo)}
-                  {console.log("workoutInfo[key]:",workoutInfo[key])}
-                  {console.log("workoutInfo[key].setsAndReps:",workoutInfo[key].setsAndReps)}
-                  
+                <>
                   <div className={classes.innerContent} key={index}>
                     <CardActionArea
                       className={classes.cardImageAction}

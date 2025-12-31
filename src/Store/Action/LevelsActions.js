@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import { useSelector } from 'react-redux';
 import axios from 'axios'
 import moment from 'moment-timezone'
 import _ from 'lodash'
@@ -10193,40 +10194,113 @@ export const logAllBeginnerWorkout = (dateIndex, dateKey, courseIds = []) => (di
     ? courseIds
     : newWorkoutData.filter(w => w.isLogged === false).map(w => w.classId);
 
+  Axios(AxiosConfig('POST', `/class-log/beginner/users/${UserId}?loggedDate=${date}`, webToken, { data: courseIdArray }))
+    .then(res => {
+      console.log('Axios response:', res);
 
-  Axios(AxiosConfig('POST', `/class-log/beginner/users/${UserId}?loggedDate=${date}`, webToken, { data: courseIdArray })).then(res => {
-    courseIdArray.forEach(c => {
-      const index = newWorkoutData.findIndex(w => w.classId === c);
-      newWorkoutData[index].isLogged = true;
+      courseIdArray.forEach(c => {
+        const index = newWorkoutData.findIndex(w => w.classId === c);
+        newWorkoutData[index].isLogged = true;
+      });
+
+      let action = levelsOneToFour ?
+        { type: actionTypes.LOG_NON_LEGACY_WORKOUT, payload: { userSchedule: { ...userSchedule, [dateKey]: [...newWorkoutData] } } } :
+        { type: actionTypes.LOG_NON_LEGACY_WORKOUT, payload: { userSchedule: { ...userSchedule, [dateKey]: { ...userSchedule[dateKey], classesList: newWorkoutData } } } };
+      dispatch(action);
+    })
+    .catch(error => {
+      Sentry.captureException(error);
+    });
+
+}
+export const logAllBeginnerWorkoutNew = (dateIndex, dateKey, courseIds = []) => (dispatch, getState) => {
+  const state = getState();
+  const { webToken, UserId, timezone, levelId } = state.login;
+  const { userSchedule } = state.levels;
+  const date = getCalanderDate(timezone)[dateIndex];
+
+  const levelsOneToFour = between(levelId, 1, 4);
+
+  let newWorkoutData = levelsOneToFour ? userSchedule[dateKey] : userSchedule[dateKey].classesList;
+  let newData = newWorkoutData ? _.cloneDeep(newWorkoutData) : [];
+
+
+  let courseIdArray = courseIds.length > 0
+    ? courseIds
+    : newWorkoutData.filter(w => w.isLogged === false).map(w => w.classId);
+
+  courseIdArray.forEach(c => {
+    const index = newWorkoutData.findIndex(w => w.classId === c);
+    newData[index].isLogged = true;
+    delete newData[index]['description']
+    delete newData[index]['image']
+    delete newData[index]['mediaId']
+    delete newData[index]['trainingType']
+  });
+
+  // console.log("dateKey", dateKey)//pass this -> Wednesday, December 31
+  // console.log("date", date)//2025-12-31
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+  let data = {
+    userId: UserId,
+    userScheduleDate: dateKey,
+    updatedData: newData
+  }
+  Axios.post(NEWAPI + '/api/user/log', data, config)
+    .then(res => {
+      courseIdArray.forEach(c => {
+        const index = newWorkoutData.findIndex(w => w.classId === c);
+        newWorkoutData[index].isLogged = true;
+      });
+
+      let action = levelsOneToFour ?
+        { type: actionTypes.LOG_NON_LEGACY_WORKOUT, payload: { userSchedule: { ...userSchedule, [dateKey]: [...newWorkoutData] } } } :
+        { type: actionTypes.LOG_NON_LEGACY_WORKOUT, payload: { userSchedule: { ...userSchedule, [dateKey]: { ...userSchedule[dateKey], classesList: newWorkoutData } } } };
+      dispatch(action);
+    })
+    .catch(error => {
+      Sentry.captureException(error);
     })
 
-    let action = levelsOneToFour
-      ? {
-        type: actionTypes.LOG_NON_LEGACY_WORKOUT,
-        payload: {
-          userSchedule: {
-            ...userSchedule,
-            [dateKey]: [...newWorkoutData]
-          }
-        }
-      }
-      : {
-        type: actionTypes.LOG_NON_LEGACY_WORKOUT,
-        payload: {
-          userSchedule: {
-            ...userSchedule,
-            [dateKey]: {
-              ...userSchedule[dateKey],
-              classesList: newWorkoutData
+
+
+  /*Axios(AxiosConfig('POST', `/class-log/beginner/users/${UserId}?loggedDate=${date}`, webToken, { data: courseIdArray }))
+    .then(res => {
+      courseIdArray.forEach(c => {
+        const index = newWorkoutData.findIndex(w => w.classId === c);
+        newWorkoutData[index].isLogged = true;
+      })
+
+      let action = levelsOneToFour
+        ? {
+          type: actionTypes.LOG_NON_LEGACY_WORKOUT,
+          payload: {
+            userSchedule: {
+              ...userSchedule,
+              [dateKey]: [...newWorkoutData]
             }
           }
         }
-      }
-
-    dispatch(action)
-  }).catch(error => {
-    Sentry.captureException(error);
-  });
+        : {
+          type: actionTypes.LOG_NON_LEGACY_WORKOUT,
+          payload: {
+            userSchedule: {
+              ...userSchedule,
+              [dateKey]: {
+                ...userSchedule[dateKey],
+                classesList: newWorkoutData
+              }
+            }
+          }
+        }
+      dispatch(action)
+    }).catch(error => {
+      Sentry.captureException(error);
+    });*/
 }
 export const removeBeginnerWorkoutLog = (dateIndex, dateKey, courseId) => (dispatch, getState) => {
   const state = getState();
@@ -10268,6 +10342,86 @@ export const removeBeginnerWorkoutLog = (dateIndex, dateKey, courseId) => (dispa
   }).catch(error => {
     Sentry.captureException(error);
   });
+}
+export const removeBeginnerWorkoutLogNew = (dateIndex, dateKey, courseIds = []) => (dispatch, getState) => {
+  const state = getState();
+  const { webToken, UserId, timezone, levelId } = state.login;
+  const { userSchedule } = state.levels;
+  const date = getCalanderDate(timezone)[dateIndex];
+
+  const levelsOneToFour = between(levelId, 1, 4);
+
+  let newWorkoutData = levelsOneToFour ? userSchedule[dateKey] : userSchedule[dateKey].classesList;
+  let newData = newWorkoutData ? _.cloneDeep(newWorkoutData) : [];
+
+  let courseIdArray = courseIds.length > 0
+    ? courseIds
+    : newWorkoutData.filter(w => w.isLogged === false).map(w => w.classId);
+
+
+  courseIdArray.forEach(c => {
+    const index = newWorkoutData.findIndex(w => w.classId === c);
+    newData[index].isLogged = false;
+    delete newData[index]['description']
+    delete newData[index]['image']
+    delete newData[index]['mediaId']
+    delete newData[index]['trainingType']
+  });
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+  console.log("newWorkoutData in DELETE:", newWorkoutData)
+  let data = {
+    userId: UserId,
+    userScheduleDate: dateKey,
+    updatedData: newData
+  }
+  Axios({
+    method: 'DELETE',
+    url: NEWAPI + '/api/user/log',
+    data: data,
+    headers: config.headers
+  })
+    .then(res => {
+      let courseIdArray = courseIds.length > 0
+        ? courseIds
+        : newWorkoutData.filter(w => w.isLogged === false).map(w => w.classId);
+      courseIdArray.forEach(c => {
+        const index = newWorkoutData.findIndex(w => w.classId === c);
+        newWorkoutData[index].isLogged = false;
+      });
+
+
+      let action = levelsOneToFour
+        ? {
+          type: actionTypes.REMOVE_LOG_NON_LEGACY_WORKOUT,
+          payload: {
+            userSchedule: {
+              ...userSchedule,
+              [dateKey]: [...newWorkoutData]
+            }
+          }
+        }
+        : {
+          type: actionTypes.REMOVE_LOG_NON_LEGACY_WORKOUT,
+          payload: {
+            userSchedule: {
+              ...userSchedule,
+              [dateKey]: {
+                ...userSchedule[dateKey],
+                classesList: newWorkoutData
+              }
+            }
+          }
+        }
+
+      dispatch(action)
+    })
+    .catch(error => {
+      Sentry.captureException(error);
+    })
 }
 const levelObj = {
   0: {
@@ -13000,7 +13154,7 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
 export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "Advanced One"
   console.log('getLevelPlanNew = () =>  `/api/user/userStatus` ',)
   const state = getState();
-  const { webToken, UserId, levelId } = state.login;
+  const { webToken, UserId, levelId, timezone } = state.login;
   const config = {
     headers: {
       "Content-Type": "application/json"
@@ -13014,12 +13168,55 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
 
   data = levelId == 1 ? { ...intermediateOne } : levelId == 2 ? { ...intermediateTwo } : levelId == 3 ? { ...advancedOne } : { ...advancedTwo };
 
+  const firstAndLast = [getCalanderDate(timezone, 'MMMM DD YYYY')[0], getCalanderDate(timezone, 'MMMM DD YYYY')[6]];
+
+  const dates = [];
+  const start = new Date(firstAndLast[0]);
+  const end = new Date(firstAndLast[1]);
+
+  while (start <= end) {
+    dates.push(start.toLocaleString('en-US', { weekday: 'long', month: 'long', day: '2-digit' }));
+    start.setDate(start.getDate() + 1);
+  }
+
+  Object.keys(data).forEach((key, index) => {
+    data[dates[index]] = data[key]; //create new key
+    delete data[key]; //delete old key
+  });
+
+
+  console.log("data new is:", data)
+
   Axios.get(NEWAPI + '/api/user/userStatus', {
     params: userData
   }, config)
     .then(res => {
-      let userLevelId = JSON.parse(res.data.data).leveld
+      console.log("res is:", res)
+      let settings = res.data.filter(obj => obj.settings).map(obj => obj.settings);
+      let logs = res.data.filter(obj => obj.logs).map(obj => obj.logs)[0];
+      let userLevelId = JSON.parse(settings[0].data).leveld
       localStorage.setItem('userLevelID', userLevelId);
+
+      let newData = {}
+
+      logs.map((log) => {
+        newData[log.userScheduleDate] = log.data
+      })
+
+      let newDataKeys = Object.keys(newData)
+      let dataKeys = Object.keys(data)
+
+      let commonValues = dataKeys.filter(val => newDataKeys.includes(val));
+
+      commonValues.map(value => {
+        data[value].map(mainItem => {
+          newData[value].map(newItem => {
+            if (mainItem.scheduleId == newItem.scheduleId && mainItem.classId == newItem.classId) {
+              mainItem.workout.isLogged = newItem.isLogged
+            }
+          })
+        })
+      })
       let workoutSchedule = data ? _.cloneDeep(data) : {};
       let keys = Object.keys(workoutSchedule);
       keys.forEach(k => {
@@ -13185,14 +13382,28 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
   */
 
 
+
+  
   let data = levelId == 1 ? { ...intermediateOne } : levelId == 2 ? { ...intermediateTwo } : levelId == 3 ? { ...advancedOne } : { ...advancedTwo };
+  const firstAndLast = [getCalanderDate(timezone, 'MMMM DD YYYY')[0], getCalanderDate(timezone, 'MMMM DD YYYY')[6]];
+  const dates = [];
+  const start = new Date(firstAndLast[0]);
+  const end = new Date(firstAndLast[1]);
+  while (start <= end) {
+    dates.push(start.toLocaleString('en-US', { weekday: 'long', month: 'long', day: '2-digit' }));
+    start.setDate(start.getDate() + 1);
+  }
+  Object.keys(data).forEach((key, index) => {
+    data[dates[index]] = data[key]; //create new key
+    delete data[key]; //delete old key
+  });
+
 
   const programAtLevel = data[dateKey][workoutIndex].workout[`LEVEL ${levelId}`][section][0]
   let masterySteps = programAtLevel.masterySteps[step + 1]
   const workoutInfoObjectkeys = Object.keys(programAtLevel.workoutInfo);
   //loop over workoutInfoObjectkeys, update setsAndRepsfor each object
   workoutInfoObjectkeys.map(key => {
-    console.log("key is:", key)
     if (key == "Strength") {
       console.log("!!!:", masterySteps)
       programAtLevel.workoutInfo[key].setsAndReps = `${masterySteps.sets}x${masterySteps.repsOrSecs}`
