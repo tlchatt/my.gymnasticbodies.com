@@ -6,7 +6,7 @@ import { Grid } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 
 import { handleNotes } from '../../../../../Store/Action/LegacyAction'
-import { SaveNotesLevels } from '../../../../../Store/Action/LevelsActions'
+import { SaveNotesLevels, SaveNotesLevelsNew } from '../../../../../Store/Action/LevelsActions'
 
 const useStyles = makeStyles({
   textArea: {
@@ -37,7 +37,12 @@ const Notes = props => {
 
   const handleSaveNotes = () => {
     if (props.isLevels) {
-      dispatch(SaveNotesLevels(note, props.data.exerciseId, props.data.masterySteps[props.data.stepNo], props.dateKeyIndex))
+      console.log("props is:",props)
+      if(props?.data?.masterySteps){
+        dispatch(SaveNotesLevels(note, props?.data?.exerciseId, props?.data?.masterySteps[props?.data?.stepNo], props?.dateKeyIndex))
+      } 
+      
+      // dispatch(SaveNotesLevelsNew(note, props?.data))
     }
     else {
       dispatch(

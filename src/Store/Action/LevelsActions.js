@@ -10537,7 +10537,6 @@ export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState)
       leveld: leveld,
     }
   }
-
   Axios.post(NEWAPI + '/api/user/userStatus', data, config)
     .then(res => {
       let returnData = res.data[0]?.data;
@@ -10634,7 +10633,9 @@ export const proccesLegacyCoursesNew = (data) => {
   }
 
   levelKeys.forEach(lKey => {
-    let progKeys = Object.keys(workout[lKey]);
+    // console.log("lKey:", lKey)
+    let progKeys = workout[lKey] ? Object.keys(workout[lKey]) : [];
+
     progKeys.forEach(pKey => {
       let progessions = workout[lKey][pKey];
       groupName = checkGroup(progessions);
@@ -13185,7 +13186,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
   });
 
 
-  console.log("data new is:", data)
+
 
   Axios.get(NEWAPI + '/api/user/userStatus', {
     params: userData
@@ -13208,7 +13209,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
 
       let commonValues = dataKeys.filter(val => newDataKeys.includes(val));
 
-      commonValues.map(value => {
+      commonValues.map(value => {//updates user set class settings 
         data[value].map(mainItem => {
           newData[value].map(newItem => {
             if (mainItem.scheduleId == newItem.scheduleId && mainItem.classId == newItem.classId) {
@@ -13217,17 +13218,78 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
           })
         })
       })
+
       let workoutSchedule = data ? _.cloneDeep(data) : {};
       let keys = Object.keys(workoutSchedule);
+
       keys.forEach(k => {
         let workouts = workoutSchedule[k] ? workoutSchedule[k] : [];
         workoutSchedule[k] = workouts.map(processUserWorkoutNew);
+      })
+
+
+      //you need to update workoutSchedule to update a program.
+      //update db user settings into workoutSchedule
+      let finalObj = {}
+      let onlyUpdatedPrograms
+      keys.forEach(k => {
+        logs.map((log) => {
+
+          if (log.userScheduleDate == k) {
+            onlyUpdatedPrograms = log.data.map(data => {//fromdb data
+              if (data.type == "Program") {
+                const { workout = {} } = data;
+                let levelKeys = Object.keys(workout);
+                let chosenProgs = [];
+                let groupName;
+                const idToClassName = {
+                  59207: 'Foundation Core',
+                  59219: 'Foundation Upper Body',
+                  59213: 'Foundation Lower Body'
+                }
+                levelKeys.forEach(lKey => {
+                  let progKeys = workout[lKey] ? Object.keys(workout[lKey]) : [];
+                  progKeys.forEach(pKey => {
+                    let progessions = workout[lKey][pKey];
+                    groupName = checkGroup(progessions);
+                    progessions.forEach(prog => {
+                      chosenProgs = [...chosenProgs, { ...prog, section: pKey, levelKey: lKey }]
+                    })
+                  })
+                });
+
+                if (chosenProgs) {
+                  // console.log("chosenProgs:", chosenProgs)
+                  if (!groupName) {
+                    groupName = idToClassName[data.classId]
+                  }
+                  // console.log("groupName = ", groupName)
+                  return { chosenProgs: chosenProgs, isLegacy: true, category: groupName };
+                }
+              }
+            })
+
+            let allUndefined = onlyUpdatedPrograms.every(val => val === undefined);
+
+            if (!allUndefined) {
+              //loop over test, where the value is not undefined, get the index and update the workoutScheduleat that index
+              onlyUpdatedPrograms.map((item, index) => {
+
+                if (item) {
+                  workoutSchedule[k][index] = item
+                }
+              })
+            }
+          }
+
+        })
       })
       dispatch({
         type: actionTypes.SET_LEVELS,
         payload: { userSchedule: workoutSchedule }
       })
     }).catch(error => {
+      console.log("error in getLevelPlanNew", error)
       console.error('getLevelPlanNew failure')
     });
 }
@@ -13382,8 +13444,6 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
   */
 
 
-
-  
   let data = levelId == 1 ? { ...intermediateOne } : levelId == 2 ? { ...intermediateTwo } : levelId == 3 ? { ...advancedOne } : { ...advancedTwo };
   const firstAndLast = [getCalanderDate(timezone, 'MMMM DD YYYY')[0], getCalanderDate(timezone, 'MMMM DD YYYY')[6]];
   const dates = [];
@@ -13405,11 +13465,9 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
   //loop over workoutInfoObjectkeys, update setsAndRepsfor each object
   workoutInfoObjectkeys.map(key => {
     if (key == "Strength") {
-      console.log("!!!:", masterySteps)
       programAtLevel.workoutInfo[key].setsAndReps = `${masterySteps.sets}x${masterySteps.repsOrSecs}`
     }
     if (key == "Mobility") {
-      console.log("@@@:", masterySteps)
       programAtLevel.workoutInfo[key].setsAndReps = `${masterySteps.sets}x10s`
     }
     if (type == "up") {
@@ -13419,6 +13477,76 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
     }
   })
 
+  /*set the data object to have the right date key.*/
+  let newData = data ? _.cloneDeep(data) : [];
+
+  const updatedprogramAtLevel = newData[dateKey][workoutIndex].workout[`LEVEL ${levelId}`][section][0]
+
+  const updatedWorkoutInfoObjectkeys = Object.keys(updatedprogramAtLevel.workoutInfo);
+
+  console.log("updatedprogramAtLevel:", updatedprogramAtLevel)
+
+  let dataNotUpdated = legacyWorkout?.chosenProgs?.filter(oldData => oldData?.exerciseId != updatedprogramAtLevel["exerciseId"]);
+
+  console.log("dataNotUpdated:", dataNotUpdated)
+  for (const [key, value] of Object.entries(updatedprogramAtLevel)) {
+
+    delete updatedprogramAtLevel['image']
+    //currently commenting out, since causing issue in later steps (notes and step edit)
+    // delete updatedprogramAtLevel['masterySteps']
+    // delete updatedprogramAtLevel['setsAndReps']
+    updatedWorkoutInfoObjectkeys.map(key => {
+      //whatever key is strength or mobilty delete following keys in that object
+      // delete updatedprogramAtLevel.workoutInfo[key]['imageName']
+      // delete updatedprogramAtLevel.workoutInfo[key]['focusPoints']
+      // delete updatedprogramAtLevel.workoutInfo[key]['instructions']
+      // delete updatedprogramAtLevel.workoutInfo[key]['videos']
+      // delete updatedprogramAtLevel.workoutInfo[key]['technicalTips']
+    })
+  }
+  let allProgramNewData = []
+  let programData = []
+  userSchedule[dateKey].map((schedule) => {
+
+    if (schedule.type == "Class") {
+
+      allProgramNewData.push(schedule)
+    } else {
+      programData = newData[dateKey].filter(newdata => newdata.type === "Program");
+
+
+    }
+
+  })
+  //data that was not updated add that to allProgramNewData
+  console.log("userSchedule:", userSchedule)
+
+  programData.map(program => {
+    if (program.workout) {
+      for (const [key, value] of Object.entries(program.workout)) {
+
+        if (value) {
+          for (const [id, info] of Object.entries(value)) {
+
+            let exerciseId = info[0].exerciseId
+
+            dataNotUpdated.map((oldData) => {
+
+              if (oldData.exerciseId == exerciseId) {//updating the data for which content was not updated currently to the all data, so that other (old) steps are also saved and not re written
+                info[0] = oldData
+              }
+            })
+
+
+          }
+        }
+
+      }
+    }
+  })
+
+
+  allProgramNewData = [...allProgramNewData, ...programData]
 
   dispatch({
     type: actionTypes.GET_WORKOUT,
@@ -13426,14 +13554,23 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
       userSchedule: userSchedule
     }
   })
-  //dispatch(getLevelPlanNew())
-  // Axios(AxiosConfig('put', `/workout-service/users/${UserId}/difficulty/${type}/?workoutType=${courseName}&exerciseId=${exerciseId}&date=${date}`, webToken))
-  //   .then(res => {
-  dispatch(getLevelPlanNew())
-  //   }).catch(error => {
-  //     dispatch(getLevelPlanNew())
-  //     Sentry.captureException(error);
-  //   });
+
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+  let dataToPost = {
+    userId: UserId,
+    userScheduleDate: dateKey,
+    updatedData: allProgramNewData
+  }
+  Axios.post(NEWAPI + '/api/user/log', dataToPost, config)
+    .then(res => {
+      dispatch(getLevelPlanNew())
+    }).catch(error => {
+      Sentry.captureException(error);
+    });
 }
 export const LogLegacy = (exerciseId, mobilityStatus, autoProg, steps, logList, dateKeyIndex, dateKey, workoutIndex) => (dispatch, getState) => {
   const state = getState();
@@ -13489,6 +13626,64 @@ export const SaveNotesLevels = (notes, exerciseId, masterySteps, dateKeyIndex) =
     }).catch(error => {
       Sentry.captureException(error);
     });
+}
+export const SaveNotesLevelsNew = (notes, data, exerciseId, masterySteps, dateKeyIndex) => (dispatch, getState) => {
+  const state = getState();
+  const { webToken, UserId, timezone } = state.login;
+  // const date = getCalanderDate(timezone)[dateKeyIndex];
+  const { userSchedule } = state.levels;
+  console.log("notes is:", notes)
+  console.log("userSchedule:", userSchedule)
+  let workout = userSchedule[data.dateKey]
+  workout.map(item=> {
+    if(item.chosenProgs){
+      item.chosenProgs.map(prog => {
+        if(prog.exerciseId == data.exerciseId){
+          prog.notes = notes
+        }
+      })
+    }
+  })
+  console.log("userSchedule:", userSchedule)
+  let postData = {
+    userId: UserId,
+    userScheduleDate: data.dateKey,
+    notes: notes
+  }
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+  // Axios.post(NEWAPI + '/api/user/log', postData, config)
+  //   .then(res => {
+
+  //   })
+  //   .catch(error => {
+
+  //   })
+  // let body = {
+  //   data: {
+  //     userId: UserId,
+  //     date: date,
+  //     exerciseId: exerciseId,
+  //     notes: notes,
+  //     masterySets: {
+  //       masterySetId: masterySteps.masterySetId,
+  //       sets: masterySteps.sets,
+  //       repsOrSecs: masterySteps.repsOrSecs
+  //     },
+  //     setsAndRepsDTOList: []
+  //   }
+  // }
+
+  // Axios(AxiosConfig('post', `/program-log/notes/users/${UserId}`, webToken, body))
+  //   .then(res => {
+  //     dispatch(showToast('Your notes have been saved.', 'success'))
+  //     dispatch(getLevelPLan())
+  //   }).catch(error => {
+  //     Sentry.captureException(error);
+  //   });
 }
 export const GetAllWorkoutInfo = (dateKey, workoutIndex, dateKeyIndex) => (dispatch, getState) => {
   const state = getState();
