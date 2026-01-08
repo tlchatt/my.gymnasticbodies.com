@@ -116,7 +116,7 @@ export default function CourseCardContent(props) {
     isBuildYourOwn
   } = props;
   const classes = useStyles(isMobileView);
-
+  console.log("props?:", isLogged,"section:",section)
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [type, setType] = React.useState('log');
@@ -142,7 +142,7 @@ export default function CourseCardContent(props) {
           {
             workoutInfoObjectkeys.map((key, index) => {
               return (
-                <>
+                
                   <div className={classes.innerContent} key={index}>
                     <CardActionArea
                       className={classes.cardImageAction}
@@ -171,7 +171,7 @@ export default function CourseCardContent(props) {
                       {workoutInfo[key].setsAndReps} - {workoutInfo[key].name}
                     </Typography>
                   </div>
-                </>
+                
               )
             })
           }

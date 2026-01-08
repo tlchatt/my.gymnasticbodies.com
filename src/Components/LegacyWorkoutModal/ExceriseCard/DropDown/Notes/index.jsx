@@ -37,12 +37,11 @@ const Notes = props => {
 
   const handleSaveNotes = () => {
     if (props.isLevels) {
-      console.log("props is:",props)
       if(props?.data?.masterySteps){
         dispatch(SaveNotesLevels(note, props?.data?.exerciseId, props?.data?.masterySteps[props?.data?.stepNo], props?.dateKeyIndex))
       } 
       
-      // dispatch(SaveNotesLevelsNew(note, props?.data))
+      dispatch(SaveNotesLevelsNew(note, props))
     }
     else {
       dispatch(

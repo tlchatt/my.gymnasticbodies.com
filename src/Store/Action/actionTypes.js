@@ -20,6 +20,7 @@ export const CLEAR_CAL_SUCCESS = 'CLEAR_CAL_SUCCESS';
 export const UPDATE_USER_PLAN = 'UPDATE_USER_PLAN';
 
 export const SET_ALL_CLASSES = 'SET_ALL_CLASSES';
+export const SET_ALL_DATA = 'SET_ALL_DATA';
 export const SET_ALL_SUB_CLASSES = 'SET_ALL_SUB_CLASSES'
 
 export const SHOW_TOAST = 'SHOW_TOAST'

@@ -63,6 +63,7 @@ const Steps = (props) => {
   const handleDifficulty = (type) => {
     SetLoading(true)
     console.log("inside handleDifficulty step",step)
+    console.log("props is:",props)
     //Original: 
     dispatch(ManageDificulty(workoutIndex, dateKey, dateKeyIndex, exerciseId, type, section,step))
     //PC:
