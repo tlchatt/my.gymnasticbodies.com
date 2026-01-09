@@ -116,7 +116,6 @@ export default function CourseCardContent(props) {
     isBuildYourOwn
   } = props;
   const classes = useStyles(isMobileView);
-  console.log("props?:", isLogged,"section:",section)
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [type, setType] = React.useState('log');

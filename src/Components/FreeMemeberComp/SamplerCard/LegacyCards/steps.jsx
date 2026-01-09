@@ -62,12 +62,10 @@ const Steps = (props) => {
   const [loading, SetLoading] = useState(false);
   const handleDifficulty = (type) => {
     SetLoading(true)
-    console.log("inside handleDifficulty step",step)
-    console.log("props is:",props)
     //Original: 
     dispatch(ManageDificulty(workoutIndex, dateKey, dateKeyIndex, exerciseId, type, section,step))
     //PC:
-    dispatch(ManageDificultyNew(workoutIndex, dateKey, dateKeyIndex, exerciseId, type,section,step))
+    // dispatch(ManageDificultyNew(workoutIndex, dateKey, dateKeyIndex, exerciseId, type,section,step))
   }
 
   React.useEffect(() => {

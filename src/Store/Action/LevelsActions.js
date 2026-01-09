@@ -3210,15 +3210,16 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
     userId: UserId,
     type: type ? type : "levelPath"
   }
+  localStorage.setItem('userLevelID', levelId);
 
   let data = dispatch(getData())
-
+  console.log("data in levels is:", data)
   Axios.get(NEWAPI + '/api/user/userStatus', {
     params: userData
   }, config)
     .then(res => {
 
-      localStorage.setItem('userLevelID', levelId);
+
       let logs = res.data.filter(obj => obj.logs).map(obj => obj.logs)[0];//getting only the logs from response data
 
       let newData = {}
@@ -3228,9 +3229,6 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
       })
 
       const commonDates = Object.keys(data).filter(key => key in newData);
-      console.log("commonDates:", commonDates)
-      console.log("newData:", newData)
-      console.log("data:", data)
 
       //simple class update
       commonDates.forEach(date => {
@@ -3239,18 +3237,15 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
             item.scheduleId === newItem.scheduleId && item.classId === newItem.classId
           );
           if (orgItem) {//class or program type
-            console.log("orgItem:", orgItem)
             if (newItem.type === "Class") {
-              orgItem.workout.isLogged = newItem.isLogged;
+              let newLogValue = newItem.isLogged ? newItem.isLogged : newItem.workout.isLogged
+              orgItem.workout.isLogged = newLogValue
             } else if (newItem.type === "Program") {
-              console.log("newItem :", newItem)
-              console.log("orgItem before:", orgItem)
               orgItem.workout = newItem.workout;
-              console.log("orgItem after:", orgItem)
             }
           } else {//program type with chosenprogs structure
-            console.log("newItem in else:", newItem)
-            console.log("data[date]:", data[date])
+            // console.log("newItem in else:", newItem)
+            // console.log("data[date]:", data[date])
           }
         });
       });
@@ -3262,82 +3257,12 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
       //keys is the date
 
       keys.forEach(k => {
-        console.log("k is:", k)
         let workouts = workoutSchedule[k] ? workoutSchedule[k] : [];
-        console.log("workouts:", workouts)
         workoutSchedule[k] = workouts.map(processUserWorkoutNew);
       })
       //you need to update workoutSchedule to update a program.
       //update db user settings into workoutSchedule
 
-      /*let onlyUpdatedPrograms
-      keys.forEach(k => {
-        logs.map((log) => {
-          console.log("k is:", k)
-          console.log("log.userScheduleDate:", log.userScheduleDate)
-          if (log.userScheduleDate == k) {
-
-            onlyUpdatedPrograms = log.data.map(data => {//from db data
-              console.log("log data:", data)
-              if (data.type == "Program") {
-                const { workout = {} } = data;
-                let levelKeys = Object.keys(workout);
-                let chosenProgs = [];
-                let groupName;
-                const idToClassName = {
-                  59207: 'Foundation Core',
-                  59219: 'Foundation Upper Body',
-                  59213: 'Foundation Lower Body'
-                }
-                levelKeys.forEach(lKey => {
-                  let progKeys = workout[lKey] ? Object.keys(workout[lKey]) : [];
-                  progKeys.forEach(pKey => {
-                    let progessions = workout[lKey][pKey];
-                    groupName = checkGroup(progessions);
-                    progessions.forEach(prog => {
-                      chosenProgs = [...chosenProgs, { ...prog, section: pKey, levelKey: lKey }]
-                    })
-                  })
-                });
-                console.log("chosenProgs:", chosenProgs)
-                if (chosenProgs) {
-
-                  if (!groupName) {
-                    groupName = idToClassName[data.classId]
-                  }
-                  // console.log("groupName = ", groupName)
-                  return { chosenProgs: chosenProgs, isLegacy: true, category: groupName };
-                }
-              }
-              if (data.chosenProgs) {
-                console.log("workoutSchedule[k]:", workoutSchedule[k])
-                workoutSchedule[k].forEach(sch => {
-                  if (sch.chosenProgs) {
-                    sch.chosenProgs = data.chosenProgs
-                  }
-                })
-              }
-            })
-            console.log("onlyUpdatedPrograms:", onlyUpdatedPrograms)
-            let allUndefined = onlyUpdatedPrograms.every(val => val === undefined);
-
-            if (!allUndefined) {
-              //loop over onlyUpdatedPrograms, where the value is not undefined, get the index and update the workoutScheduleat that index
-              onlyUpdatedPrograms.map((item, index) => {
-
-                if (item) {
-                  console.log("item is:", item)
-                  workoutSchedule[k][index] = item
-                }
-              })
-            }
-          }
-
-        })
-      })*/
-
-      console.log("final workoutSchedule:", workoutSchedule)
-      console.log("final data:", data)
       dispatch({
         type: actionTypes.SET_LEVELS,
         payload: { userSchedule: workoutSchedule }
@@ -3463,12 +3388,15 @@ export const ManageDificulty = (workoutIndex, dateKey, dateKeyIndex, exerciseId,
   const { userSchedule } = state.levels;
   const date = getCalanderDate(timezone)[dateKeyIndex];
   const legacyWorkout = userSchedule[dateKey][workoutIndex];
-  console.log("workoutIndex:", workoutIndex)
+
   const courseName = legacyWorkout.category.replace('Foundation ', '');
   Axios(AxiosConfig('put', `/workout-service/users/${UserId}/difficulty/${type}/?workoutType=${courseName}&exerciseId=${exerciseId}&date=${date}`, webToken))
     .then(res => {
       console.log("res in ManageDificulty is:", res)
       dispatch(getLevelPLan())
+      if (!res) {
+        dispatch(ManageDificultyNew(workoutIndex, dateKey, dateKeyIndex, exerciseId, type, section, step))
+      }
     }).catch(error => {
       console.log("error is:", error)
       dispatch(ManageDificultyNew(workoutIndex, dateKey, dateKeyIndex, exerciseId, type, section, step))
@@ -3481,7 +3409,7 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
   const { webToken, UserId, timezone, levelId } = state.login;
   const { userSchedule } = state.levels;
   const date = getCalanderDate(timezone)[dateKeyIndex];
-  console.log("workout index:", workoutIndex)
+
   const legacyWorkout = userSchedule[dateKey][workoutIndex];
   const courseName = legacyWorkout.category.replace('Foundation ', '');
   /*
@@ -3498,21 +3426,22 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
   * 3. update legacy workout setsAndReps value in step 1 
   */
 
-  console.log("legacyWorkout:", legacyWorkout)
 
-  let data = dispatch(getData())
+
+  dispatch(getData())
+  let data = state.data.allData
+
   // let updatedDataDiff = dispatch(updateData(step,"manageDificulty"))
   // console.log("updatedDataDiff:", updatedDataDiff)
   const programAtLevel = data[dateKey][workoutIndex].workout[`LEVEL ${levelId}`][section][0]
-  console.log("programAtLevel:", programAtLevel)
-  console.log("step is:", step)
+
   let totalSteps = Object.keys(programAtLevel.masterySteps).length
-  console.log("totalSteps:", totalSteps)
+
   let masterySteps = (step == totalSteps) ? programAtLevel.masterySteps[step - 1] : programAtLevel.masterySteps[step + 1]
 
   const workoutInfoObjectkeys = Object.keys(programAtLevel.workoutInfo);
   //loop over workoutInfoObjectkeys, update setsAndRepsfor each object
-  console.log("masterySteps:", masterySteps)
+
   workoutInfoObjectkeys.map(key => {
 
     if (key == "Strength") {
@@ -3535,7 +3464,7 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
 
   const updatedWorkoutInfoObjectkeys = Object.keys(updatedprogramAtLevel.workoutInfo);
 
-  console.log("updatedprogramAtLevel:", updatedprogramAtLevel)
+
 
   let dataNotUpdated = legacyWorkout?.chosenProgs?.filter(oldData => oldData?.exerciseId != updatedprogramAtLevel["exerciseId"]);
 
@@ -3570,7 +3499,7 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
 
   })
   //data that was not updated add that to allProgramNewData
-  console.log("programData:", programData)
+
   programData.map(program => {
     if (program.workout) {
       for (const [key, value] of Object.entries(program.workout)) {
@@ -3643,13 +3572,19 @@ export const LogLegacy = (exerciseId, mobilityStatus, autoProg, steps, logList, 
       setsAndRepsDTOList: logList
     }
   }
-  console.log("body is:", body)
+
   Axios(AxiosConfig('post', `/workout-service/programs/users/${UserId}/logging?workoutType=${courseName}`, webToken, body))
     .then(res => {
       console.log("res is:", res)
       dispatch(getLevelPLan())
+      if (!res) {
+        dispatch(LogLegacyNew(exerciseId, mobilityStatus, autoProg, steps, logList, dateKeyIndex, dateKey, workoutIndex))
+      }
     }).catch(error => {
-      Sentry.captureException(error);
+
+      dispatch(LogLegacyNew(exerciseId, mobilityStatus, autoProg, steps, logList, dateKeyIndex, dateKey, workoutIndex))
+
+
     });
 }
 export const LogLegacyNew = (exerciseId, mobilityStatus, autoProg, steps, logList, dateKeyIndex, dateKey, workoutIndex) => (dispatch, getState) => {
@@ -3659,23 +3594,23 @@ export const LogLegacyNew = (exerciseId, mobilityStatus, autoProg, steps, logLis
   const date = getCalanderDate(timezone)[dateKeyIndex];
 
   const legacyWorkout = userSchedule[dateKey][workoutIndex];
-  console.log("legacyWorkout:", legacyWorkout)
-  console.log("exerciseId:", exerciseId)
+
   //get excersice from legacyWorkout based on the exerciseId
   let updatedProgram = legacyWorkout?.chosenProgs?.filter(oldData => oldData?.exerciseId == exerciseId);
-  console.log("updatedProgram:", updatedProgram)
+
   let section = updatedProgram[0].section
-  console.log("section:", section)
+
   const courseName = legacyWorkout.category.replace('Foundation ', '');
-  console.log("logList:", logList)
+
 
   dispatch(getData())
   let data = state.data.allData
+
   data[dateKey][workoutIndex].workout[`LEVEL ${levelId}`][section][0] = updatedProgram[0]
   data[dateKey][workoutIndex].workout[`LEVEL ${levelId}`][section][0].log = logList
   data[dateKey][workoutIndex].workout[`LEVEL ${levelId}`][section][0].isLogged = true
 
-  console.log("data later is:", data)
+
 
   // let workoutSchedule = data ? _.cloneDeep(data) : {};
   // let keys = Object.keys(workoutSchedule);
@@ -3721,7 +3656,7 @@ export const LogLegacyNew = (exerciseId, mobilityStatus, autoProg, steps, logLis
   //     Sentry.captureException(error);
   //   });
 }
-export const SaveNotesLevels = (notes, exerciseId, masterySteps, dateKeyIndex) => (dispatch, getState) => {
+export const SaveNotesLevels = (notes, exerciseId, masterySteps, dateKeyIndex, dateKey, workoutIndex, section) => (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, timezone } = state.login;
   const date = getCalanderDate(timezone)[dateKeyIndex];
@@ -3743,15 +3678,23 @@ export const SaveNotesLevels = (notes, exerciseId, masterySteps, dateKeyIndex) =
 
   Axios(AxiosConfig('post', `/program-log/notes/users/${UserId}`, webToken, body))
     .then(res => {
+      console.log("res in notes:", res)
       dispatch(showToast('Your notes have been saved.', 'success'))
       dispatch(getLevelPLan())
     }).catch(error => {
+      console.log("error in notes:", error)
+      // dispatch(SaveNotesLevelsNew(notes, dateKey, workoutIndex, section))
       Sentry.captureException(error);
     });
+
+
+
+
 }
-export const SaveNotesLevelsNew = (note, notesdata) => (dispatch, getState) => {
+export const SaveNotesLevelsNew = (notes, dateKey, workoutIndex, section) => (dispatch, getState) => {
+  console.log("inside SaveNotesLevelsNew now")
   const state = getState();
-  const { webToken, UserId, timezone, levelId} = state.login;
+  const { webToken, UserId, timezone, levelId } = state.login;
   // const date = getCalanderDate(timezone)[dateKeyIndex];
 
   const { userSchedule } = state.levels;
@@ -3760,25 +3703,20 @@ export const SaveNotesLevelsNew = (note, notesdata) => (dispatch, getState) => {
 
   dispatch(getData())
 
-  console.log("all data:",state.data)
+
   let data = state.data.allData
-  console.log("data ois:",data)
+
   if (state.data) {
-    console.log("notesdata:",notesdata)
-    let { dateKey, workoutIndex, section } = notesdata?.data
 
     let programAtLevel = data[dateKey][workoutIndex].workout[`LEVEL ${levelId}`][section][0]
-    console.log("programAtLevel:", programAtLevel)
-    // programAtLevel.notes = notes
-    // Object.assign(programAtLevel, notesdata);//copy new data object into old one
 
-    programAtLevel.notes = note
+    programAtLevel.notes = notes
     delete programAtLevel["dateKey"]//delete the keys we don't need in db or the original object, so that data updates too and not just its reference.
     delete programAtLevel["dateKeyIndex"]
     delete programAtLevel["handleLegacyPlayer"]
     delete programAtLevel["showDivider"]
 
-    console.log("programAtLevel:", programAtLevel)
+
     // /*set the data object to have the right date key.*/
     // console.log("data[dateKey]:", data[dateKey])
     let postData = {
@@ -3786,15 +3724,16 @@ export const SaveNotesLevelsNew = (note, notesdata) => (dispatch, getState) => {
       userScheduleDate: dateKey,
       updatedData: data[dateKey]
     }
-    console.log("postData:", postData)
     const config = {
       headers: {
         "Content-Type": "application/json"
       }
     }
+    dispatch(showToast('Your notes have been saved.', 'success'))
     Axios.post(NEWAPI + '/api/user/log', postData, config)
       .then(res => {
-        dispatch(showToast('Your notes have been saved.', 'success'))
+        console.log("SaveNotesLevelsNew response:", res)
+
         // dispatch(getLevelPLan())
       })
       .catch(error => {

@@ -122,18 +122,18 @@ const Log = props => {
           props.workoutIndex
         )
       )
-      dispatch(
-        LogLegacyNew(
-          props.data.exerciseId,
-          mobStatus,
-          props.workoutInfo.WarmUp || props.isStretchFollow ? false : !staySameStep,
-          props.data.masterySteps[props.data.stepNo],
-          logArray,
-          props.dateKeyIndex,
-          props.dateKey,
-          props.workoutIndex
-        )
-      )
+      // dispatch(
+      //   LogLegacyNew(
+      //     props.data.exerciseId,
+      //     mobStatus,
+      //     props.workoutInfo.WarmUp || props.isStretchFollow ? false : !staySameStep,
+      //     props.data.masterySteps[props.data.stepNo],
+      //     logArray,
+      //     props.dateKeyIndex,
+      //     props.dateKey,
+      //     props.workoutIndex
+      //   )
+      // )
     }
     else {
       dispatch(
