@@ -189,7 +189,7 @@ const Log = props => {
           : null
       }
       {
-        props.workoutInfo.Strength && !props.isStretchFollow ? <Typography variant="h6" className={classes.title}>Strength</Typography> : null
+        props.workoutInfo.Strength && !props.isStretchFollow ? <Typography variant="h6" className={classes.title}>Strength (Reps Complete)</Typography> : null
       }
       {
         props.workoutInfo.WarmUp && !props.isStretchFollow ? <Typography variant="h6" className={classes.title}>Warmup</Typography> : null
