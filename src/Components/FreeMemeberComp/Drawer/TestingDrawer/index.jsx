@@ -12,6 +12,7 @@ import History from '../../History'
 import BuildYourOwn from '../BuildYourOwn'
 
 import "./index.scss";
+import ContactUs from "../Support";
 
 const TestingDrawer = props => {
   const { open, toggle, isDrawerOpen, componentId } = props;
@@ -26,6 +27,8 @@ const TestingDrawer = props => {
         return <FocusCycles />;
       case "FitnessQuiz":
         return <FitnessQuiz handleClose={toggle} />;
+        case "ContactUs":
+        return <ContactUs handleClose={toggle} />;
       case "Thrive":
         return <Thrive open={open} />;
       case "History":

@@ -195,7 +195,7 @@ const quizText = {
   },
 }
 
-const FitnessQuiz = (props) => {
+const ContactUs = (props) => {
 
   const [sectionId, setSectionId] = useState('initial');
 
@@ -226,10 +226,10 @@ const FitnessQuiz = (props) => {
 
   if (sectionId === 'Suggestion') return <Suggestion userInputs={userInputs} lowestScore={lowestScore} handleClose={props.handleClose} />
 
-
+  
   return sectionId === 'initial'
     ? <InitialQuiz setSectionId={() => setSectionId("UpperBodyOne")} />
     : <QuizLayout {...quizText[sectionId]} setSectionId={() => setSectionId(quizText[sectionId].nextSection)} handleUserInput={handleUserInput} />;
 }
 
-export default FitnessQuiz;
+export default ContactUs;

@@ -203,6 +203,8 @@ export default function MiniDrawer(props) {
   };
 
   const handleOpenDrawer = (id) => {
+    console.log("id is:",id)
+    console.log("location.pathname:",location.pathname)
     if (location.pathname !== '/') {
       if (levelId === 9 && id === 'SwitchToAuto') {
         history.push('/');
@@ -227,6 +229,7 @@ export default function MiniDrawer(props) {
     }
     else {
       if (openDrawer.componentId === id && openDrawer.open) {
+        console.log(' if setOpenDrawer')
         handleCloseDrawer();
       }
       else {
@@ -277,7 +280,6 @@ export default function MiniDrawer(props) {
           return false;
         }
       },
-     
       {
         text: 'Fitness Placement Quiz',
         cb: () => handleCallBackFunction('FitnessQuiz'),
@@ -304,7 +306,19 @@ export default function MiniDrawer(props) {
           }
           return false;
         }
-      }
+      },
+      {
+        text: 'Contact Us',
+        cb: () => handleCallBackFunction('ContactUs'),
+        imageName: 'info.png',
+        ids: [],
+        isActive: () => {
+          if (openDrawer.componentId === 'ContactUs') {
+            return true;
+          }
+          return false;
+        }
+      },
     ]
   }
   else {

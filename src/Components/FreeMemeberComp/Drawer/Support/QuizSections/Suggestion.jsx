@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { suggestedSecondary } from './secondaryText'
+import { setLevelPath } from '../../../../../Store/Action/LevelsActions';
+import { openOhNo } from '../../../../../Store/Reducers/OhNoReducer';
 
-import { setLevelPath } from '../../../../Store/Action/LevelsActions';
-import { openOhNo } from '../../../../Store/Reducers/OhNoReducer'
 
 const useStyles = makeStyles(theme => ({
   title: {

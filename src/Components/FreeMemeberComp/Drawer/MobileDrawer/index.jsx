@@ -330,6 +330,18 @@ export default function MobileDrawer(props) {
         }
         return false;
       }
+    },
+    {
+      text: 'Contact Us',
+      cb: () => handleCallBackFunction('ContactUs'),
+      imageName: 'info.png',
+      ids: [],
+      isActive: () => {
+        if (openDrawer.componentId === 'ContactUs') {
+          return true;
+        }
+        return false;
+      }
     }
   ]
 }
