@@ -10,7 +10,7 @@ export async function submitForm(branding, data) {
 
   data.to = branding.Settings.Email
   data.bcc = 'contact@tlchatt.com'
-  data.from = 'contact@tlchatt.com'
+  data.from = 'contact@gymnasticbodies.com' 
   data.subject = `${branding.Settings.SiteTitle} Contact Form Submission from ${data.name}`
 
   if ((data?.email?.includes('@')) && (data?.email.includes('.'))) {

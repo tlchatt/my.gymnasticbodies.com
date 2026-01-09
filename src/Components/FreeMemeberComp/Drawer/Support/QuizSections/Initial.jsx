@@ -75,8 +75,8 @@ const FitnessQuiz = (props) => {
   }
   let branding = {
     Settings: {
-      Email: "test@tlchatt.com",
-      SiteTitle: "test"
+      Email: "support@gymnasticbodies.com", //to email. 
+      SiteTitle: "my.gymnasticbodies.com"
     }
   }
   const classes = useStyles();
