@@ -17,6 +17,7 @@ import thunk from 'redux-thunk';
 import { LoginReducer } from './Store/Reducers/Login.js'
 import { CalendarReducer } from './Store/Reducers/Calendar'
 import { AllClassesReducer } from './Store/Reducers/AllClasses'
+import { AllDataReducer } from './Store/Reducers/AllData.js';
 import { AllSubClassesReducer } from './Store/Reducers/AllSubClasses'
 import { LegacyReducer } from './Store/Reducers/LegacyModalReducer'
 import { DemoModalReducer } from './Store/Reducers/DemoModalReducer'
@@ -55,6 +56,7 @@ const rootReducer = combineReducers({
   login: LoginReducer,
   calendar: CalendarReducer,
   classes: AllClassesReducer,
+  data:AllDataReducer,
   subClasses: AllSubClassesReducer,
   legacyCourse: LegacyReducer,
   demoModal: DemoModalReducer,

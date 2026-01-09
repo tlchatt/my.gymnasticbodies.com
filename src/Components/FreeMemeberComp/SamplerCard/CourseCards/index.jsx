@@ -11,7 +11,7 @@ import { CompleteIcon, GreenComplete } from '../../Drawer/SvgIcons'
 
 import CourseCardContent from './CourseCardContent';
 
-import { logAllBeginnerWorkout,removeBeginnerWorkoutLog, refreshWMS } from '../../../../Store/Action/LevelsActions'
+import { logAllBeginnerWorkout,removeBeginnerWorkoutLog, refreshWMS, logAllBeginnerWorkoutNew, removeBeginnerWorkoutLogNew } from '../../../../Store/Action/LevelsActions'
 import { logMainCourses,removeMainCourseLog, openLegacyWorkoutModal } from '../../../../Store/Action/WorkoutBuilderActions'
 
 import { openOhNo } from '../../../../Store/Reducers/OhNoReducer';
@@ -83,9 +83,11 @@ export default function CourseCards(props) {
     else {
       if(!props.isLogged){
         dispatch(logAllBeginnerWorkout(props.dateKeyIndex, props.dateKey, [props.classId]));
+        dispatch(logAllBeginnerWorkoutNew(props.dateKeyIndex, props.dateKey, [props.classId]));
       }
       else{
         dispatch(removeBeginnerWorkoutLog(props.dateKeyIndex, props.dateKey, props.classId));
+        dispatch(removeBeginnerWorkoutLogNew(props.dateKeyIndex, props.dateKey, [props.classId]));
       }
     }
   }

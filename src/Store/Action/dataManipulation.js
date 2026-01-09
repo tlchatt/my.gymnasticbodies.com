@@ -10029,26 +10029,30 @@ export const updateData = (data) => (dispatch, getState) => {
                     );
                     if (orgItem) {//class or program in log data type that matched original data
                         if (newItem.type === "Class") {
-                            let newLogValue = newItem.isLogged ? newItem.isLogged : newItem.workout.isLogged
+                            
+                            let newLogValue = newItem?.isLogged ? newItem?.isLogged : newItem?.workout?.isLogged
                             orgItem.workout.isLogged = newLogValue
                         } else if (newItem.type === "Program") {
                             orgItem.workout = newItem.workout;
                         }
                     } else {//program type with chosenprogs structure
-                        newItem?.chosenProgs?.forEach(prog => {
-                            let exerciseId = prog.exerciseId
-                            let sectionName = prog.section
-                            data[date].forEach(item => {
-                                if (item.type == "Program" && `LEVEL ${levelId}` in item.workout) {
-                                    let orgExercise = item?.workout[`LEVEL ${levelId}`][sectionName]
-                                    if (orgExercise) {
-                                        if (exerciseId = orgExercise[0].exerciseId) {
-                                            orgExercise[0] = prog
+                        if (newItem.type === "Program") {
+                            newItem?.chosenProgs?.forEach(prog => {
+                                let exerciseId = prog.exerciseId
+                                let sectionName = prog.section
+                                data[date].forEach(item => {
+                                    if (item.type == "Program" && `LEVEL ${levelId}` in item.workout) {
+                                        let orgExercise = item?.workout[`LEVEL ${levelId}`][sectionName]
+                                        if (orgExercise) {
+                                            if (exerciseId = orgExercise[0].exerciseId) {
+                                                orgExercise[0] = prog
+                                            }
                                         }
                                     }
-                                }
+                                })
                             })
-                        })
+                        }
+
                     }
                 });
                 let workouts = workoutSchedule[date] ? workoutSchedule[date] : [];
@@ -10056,8 +10060,6 @@ export const updateData = (data) => (dispatch, getState) => {
             });
             // console.log("data is->>>:", data)
             // console.log("workoutSchedule is->>>:", workoutSchedule)
-            console.log("actionTypes.SET_ALL_DATA",actionTypes.SET_ALL_DATA)
-            
             dispatch({ type: actionTypes.SET_ALL_DATA, data: { allData: data, workoutSchedule: workoutSchedule } })
             return data
 
