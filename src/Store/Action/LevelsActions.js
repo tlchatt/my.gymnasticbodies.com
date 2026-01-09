@@ -3238,7 +3238,7 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
           );
           if (orgItem) {//class or program type
             if (newItem.type === "Class") {
-              let newLogValue = newItem.isLogged ? newItem.isLogged : newItem.workout.isLogged
+              let newLogValue = newItem?.isLogged ? newItem?.isLogged : newItem?.workout?.isLogged
               orgItem.workout.isLogged = newLogValue
             } else if (newItem.type === "Program") {
               orgItem.workout = newItem.workout;
