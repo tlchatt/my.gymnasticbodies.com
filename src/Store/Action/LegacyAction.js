@@ -95,6 +95,7 @@ export const ManageDiffculty = (type, exerciseId, date) => (dispatch, getState) 
     };
   }
   else {
+    console.log("in LegacyAction/ManageDiffculty")
     config = {
       method: 'put',
       url: `${API}/workout-service/users/${userData.UserId}/difficulty/${type}/?workoutType=${legacyPage.name}&exerciseId=${exerciseId}&date=${date}`,
@@ -425,7 +426,7 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
   const isBuildYourOwn = state.legacyCourse.isBuildYourOwn;
 
   let config;
-
+  console.log("in LegacyAction/handleAddProgression")
   if (isBuildYourOwn) {
     config = AxiosConfig(
       'PUT',

@@ -13,7 +13,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useDispatch } from 'react-redux'
 
 import { handleLegacyLog } from '../../../../../Store/Action/LegacyAction'
-import { LogLegacy } from '../../../../../Store/Action/LevelsActions'
+import { LogLegacy, LogLegacyNew } from '../../../../../Store/Action/LevelsActions'
 
 const useStyles = makeStyles({
   title: {
@@ -108,7 +108,7 @@ const Log = props => {
     if (props.isStretchFollow) {
       mobStatus = 1;
     }
-
+    console.log("props levels:",props)
     if (props.isLevels) {
       dispatch(
         LogLegacy(
@@ -122,6 +122,18 @@ const Log = props => {
           props.workoutIndex
         )
       )
+      // dispatch(
+      //   LogLegacyNew(
+      //     props.data.exerciseId,
+      //     mobStatus,
+      //     props.workoutInfo.WarmUp || props.isStretchFollow ? false : !staySameStep,
+      //     props.data.masterySteps[props.data.stepNo],
+      //     logArray,
+      //     props.dateKeyIndex,
+      //     props.dateKey,
+      //     props.workoutIndex
+      //   )
+      // )
     }
     else {
       dispatch(
