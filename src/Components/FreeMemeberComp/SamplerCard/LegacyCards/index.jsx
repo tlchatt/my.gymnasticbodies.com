@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Button} from '@material-ui/core';
+import { makeStyles, Button } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -58,8 +58,9 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function LegacyCards(props) {
+  console.log("props in LegacyCards:", props)
   const classes = useStyles();
-  const { workoutIndex, dateKey, dateKeyIndex , handleLegacyPlayer, isBuildYourOwn} = props;
+  const { workoutIndex, dateKey, dateKeyIndex, handleLegacyPlayer, isBuildYourOwn } = props;
   const dispatch = useDispatch();
 
   if (!props.chosenProgs.length) {
@@ -78,9 +79,12 @@ export default function LegacyCards(props) {
             <Typography variant="h5" className={classes.cardTitle}>
               {props.category}
             </Typography>
-            <Button className={classes.cardHeaderButton} onClick={ handleEditLegacy}>
-              Edit
-            </Button>
+            {!props.postAWS &&
+              <Button className={classes.cardHeaderButton} onClick={handleEditLegacy}>
+                Edit
+              </Button>
+            }
+
           </>
         }
         disableTypography={true}

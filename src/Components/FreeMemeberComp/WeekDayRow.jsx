@@ -83,7 +83,7 @@ const WeekRow = props => {
     isBuildYourOwn,
     showMarkAllDone
   } = props;
-
+  console.log("openPlayer in WeekRow:",openPlayer)
   useEffect(() => {
     if (isOpenInitial) {
       setOpenCollapse(true);
@@ -121,7 +121,7 @@ const WeekRow = props => {
             </IconButton>
 
           </Grid>
-          {
+          {/* {
             showButtons
               ? <>
                 <Grid item xs={6} sm={3} md={3} lg={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -160,7 +160,7 @@ const WeekRow = props => {
                 </Grid>
               </>
               : null
-          }
+          } */}
         </Grid>
         {
           (openPlayer && showButtons && !isBuildYourOwn) &&

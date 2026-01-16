@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   makeStyles,
 } from '@material-ui/core';
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     overflowX: 'scroll',
-    marginBottom: theme.spacing(2) -4,
+    marginBottom: theme.spacing(2) - 4,
   },
   gridItem: {
     width: 215,
@@ -70,10 +70,11 @@ const WorkoutPlanner = (props) => {
 
   const byoRounds = useSelector(state => isBuildYourOwn ? state.buildYourOwn.userSchedule[dateKey].rounds : 0);
   const isAllAccessUser = useSelector(state => state.login.isAllAccessUser);
-
+  let postAWS = useSelector(state => state.login.postAWS);
+  console.log("postAWS is:", postAWS)
   const openPlayerModal = (prog, isIndividualVideo = false) => {
     closeMainPlayer();
-    setSingleVideo({...prog, isIndividualVideo, isBuildYourOwn});
+    setSingleVideo({ ...prog, isIndividualVideo, isBuildYourOwn });
     setOpenPlayer(true);
 
     if (props.levelsPlayer) {
@@ -103,7 +104,7 @@ const WorkoutPlanner = (props) => {
   return (
     <div className={classes.gridContainer}>
       {showRounds && <Rounds {...props} />}
-      {showWorkoutCount && <WorkoutCount {...props}/> }
+      {showWorkoutCount && <WorkoutCount {...props} />}
       {
         props.workoutData ? props.workoutData.map((data, index) => {
           return (
@@ -125,6 +126,7 @@ const WorkoutPlanner = (props) => {
                     dateKeyIndex={dateKeyIndex}
                     handleLegacyPlayer={handleLegacyPlayer}
                     isBuildYourOwn={isBuildYourOwn}
+                    postAWS={postAWS}
                   />
                   : <CardType
                     {...data}
@@ -154,7 +156,7 @@ const WorkoutPlanner = (props) => {
       }
       {
         hasIdividualWokrouts && isAllAccessUser ? individiualWorkouts.map((data, index) => {
-          return <div className={ classes.gridItem} key={index} >
+          return <div className={classes.gridItem} key={index} >
             <SamplerCard
               {...data}
               openPlayerModal={openPlayerModal}
@@ -164,16 +166,16 @@ const WorkoutPlanner = (props) => {
               isBuildYourOwn={isBuildYourOwn}
               isIndividualVideo
             />
-        </div>
+          </div>
         }) : null
       }
       {
-         <VideoModal open={openPlayer} handleClose={() => setOpenPlayer(!openPlayer)} {...singelVideo} levelsPlayer={props.levelsPlayer}>
+        <VideoModal open={openPlayer} handleClose={() => setOpenPlayer(!openPlayer)} {...singelVideo} levelsPlayer={props.levelsPlayer}>
           <VideoPlayer open={openPlayer} singleProg={[singelVideo]} levelsPlayer={props.levelsPlayer} withIcons={hideIcons} isBuildYourOwn={isBuildYourOwn} dateKey={dateKey} />
         </VideoModal>
       }
       {
-        legacyModalPlayer.open && <LegacyPlayer playerData={legacyModalPlayer} open={legacyModalPlayer.open} handleClose={() => setLegacyModalPlayer(initialLegacyState)}/>
+        legacyModalPlayer.open && <LegacyPlayer playerData={legacyModalPlayer} open={legacyModalPlayer.open} handleClose={() => setLegacyModalPlayer(initialLegacyState)} />
       }
     </div>
   )
