@@ -334,7 +334,7 @@ export default function MobileDrawer(props) {
     {
       text: 'Contact Us',
       cb: () => handleCallBackFunction('ContactUs'),
-      imageName: 'info.png',
+      imageName: 'FocusGroups.png',
       ids: [],
       isActive: () => {
         if (openDrawer.componentId === 'ContactUs') {

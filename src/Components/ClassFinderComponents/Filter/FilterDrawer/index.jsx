@@ -89,7 +89,7 @@ const ClassFinderGridDrawer = props => {
           !state.left ? 'Filters' : 'Close'
         }
       </Button>
-      {/* <Drawer
+      <Drawer
         transitionDuration={250}
         anchor='left'
         open={state.left}
@@ -98,7 +98,7 @@ const ClassFinderGridDrawer = props => {
         className={classes.drawer}
       >
         {list('left')}
-      </Drawer> */}
+      </Drawer>
     </Aux>
   );
 }

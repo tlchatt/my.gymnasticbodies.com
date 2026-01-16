@@ -3177,6 +3177,9 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
     ],
     "SUNDAY,DECEMBER 21": null
   }
+  console.log("UserId:",UserId)
+  console.log("levelId:",levelId)
+  console.log("webToken:",webToken)
   Axios(AxiosConfig('GET', `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}`, webToken))
     .then(res => {
       let workoutSchedule = res.data ? _.cloneDeep(res.data) : {};

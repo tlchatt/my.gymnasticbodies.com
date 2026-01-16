@@ -170,7 +170,7 @@ export default function MiniDrawer(props) {
   const userNameFullName = useSelector(state => state.login.name)
   const levelId = useSelector(state => state.login.levelId)
   const postAWS = useSelector(state => state.login.postAWS)
-
+  // console.log("postAWS in MiniDrawer:",postAWS)
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -183,8 +183,8 @@ export default function MiniDrawer(props) {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
 
   const OpenDrawerRedux = useSelector(state => state.OpenDrawer);
-    console.log('OpenDrawerRedux', OpenDrawerRedux)
-    console.log('openDrawer', openDrawer)
+  console.log('OpenDrawerRedux', OpenDrawerRedux)
+  console.log('openDrawer', openDrawer)
   useEffect(() => {
     if (OpenDrawerRedux.open) {
       setOpenDrawer({
@@ -203,8 +203,8 @@ export default function MiniDrawer(props) {
   };
 
   const handleOpenDrawer = (id) => {
-    console.log("id is:",id)
-    console.log("location.pathname:",location.pathname)
+    console.log("id is:", id)
+    console.log("location.pathname:", location.pathname)
     if (location.pathname !== '/') {
       if (levelId === 9 && id === 'SwitchToAuto') {
         history.push('/');
@@ -310,7 +310,7 @@ export default function MiniDrawer(props) {
       {
         text: 'Contact Us',
         cb: () => handleCallBackFunction('ContactUs'),
-        imageName: 'info.png',
+        imageName: 'FocusGroups.png',
         ids: [],
         isActive: () => {
           if (openDrawer.componentId === 'ContactUs') {
