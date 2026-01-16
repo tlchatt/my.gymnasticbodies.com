@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Grid } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import { Route, Redirect, Switch, useLocation} from 'react-router-dom';
+import { Route, Redirect, Switch, useLocation } from 'react-router-dom';
 
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek';
 import Drawer from '../../Components/FreeMemeberComp/Drawer';
@@ -114,7 +114,7 @@ export default function FreeMembers() {
   const timeZone = useSelector(state => state.login.timezone);
   const userLevel = useSelector(state => state.login.userLevel);
   const isFreeMember = useSelector(state => state.login.isFreeMember);
-  const isAllAccessUser = useSelector(state =>  state.login.isAllAccessUser)
+  const isAllAccessUser = useSelector(state => state.login.isAllAccessUser)
 
   const firstAndLast = [getCalanderDate(timeZone, 'MMMM DD')[0], getCalanderDate(timeZone, 'MMMM DD')[6]];
   const location = useLocation();
@@ -160,13 +160,16 @@ export default function FreeMembers() {
   const handleOhNoModal = () => {
     setOhNoModal(true);
   }
-
+  
+  
+  const postAWS = localStorage.getItem('postAWS');
+  console.log("postAWS in freemembers:",postAWS)
   return (
     <>
       {
         isMobile
           ? <MobileDrawer isMobile={isMobile} userChoosenLevel={userLevel} isFreeMember={isFreeMember} handleOhNoModal={handleOhNoModal} />
-          : isTablet ? <Drawer isMobile={isTablet} userChoosenLevel={userLevel}  isFreeMember={isFreeMember} handleOhNoModal={handleOhNoModal}/> : null
+          : isTablet ? <Drawer isMobile={isTablet} userChoosenLevel={userLevel} isFreeMember={isFreeMember} handleOhNoModal={handleOhNoModal} /> : null
       }
       <div className={clsx(classes.root, { [classes.isMobileStyles]: isTablet || isMobile })}>
         <CssBaseline />
@@ -193,7 +196,7 @@ export default function FreeMembers() {
                       </div>
                   }
                 </Grid>
-                : <Grid item xs={8} sm={11} md={11} lg={11} className={classes.headerArea}/>
+                : <Grid item xs={8} sm={11} md={11} lg={11} className={classes.headerArea} />
             }
 
             <div style={{ flex: 1 }} />
@@ -208,7 +211,7 @@ export default function FreeMembers() {
                     : <MyCourses basicLayout />
                 }
               </Route>
-              <Route path="/learn-more/:route" component={HowTo} exact/>
+              <Route path="/learn-more/:route" component={HowTo} exact />
               <Route path="/information" exact>
                 <Information basicLayout />
               </Route>

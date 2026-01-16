@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const cleanName = name => name.replace(/\s+/g, '').toLowerCase();
-let secondRowData = {
+let FoundationSecondRow = {
   "show": true,
   "data": [
     {
@@ -80,7 +80,128 @@ let secondRowData = {
     }
   ]
 }
-let thirdRowData = {
+let HandstandSecondRow = {
+  "show": true,
+  "data": [
+    {
+      "name": "Handstand 1",
+      "nameId": "H1",
+      "imgUrl": "handstand1.jpg"
+    },
+    {
+      "name": "Handstand 2",
+      "nameId": "H2",
+      "imgUrl": "handstand2.jpg"
+    },
+    {
+      "name": "Handstand 3",
+      "nameId": "H3",
+      "imgUrl": "handstand3.jpg"
+    }
+  ]
+}
+let StretchSecondRow = {
+  "show": true,
+  "data": [
+    {
+      "name": "Stretch Series - Middle Split",
+      "nameId": "SMS",
+      "imgUrl": "stretchseriesmiddlesplit.jpg"
+    },
+    {
+      "name": "Stretch Series - Front Split",
+      "nameId": "SFS",
+      "imgUrl": "stretchseriesfrontsplit.jpg"
+    },
+    {
+      "name": "Stretch Series - Thoracic Bridge",
+      "nameId": "STB",
+      "imgUrl": "stretchseriesthoracicbridge.jpg"
+    }
+  ]
+}
+let MovementSecondRow = {
+  "show": true,
+  "data": [
+    {
+      "name": "Quadrupedal Warm Up",
+      "nameId": "SMS",
+      "imgUrl": "movement-quadrupedalwarmup.jpg"
+    },
+    {
+      "name": "Shoulder Roll",
+      "nameId": "SFS",
+      "imgUrl": "movement-shoulderroll.jpg"
+    },
+    {
+      "name": "Forward Roll",
+      "nameId": "STB",
+      "imgUrl": "movement-forwardroll.jpg"
+    },
+    {
+      "name": "Backward Roll",
+      "nameId": "SMS",
+      "imgUrl": "movement-backwardroll.jpg"
+    },
+    {
+      "name": "Handstand Forward Roll",
+      "nameId": "SFS",
+      "imgUrl": "movement-handstandforwardroll.jpg"
+    },
+    {
+      "name": "Back Extension Development",
+      "nameId": "STB",
+      "imgUrl": "movement-backextensiondevelopment.jpg"
+    },
+    {
+      "name": "Cartwheel Development",
+      "nameId": "SMS",
+      "imgUrl": "movement-cartwheeldevelopment.jpg"
+    },
+    {
+      "name": "Cartwheel Refinement",
+      "nameId": "SFS",
+      "imgUrl": "movement-cartwheelrefinement.jpg"
+    },
+    {
+      "name": "Integrated Roll Series",
+      "nameId": "STB",
+      "imgUrl": "movement-integratedrollseries.jpg"
+    },
+
+  ]
+}
+let RingsSecondRow = {
+  "show": true,
+  "data": [
+    {
+      "name": "Ring mobility R1>iM1-8",
+      "nameId": "SMS",
+      "imgUrl": "rings-ringmobilityr1>im1-8.jpg"
+    },
+    {
+      "name": "Reverse Muscle Up",
+      "nameId": "SFS",
+      "imgUrl": "rings-reversemuscleup.jpg"
+    },
+    {
+      "name": "LARS",
+      "nameId": "STB",
+      "imgUrl": "rings-lars.jpg"
+    },
+    {
+      "name": "Ring support",
+      "nameId": "SFS",
+      "imgUrl": "rings-ringsupport.jpg"
+    },
+    {
+      "name": "Back Lever",
+      "nameId": "STB",
+      "imgUrl": "rings-backlever.jpg"
+    }
+  ]
+}
+let FoundationThirdRow = {
   "show": true,
   "data": [
     "Front Lever",
@@ -3340,7 +3461,9 @@ const CourseLibrary = (props) => {
   }, [allProgs])
 
   const handleCardClick = row => {
+    console.log("row in handleCardClick is:", row.associatedCourses)
     if (row.associatedCourses && row.associatedCourses.length > 0) {
+      console.log("if (row.associatedCourses && row.associatedCourses.length > 0) {")
       setSecondRow({
         show: true,
         data: row.associatedCourses
@@ -3357,6 +3480,7 @@ const CourseLibrary = (props) => {
       }
     }
     else {
+      console.log("else secondRow", secondRow)
       if (secondRow.show) {
         setSecondRow({
           show: false,
@@ -3368,7 +3492,7 @@ const CourseLibrary = (props) => {
   }
 
   const handleThirdRowClick = row => {
-    // console.log("row in handleThirdRowClick is:", row)
+    console.log("row in handleThirdRowClick is:", row)
 
     setThirdRow({
       ...thirdRow,
@@ -3390,7 +3514,7 @@ const CourseLibrary = (props) => {
 
 
     axios(config).then(response => {
-      // console.log("response.data is:", response.data)
+      console.log("response.data is:", response.data)
       const keys = Object.keys(response.data);
       if (response.data === "YOU AREN'T ENROLLED IN THIS COURSE.") {
         console.log('YOU AREN\'T ENROLLED IN THIS COURSE');
@@ -6685,9 +6809,9 @@ const CourseLibrary = (props) => {
     }
   }
 
-  // console.log("secondRow:", secondRow)
-  // console.log("thirdRow:", thirdRow)
-  // console.log("allProgs:", allProgs)
+  console.log("secondRow:", secondRow)
+  console.log("thirdRow:", thirdRow)
+  console.log("allProgs:", allProgs)
 
 
   return (
