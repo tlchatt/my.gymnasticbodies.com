@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   makeStyles,
   Card,
@@ -19,7 +19,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { handleDeleteProgression, handleAddProgression } from '../../../Store/Action/LegacyAction'
 import { OpenModal } from '../../../Store/Action/DemoModalActions'
 
@@ -80,12 +80,13 @@ const useStyles = makeStyles(theme => ({
 const EditCard = props => {
   const classes = useStyles();
   const theme = useTheme();
+
   const phoneScreen = useMediaQuery(theme.breakpoints.down(415));
   const [anchorEl, setAnchorEl] = React.useState(null);
   const disptach = useDispatch();
   const { progression } = props;
   const [progId, setProgId] = React.useState();
-
+  const postAWS = useSelector(state => state.login.postAWS)
   useEffect(() => {
     if (progression.stepNo) {
       setProgId(progression.masterySteps[progression.stepNo].masterySetId);
@@ -113,6 +114,10 @@ const EditCard = props => {
   }
 
   const handleAdd = () => {
+    console.log("progression.exerciseId", progression.exerciseId)
+    console.log("progId", progId)
+    console.log("props.date", props.date)
+    console.log("props.isLevels", props.isLevels)
     disptach(handleAddProgression(progression.exerciseId, progId, props.date, props.isLevels));
     setAnchorEl(null);
   }
@@ -133,7 +138,7 @@ const EditCard = props => {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings" style={{padding: phoneScreen ? 4 : 12 }} onClick={handleClick} color='primary'>
+          <IconButton aria-label="settings" style={{ padding: phoneScreen ? 4 : 12 }} onClick={handleClick} color='primary'>
             <SettingsIcon />
           </IconButton>
         }
@@ -144,7 +149,7 @@ const EditCard = props => {
         className={classes.media}
         image={`https://gymfit-images.s3.amazonaws.com/exercises/${progression.image.split('.').join('').toUpperCase()}.jpg`}
       />
-      <CheckCircleIcon className={`${classes.checkMark} ${progression.selected ? classes.selected : null}`}/>
+      <CheckCircleIcon className={`${classes.checkMark} ${progression.selected ? classes.selected : null}`} />
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -157,10 +162,11 @@ const EditCard = props => {
         {
           progression.selected
             ? [
-              <MenuItem onClick={handleDelete} key='Remove'>Remove</MenuItem>,
+              !postAWS ? <MenuItem onClick={handleDelete} key='Remove'>Remove</MenuItem> : null,
               <MenuItem onClick={() => disptach(OpenModal(progression.exerciseId))} key='See Demo'>See Demo</MenuItem>,
-              <MenuItem onClick={handleAdd} key='Update'>Update Step</MenuItem>,
-              <MenuItem key='Add DropDown'>
+              !postAWS ? 
+              <MenuItem onClick={handleAdd} key='Update'>Update Step</MenuItem> : null,
+              !postAWS ?  <MenuItem key='Add DropDown'>
                 <FormControl>
                   <InputLabel id="step-native-simple">Steps</InputLabel>
                   <Select
@@ -175,11 +181,14 @@ const EditCard = props => {
                     <StepsList steps={progression.masterySteps} />
                   </Select>
                 </FormControl>
-              </MenuItem>,
+              </MenuItem> : null,
             ]
             : [
-              <MenuItem onClick={handleAdd} key='Add Button'>Add</MenuItem>,
+              !postAWS ?
+                <MenuItem onClick={handleAdd} key='Add Button'>Add</MenuItem>
+                : null,
               <MenuItem onClick={() => disptach(OpenModal(progression.exerciseId))} key='See Demo'>See Demo</MenuItem>,
+              !postAWS ? 
               <MenuItem key='Add DropDown'>
                 <FormControl>
                   <InputLabel id="step-native-simple">Steps</InputLabel>
@@ -195,7 +204,7 @@ const EditCard = props => {
                     <StepsList steps={progression.masterySteps} />
                   </Select>
                 </FormControl>
-              </MenuItem>
+              </MenuItem> : null
             ]
         }
       </Menu>

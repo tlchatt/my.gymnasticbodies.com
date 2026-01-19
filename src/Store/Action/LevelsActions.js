@@ -3177,9 +3177,9 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
     ],
     "SUNDAY,DECEMBER 21": null
   }
-  console.log("UserId:",UserId)
-  console.log("levelId:",levelId)
-  console.log("webToken:",webToken)
+  console.log("UserId:", UserId)
+  console.log("levelId:", levelId)
+  console.log("webToken:", webToken)
   Axios(AxiosConfig('GET', `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}`, webToken))
     .then(res => {
       let workoutSchedule = res.data ? _.cloneDeep(res.data) : {};
@@ -3429,8 +3429,6 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
   * 3. update legacy workout setsAndReps value in step 1 
   */
 
-
-
   dispatch(getData())
   let data = state.data.allData
 
@@ -3529,7 +3527,7 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
 
 
   allProgramNewData = [...allProgramNewData, ...programData]
-
+  console.log("userSchedule:",userSchedule)
   dispatch({
     type: actionTypes.GET_WORKOUT,
     payload: {
@@ -3755,6 +3753,8 @@ export const GetAllWorkoutInfo = (dateKey, workoutIndex, dateKeyIndex) => (dispa
 
   Axios(AxiosConfig('get', `/workout-service/edit-workout/users/${UserId}?workoutType=${courseName}`, webToken))
     .then(res => {
+      console.log("courseName:", courseName)
+      console.log("res in GetAllWorkoutInfo is:", res.data)
       dispatch({
         type: SET_PROGRESSION,
         allProgressions: res.data.body,
@@ -3764,6 +3764,11791 @@ export const GetAllWorkoutInfo = (dateKey, workoutIndex, dateKeyIndex) => (dispa
         date: date
       })
     }).catch(error => {
-      Sentry.captureException(error);
+      let responseData = {}
+      if (courseName == "Upper Body") {
+        responseData = {
+          "LEVEL 1": {
+            "Hollow Back Press": [
+              {
+                "exerciseId": 30,
+                "name": "Incline Pushup",
+                "image": "HBPPE1",
+                "group": "Upper Body",
+                "exerciseNotation": "A1",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 1
+              },
+              {
+                "exerciseId": 31,
+                "name": "Pushup",
+                "image": "HBPPE2",
+                "group": "Upper Body",
+                "exerciseNotation": "A2",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 2
+              },
+              {
+                "exerciseId": 32,
+                "name": "Pseudo Planche Pushup",
+                "image": "HBPPE3",
+                "group": "Upper Body",
+                "exerciseNotation": "A3",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 3
+              },
+              {
+                "exerciseId": 33,
+                "name": "Bench Dip",
+                "image": "HBPPE4",
+                "group": "Upper Body",
+                "exerciseNotation": "A4",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 4
+              },
+              {
+                "exerciseId": 34,
+                "name": "Negative Parallel Bar Dip",
+                "image": "HBPPE5",
+                "group": "Upper Body",
+                "exerciseNotation": "A5",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 133,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "2": {
+                    "masterySetId": 134,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "3": {
+                    "masterySetId": 135,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "4": {
+                    "masterySetId": 137,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "5": {
+                    "masterySetId": 138,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "6": {
+                    "masterySetId": 139,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "7": {
+                    "masterySetId": 141,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4rx10s"
+                  },
+                  "8": {
+                    "masterySetId": 142,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5rx10s"
+                  },
+                  "9": {
+                    "masterySetId": 143,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5rx10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 5
+              },
+              {
+                "exerciseId": 35,
+                "name": "Parallel Bar Dip",
+                "image": "HBPPE6",
+                "group": "Upper Body",
+                "exerciseNotation": "A6",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 6
+              }
+            ],
+            "Rope Climb": [
+              {
+                "exerciseId": 36,
+                "name": "Incline Row",
+                "image": "RCPE1",
+                "group": "Upper Body",
+                "exerciseNotation": "B1",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 1
+              },
+              {
+                "exerciseId": 37,
+                "name": "Ground Rows",
+                "image": "RCPE2",
+                "group": "Upper Body",
+                "exerciseNotation": "B2",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 2
+              },
+              {
+                "exerciseId": 38,
+                "name": "Elevated Row",
+                "image": "RCPE3",
+                "group": "Upper Body",
+                "exerciseNotation": "B3",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 3
+              },
+              {
+                "exerciseId": 39,
+                "name": "Bulgarian Row",
+                "image": "RCPE4",
+                "group": "Upper Body",
+                "exerciseNotation": "B4",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 4
+              },
+              {
+                "exerciseId": 40,
+                "name": "Hinge Row",
+                "image": "RCPE5",
+                "group": "Upper Body",
+                "exerciseNotation": "B5",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 5
+              },
+              {
+                "exerciseId": 41,
+                "name": "Bent Arm Chin Hang",
+                "image": "RCPE6",
+                "group": "Upper Body",
+                "exerciseNotation": "B6",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 6
+              }
+            ],
+            "Straddle Planche": [
+              {
+                "exerciseId": 7,
+                "name": "Scapular Shrugs",
+                "image": "sPLPE1",
+                "group": "Upper Body",
+                "exerciseNotation": "C1",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 1
+              },
+              {
+                "exerciseId": 8,
+                "name": "Forearm Plank",
+                "image": "sPLPE2",
+                "group": "Upper Body",
+                "exerciseNotation": "C2",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 85,
+                    "masteryLevel": "60s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "2": {
+                    "masterySetId": 86,
+                    "masteryLevel": "60s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12s"
+                  },
+                  "3": {
+                    "masterySetId": 87,
+                    "masteryLevel": "60s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24s"
+                  },
+                  "4": {
+                    "masterySetId": 89,
+                    "masteryLevel": "60s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "5": {
+                    "masterySetId": 90,
+                    "masteryLevel": "60s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36s"
+                  },
+                  "6": {
+                    "masterySetId": 91,
+                    "masteryLevel": "60s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36s"
+                  },
+                  "7": {
+                    "masterySetId": 93,
+                    "masteryLevel": "60s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48s"
+                  },
+                  "8": {
+                    "masterySetId": 94,
+                    "masteryLevel": "60s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60s"
+                  },
+                  "9": {
+                    "masterySetId": 95,
+                    "masteryLevel": "60s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 2
+              },
+              {
+                "exerciseId": 9,
+                "name": "Plank",
+                "image": "sPLPE3",
+                "group": "Upper Body",
+                "exerciseNotation": "C3",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 85,
+                    "masteryLevel": "60s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "2": {
+                    "masterySetId": 86,
+                    "masteryLevel": "60s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12s"
+                  },
+                  "3": {
+                    "masterySetId": 87,
+                    "masteryLevel": "60s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24s"
+                  },
+                  "4": {
+                    "masterySetId": 89,
+                    "masteryLevel": "60s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "5": {
+                    "masterySetId": 90,
+                    "masteryLevel": "60s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36s"
+                  },
+                  "6": {
+                    "masterySetId": 91,
+                    "masteryLevel": "60s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36s"
+                  },
+                  "7": {
+                    "masterySetId": 93,
+                    "masteryLevel": "60s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48s"
+                  },
+                  "8": {
+                    "masterySetId": 94,
+                    "masteryLevel": "60s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60s"
+                  },
+                  "9": {
+                    "masterySetId": 95,
+                    "masteryLevel": "60s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 3
+              },
+              {
+                "exerciseId": 10,
+                "name": "Single Arm Plank",
+                "image": "sPLPE4",
+                "group": "Upper Body",
+                "exerciseNotation": "C4",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 4
+              },
+              {
+                "exerciseId": 11,
+                "name": "Planche Lean",
+                "image": "sPLPE5",
+                "group": "Upper Body",
+                "exerciseNotation": "C5",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 5
+              },
+              {
+                "exerciseId": 12,
+                "name": "Elevated Planche Lean",
+                "image": "sPLPE6",
+                "group": "Upper Body",
+                "exerciseNotation": "C6",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 6
+              }
+            ]
+          },
+          "LEVEL 2": {
+            "Hollow Back Press": [
+              {
+                "exerciseId": 129,
+                "name": "Single Bar Dip",
+                "image": "HBPPE7",
+                "group": "Upper Body",
+                "exerciseNotation": "A7",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 7
+              },
+              {
+                "exerciseId": 130,
+                "name": "Undergrip Single Bar Dip",
+                "image": "HBPPE8",
+                "group": "Upper Body",
+                "exerciseNotation": "A8",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 8
+              },
+              {
+                "exerciseId": 131,
+                "name": "Korean Dip",
+                "image": "HBPPE9",
+                "group": "Upper Body",
+                "exerciseNotation": "A9",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 9
+              },
+              {
+                "exerciseId": 132,
+                "name": "Undergrip Korean Dip",
+                "image": "HBPPE10",
+                "group": "Upper Body",
+                "exerciseNotation": "A10",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 10
+              },
+              {
+                "exerciseId": 133,
+                "name": "Russian Dip",
+                "image": "HBPPE11",
+                "group": "Upper Body",
+                "exerciseNotation": "A11",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 11
+              },
+              {
+                "exerciseId": 134,
+                "name": "Russian L Dip",
+                "image": "HBPPE12",
+                "group": "Upper Body",
+                "exerciseNotation": "A12",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 12
+              },
+              {
+                "exerciseId": 135,
+                "name": "Ring Dip",
+                "image": "HBPPE13",
+                "group": "Upper Body",
+                "exerciseNotation": "A13",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 13
+              },
+              {
+                "exerciseId": 136,
+                "name": "Bulgarian Ring Dip",
+                "image": "HBPPE14",
+                "group": "Upper Body",
+                "exerciseNotation": "A14",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 14
+              }
+            ],
+            "Rope Climb": [
+              {
+                "exerciseId": 137,
+                "name": "Negative Pull-up",
+                "image": "RCPE7",
+                "group": "Upper Body",
+                "exerciseNotation": "B7",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 133,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "2": {
+                    "masterySetId": 134,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "3": {
+                    "masterySetId": 135,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "4": {
+                    "masterySetId": 137,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "5": {
+                    "masterySetId": 138,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "6": {
+                    "masterySetId": 139,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "7": {
+                    "masterySetId": 141,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4rx10s"
+                  },
+                  "8": {
+                    "masterySetId": 142,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5rx10s"
+                  },
+                  "9": {
+                    "masterySetId": 143,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5rx10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 7
+              },
+              {
+                "exerciseId": 138,
+                "name": "Pull-up",
+                "image": "RCPE8",
+                "group": "Upper Body",
+                "exerciseNotation": "B8",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 8
+              },
+              {
+                "exerciseId": 139,
+                "name": "L Chin-up",
+                "image": "RCPE9",
+                "group": "Upper Body",
+                "exerciseNotation": "B9",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 9
+              },
+              {
+                "exerciseId": 140,
+                "name": "L Pull-up",
+                "image": "RCPE10",
+                "group": "Upper Body",
+                "exerciseNotation": "B10",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 10
+              },
+              {
+                "exerciseId": 141,
+                "name": "Bulgarian Pull-up",
+                "image": "RCPE11",
+                "group": "Upper Body",
+                "exerciseNotation": "B11",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 11
+              },
+              {
+                "exerciseId": 142,
+                "name": "Bulgarian L Pull-up",
+                "image": "RCPE12",
+                "group": "Upper Body",
+                "exerciseNotation": "B12",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 12
+              },
+              {
+                "exerciseId": 143,
+                "name": "Wide Grip Pull-up",
+                "image": "RCPE13",
+                "group": "Upper Body",
+                "exerciseNotation": "B13",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 13
+              },
+              {
+                "exerciseId": 144,
+                "name": "Wide Grip Behind the Neck Pull-up",
+                "image": "RCPE14",
+                "group": "Upper Body",
+                "exerciseNotation": "B14",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 14
+              }
+            ],
+            "Straddle Planche": [
+              {
+                "exerciseId": 109,
+                "name": "Elevated Planche Bounce",
+                "image": "sPLPE7",
+                "group": "Upper Body",
+                "exerciseNotation": "C7",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 7
+              },
+              {
+                "exerciseId": 110,
+                "name": "Frog Stand",
+                "image": "sPLSE1",
+                "group": "Upper Body",
+                "exerciseNotation": "C8",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 8
+              },
+              {
+                "exerciseId": 111,
+                "name": "Advanced Frog Stand",
+                "image": "sPLSE2",
+                "group": "Upper Body",
+                "exerciseNotation": "C9",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 9
+              },
+              {
+                "exerciseId": 112,
+                "name": "Tuck Planche",
+                "image": "sPLSE3",
+                "group": "Upper Body",
+                "exerciseNotation": "C10",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 10
+              }
+            ]
+          },
+          "LEVEL 3": {
+            "Hollow Back Press": [
+              {
+                "exerciseId": 169,
+                "name": "Box Headstand Pushup",
+                "image": "HBPPE15",
+                "group": "Upper Body",
+                "exerciseNotation": "A15",
+                "stepNo": 1,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": true,
+                "usersWorkoutSettingsId": 5212907,
+                "setsAndReps": "3x1r",
+                "order": 15
+              },
+              {
+                "exerciseId": 170,
+                "name": "Negative Headstand Pushup",
+                "image": "HBPPE16",
+                "group": "Upper Body",
+                "exerciseNotation": "A16",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 133,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "2": {
+                    "masterySetId": 134,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "3": {
+                    "masterySetId": 135,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "4": {
+                    "masterySetId": 137,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "5": {
+                    "masterySetId": 138,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "6": {
+                    "masterySetId": 139,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "7": {
+                    "masterySetId": 141,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4rx10s"
+                  },
+                  "8": {
+                    "masterySetId": 142,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5rx10s"
+                  },
+                  "9": {
+                    "masterySetId": 143,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5rx10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 16
+              },
+              {
+                "exerciseId": 171,
+                "name": "Free HeSPU",
+                "image": "HBPPE17",
+                "group": "Upper Body",
+                "exerciseNotation": "A17",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 17
+              },
+              {
+                "exerciseId": 172,
+                "name": "Elevated Headstand Pushup",
+                "image": "HBPPE18",
+                "group": "Upper Body",
+                "exerciseNotation": "A18",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 18
+              },
+              {
+                "exerciseId": 173,
+                "name": "Wall Handstand Pushup",
+                "image": "HBPPE19",
+                "group": "Upper Body",
+                "exerciseNotation": "A19",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 19
+              },
+              {
+                "exerciseId": 174,
+                "name": "Pseudo Planche Pushup +",
+                "image": "HBPPE20",
+                "group": "Upper Body",
+                "exerciseNotation": "A20",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 20
+              },
+              {
+                "exerciseId": 175,
+                "name": "Planche Dip",
+                "image": "HBPPE21",
+                "group": "Upper Body",
+                "exerciseNotation": "A21",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 21
+              },
+              {
+                "exerciseId": 176,
+                "name": "Modified Planche Pushup",
+                "image": "HBPPE22",
+                "group": "Upper Body",
+                "exerciseNotation": "A22",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 22
+              }
+            ],
+            "Rope Climb": [
+              {
+                "exerciseId": 177,
+                "name": "Wide Grip L Pull-up",
+                "image": "RCPE15",
+                "group": "Upper Body",
+                "exerciseNotation": "B15",
+                "stepNo": 1,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": true,
+                "usersWorkoutSettingsId": 5212908,
+                "setsAndReps": "3x1r",
+                "order": 15
+              },
+              {
+                "exerciseId": 178,
+                "name": "Pullover",
+                "image": "RCPE16",
+                "group": "Upper Body",
+                "exerciseNotation": "B16",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 16
+              },
+              {
+                "exerciseId": 179,
+                "name": "Naners",
+                "image": "RCPE17",
+                "group": "Upper Body",
+                "exerciseNotation": "B17",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 17
+              },
+              {
+                "exerciseId": 180,
+                "name": "TOPS Pull",
+                "image": "RCPE18",
+                "group": "Upper Body",
+                "exerciseNotation": "B18",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 18
+              },
+              {
+                "exerciseId": 181,
+                "name": "Yewkis",
+                "image": "RCPE19",
+                "group": "Upper Body",
+                "exerciseNotation": "B19",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 19
+              },
+              {
+                "exerciseId": 182,
+                "name": "1/2 Front Lever Pull",
+                "image": "RCPE20",
+                "group": "Upper Body",
+                "exerciseNotation": "B20",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 20
+              },
+              {
+                "exerciseId": 183,
+                "name": "Front Lever Pull",
+                "image": "RCPE21",
+                "group": "Upper Body",
+                "exerciseNotation": "B21",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 21
+              },
+              {
+                "exerciseId": 184,
+                "name": "Circle Front Lever Pull",
+                "image": "RCPE22",
+                "group": "Upper Body",
+                "exerciseNotation": "B22",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 22
+              }
+            ],
+            "Straddle Planche": [
+              {
+                "exerciseId": 151,
+                "name": "Open Planche",
+                "image": "sPLSE4",
+                "group": "Upper Body",
+                "exerciseNotation": "C11",
+                "stepNo": 1,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": true,
+                "usersWorkoutSettingsId": 5212903,
+                "setsAndReps": "3x6s",
+                "order": 11
+              },
+              {
+                "exerciseId": 152,
+                "name": "Open Planche Single Leg Extension",
+                "image": "sPLSE5",
+                "group": "Upper Body",
+                "exerciseNotation": "C12",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 12
+              },
+              {
+                "exerciseId": 153,
+                "name": "Open Planche Double Leg Extension",
+                "image": "sPLSE6",
+                "group": "Upper Body",
+                "exerciseNotation": "C13",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 13
+              },
+              {
+                "exerciseId": 154,
+                "name": "1/2 Straddle Planche",
+                "image": "sPLSE7",
+                "group": "Upper Body",
+                "exerciseNotation": "C14",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 14
+              }
+            ]
+          },
+          "LEVEL 4": {
+            "Hollow Back Press": [
+              {
+                "exerciseId": 212,
+                "name": "Chest Roll 1",
+                "image": "HBPSE1",
+                "group": "Upper Body",
+                "exerciseNotation": "A23",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 23
+              },
+              {
+                "exerciseId": 213,
+                "name": "Chest Roll 2",
+                "image": "HBPSE2",
+                "group": "Upper Body",
+                "exerciseNotation": "A24",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 24
+              },
+              {
+                "exerciseId": 214,
+                "name": "Chest Roll 3",
+                "image": "HBPSE3",
+                "group": "Upper Body",
+                "exerciseNotation": "A25",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 25
+              },
+              {
+                "exerciseId": 215,
+                "name": "Chest Roll 4",
+                "image": "HBPSE4",
+                "group": "Upper Body",
+                "exerciseNotation": "A26",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 26
+              },
+              {
+                "exerciseId": 216,
+                "name": "Chest Roll 5",
+                "image": "HBPSE5",
+                "group": "Upper Body",
+                "exerciseNotation": "A27",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 27
+              },
+              {
+                "exerciseId": 217,
+                "name": "Chest Roll 6",
+                "image": "HBPSE6",
+                "group": "Upper Body",
+                "exerciseNotation": "A28",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 28
+              },
+              {
+                "exerciseId": 218,
+                "name": "1/2 Hollow Back Press",
+                "image": "HBPSE7",
+                "group": "Upper Body",
+                "exerciseNotation": "A29",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 29
+              },
+              {
+                "exerciseId": 219,
+                "name": "Hollow Back Press ",
+                "image": "HBPSE8",
+                "group": "Upper Body",
+                "exerciseNotation": "A30",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 30
+              }
+            ],
+            "Rope Climb": [
+              {
+                "exerciseId": 220,
+                "name": "Czech 1",
+                "image": "RCSE1",
+                "group": "Upper Body",
+                "exerciseNotation": "B23",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 23
+              },
+              {
+                "exerciseId": 221,
+                "name": "Czech 2",
+                "image": "RCSE2",
+                "group": "Upper Body",
+                "exerciseNotation": "B24",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 24
+              },
+              {
+                "exerciseId": 222,
+                "name": "Czech 3",
+                "image": "RCSE3",
+                "group": "Upper Body",
+                "exerciseNotation": "B25",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 25
+              },
+              {
+                "exerciseId": 223,
+                "name": "Czech 4",
+                "image": "RCSE4",
+                "group": "Upper Body",
+                "exerciseNotation": "B26",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 26
+              },
+              {
+                "exerciseId": 224,
+                "name": "Rope Climb",
+                "image": "RCSE516",
+                "group": "Upper Body",
+                "exerciseNotation": "B27",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 181,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1/4 RC"
+                  },
+                  "2": {
+                    "masterySetId": 182,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1/4 RC"
+                  },
+                  "3": {
+                    "masterySetId": 183,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "1/2 RC"
+                  },
+                  "4": {
+                    "masterySetId": 185,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "1/2 RC"
+                  },
+                  "5": {
+                    "masterySetId": 186,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3/4 RC"
+                  },
+                  "6": {
+                    "masterySetId": 187,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3/4 RC"
+                  },
+                  "7": {
+                    "masterySetId": 189,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "1RC"
+                  },
+                  "8": {
+                    "masterySetId": 190,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5/4 RC"
+                  },
+                  "9": {
+                    "masterySetId": 191,
+                    "masteryLevel": "5/4 RC",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5/4 RC"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 27
+              }
+            ],
+            "Straddle Planche": [
+              {
+                "exerciseId": 192,
+                "name": "1/2 Straddle Planche Single Extension",
+                "image": "sPLSE8",
+                "group": "Upper Body",
+                "exerciseNotation": "C15",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 15
+              },
+              {
+                "exerciseId": 193,
+                "name": "1/2 Straddle Planche Double Extension",
+                "image": "sPLSE9",
+                "group": "Upper Body",
+                "exerciseNotation": "C16",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 16
+              },
+              {
+                "exerciseId": 194,
+                "name": "Scissoring Straddle Planche",
+                "image": "sPLSE10",
+                "group": "Upper Body",
+                "exerciseNotation": "C17",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 17
+              },
+              {
+                "exerciseId": 195,
+                "name": "Straddle Planche",
+                "image": "sPLSE11",
+                "group": "Upper Body",
+                "exerciseNotation": "C18",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 18
+              }
+            ]
+          }
+        }
+      }
+      if (courseName === "Core") {
+        responseData = {
+          "LEVEL 1": {
+            "Front Lever": [
+              {
+                "exerciseId": 1,
+                "name": "Bent Hollow Body Hold",
+                "image": "FLPE1",
+                "group": "Core",
+                "exerciseNotation": "A1",
+                "stepNo": 1,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 85,
+                    "masteryLevel": "60s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "2": {
+                    "masterySetId": 86,
+                    "masteryLevel": "60s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12s"
+                  },
+                  "3": {
+                    "masterySetId": 87,
+                    "masteryLevel": "60s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24s"
+                  },
+                  "4": {
+                    "masterySetId": 89,
+                    "masteryLevel": "60s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "5": {
+                    "masterySetId": 90,
+                    "masteryLevel": "60s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36s"
+                  },
+                  "6": {
+                    "masterySetId": 91,
+                    "masteryLevel": "60s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36s"
+                  },
+                  "7": {
+                    "masterySetId": 93,
+                    "masteryLevel": "60s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48s"
+                  },
+                  "8": {
+                    "masterySetId": 94,
+                    "masteryLevel": "60s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60s"
+                  },
+                  "9": {
+                    "masterySetId": 95,
+                    "masteryLevel": "60s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60s"
+                  }
+                },
+                "selected": true,
+                "usersWorkoutSettingsId": 5212912,
+                "setsAndReps": "3x12s",
+                "order": 1
+              },
+              {
+                "exerciseId": 2,
+                "name": "Bent Hollow Body Rock",
+                "image": "FLPE2",
+                "group": "Core",
+                "exerciseNotation": "A2",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 49,
+                    "masteryLevel": "60r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12r"
+                  },
+                  "2": {
+                    "masterySetId": 50,
+                    "masteryLevel": "60r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12r"
+                  },
+                  "3": {
+                    "masterySetId": 51,
+                    "masteryLevel": "60r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24r"
+                  },
+                  "4": {
+                    "masterySetId": 53,
+                    "masteryLevel": "60r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24r"
+                  },
+                  "5": {
+                    "masterySetId": 54,
+                    "masteryLevel": "60r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36r"
+                  },
+                  "6": {
+                    "masterySetId": 55,
+                    "masteryLevel": "60r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36r"
+                  },
+                  "7": {
+                    "masterySetId": 57,
+                    "masteryLevel": "60r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48r"
+                  },
+                  "8": {
+                    "masterySetId": 58,
+                    "masteryLevel": "60r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60r"
+                  },
+                  "9": {
+                    "masterySetId": 59,
+                    "masteryLevel": "60r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 2
+              },
+              {
+                "exerciseId": 3,
+                "name": "Straddle Hollow Body Hold",
+                "image": "FLPE3",
+                "group": "Core",
+                "exerciseNotation": "A3",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 85,
+                    "masteryLevel": "60s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "2": {
+                    "masterySetId": 86,
+                    "masteryLevel": "60s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12s"
+                  },
+                  "3": {
+                    "masterySetId": 87,
+                    "masteryLevel": "60s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24s"
+                  },
+                  "4": {
+                    "masterySetId": 89,
+                    "masteryLevel": "60s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "5": {
+                    "masterySetId": 90,
+                    "masteryLevel": "60s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36s"
+                  },
+                  "6": {
+                    "masterySetId": 91,
+                    "masteryLevel": "60s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36s"
+                  },
+                  "7": {
+                    "masterySetId": 93,
+                    "masteryLevel": "60s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48s"
+                  },
+                  "8": {
+                    "masterySetId": 94,
+                    "masteryLevel": "60s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60s"
+                  },
+                  "9": {
+                    "masterySetId": 95,
+                    "masteryLevel": "60s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 3
+              },
+              {
+                "exerciseId": 4,
+                "name": "Straddle Hollow Body Rock",
+                "image": "FLPE4",
+                "group": "Core",
+                "exerciseNotation": "A4",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 49,
+                    "masteryLevel": "60r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12r"
+                  },
+                  "2": {
+                    "masterySetId": 50,
+                    "masteryLevel": "60r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12r"
+                  },
+                  "3": {
+                    "masterySetId": 51,
+                    "masteryLevel": "60r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24r"
+                  },
+                  "4": {
+                    "masterySetId": 53,
+                    "masteryLevel": "60r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24r"
+                  },
+                  "5": {
+                    "masterySetId": 54,
+                    "masteryLevel": "60r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36r"
+                  },
+                  "6": {
+                    "masterySetId": 55,
+                    "masteryLevel": "60r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36r"
+                  },
+                  "7": {
+                    "masterySetId": 57,
+                    "masteryLevel": "60r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48r"
+                  },
+                  "8": {
+                    "masterySetId": 58,
+                    "masteryLevel": "60r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60r"
+                  },
+                  "9": {
+                    "masterySetId": 59,
+                    "masteryLevel": "60r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 4
+              },
+              {
+                "exerciseId": 5,
+                "name": "Hollow Body Hold",
+                "image": "FLPE5",
+                "group": "Core",
+                "exerciseNotation": "A5",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 85,
+                    "masteryLevel": "60s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "2": {
+                    "masterySetId": 86,
+                    "masteryLevel": "60s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12s"
+                  },
+                  "3": {
+                    "masterySetId": 87,
+                    "masteryLevel": "60s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24s"
+                  },
+                  "4": {
+                    "masterySetId": 89,
+                    "masteryLevel": "60s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "5": {
+                    "masterySetId": 90,
+                    "masteryLevel": "60s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36s"
+                  },
+                  "6": {
+                    "masterySetId": 91,
+                    "masteryLevel": "60s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36s"
+                  },
+                  "7": {
+                    "masterySetId": 93,
+                    "masteryLevel": "60s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48s"
+                  },
+                  "8": {
+                    "masterySetId": 94,
+                    "masteryLevel": "60s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60s"
+                  },
+                  "9": {
+                    "masterySetId": 95,
+                    "masteryLevel": "60s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 5
+              },
+              {
+                "exerciseId": 6,
+                "name": "Hollow Body Rock",
+                "image": "FLPE6",
+                "group": "Core",
+                "exerciseNotation": "A6",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 49,
+                    "masteryLevel": "60r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12r"
+                  },
+                  "2": {
+                    "masterySetId": 50,
+                    "masteryLevel": "60r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12r"
+                  },
+                  "3": {
+                    "masterySetId": 51,
+                    "masteryLevel": "60r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24r"
+                  },
+                  "4": {
+                    "masterySetId": 53,
+                    "masteryLevel": "60r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24r"
+                  },
+                  "5": {
+                    "masterySetId": 54,
+                    "masteryLevel": "60r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36r"
+                  },
+                  "6": {
+                    "masterySetId": 55,
+                    "masteryLevel": "60r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36r"
+                  },
+                  "7": {
+                    "masterySetId": 57,
+                    "masteryLevel": "60r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48r"
+                  },
+                  "8": {
+                    "masterySetId": 58,
+                    "masteryLevel": "60r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60r"
+                  },
+                  "9": {
+                    "masterySetId": 59,
+                    "masteryLevel": "60r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 6
+              }
+            ],
+            "Side Lever": [
+              {
+                "exerciseId": 13,
+                "name": "Seated Russian Twist",
+                "image": "SLPE1",
+                "group": "Core",
+                "exerciseNotation": "B1",
+                "stepNo": 1,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 37,
+                    "masteryLevel": "30r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "2": {
+                    "masterySetId": 38,
+                    "masteryLevel": "30r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "3": {
+                    "masterySetId": 39,
+                    "masteryLevel": "30r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12r"
+                  },
+                  "4": {
+                    "masterySetId": 41,
+                    "masteryLevel": "30r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "5": {
+                    "masterySetId": 42,
+                    "masteryLevel": "30r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18r"
+                  },
+                  "6": {
+                    "masterySetId": 43,
+                    "masteryLevel": "30r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18r"
+                  },
+                  "7": {
+                    "masterySetId": 45,
+                    "masteryLevel": "30r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24r"
+                  },
+                  "8": {
+                    "masterySetId": 46,
+                    "masteryLevel": "30r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30r"
+                  },
+                  "9": {
+                    "masterySetId": 47,
+                    "masteryLevel": "30r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30r"
+                  }
+                },
+                "selected": true,
+                "usersWorkoutSettingsId": 5212913,
+                "setsAndReps": "3x6r",
+                "order": 1
+              },
+              {
+                "exerciseId": 14,
+                "name": "Elbow Side Plank Twist",
+                "image": "SLPE2",
+                "group": "Core",
+                "exerciseNotation": "B2",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 121,
+                    "masteryLevel": "10r@",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r@"
+                  },
+                  "2": {
+                    "masterySetId": 122,
+                    "masteryLevel": "10r@",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r@"
+                  },
+                  "3": {
+                    "masterySetId": 123,
+                    "masteryLevel": "10r@",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r@"
+                  },
+                  "4": {
+                    "masterySetId": 125,
+                    "masteryLevel": "10r@",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r@"
+                  },
+                  "5": {
+                    "masterySetId": 126,
+                    "masteryLevel": "10r@",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r@"
+                  },
+                  "6": {
+                    "masterySetId": 127,
+                    "masteryLevel": "10r@",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r@"
+                  },
+                  "7": {
+                    "masterySetId": 129,
+                    "masteryLevel": "10r@",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r@"
+                  },
+                  "8": {
+                    "masterySetId": 130,
+                    "masteryLevel": "10r@",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r@"
+                  },
+                  "9": {
+                    "masterySetId": 131,
+                    "masteryLevel": "10r@",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r@"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 2
+              },
+              {
+                "exerciseId": 15,
+                "name": "Side Over Arch",
+                "image": "SLPE3",
+                "group": "Core",
+                "exerciseNotation": "B3",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 121,
+                    "masteryLevel": "10r@",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r@"
+                  },
+                  "2": {
+                    "masterySetId": 122,
+                    "masteryLevel": "10r@",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r@"
+                  },
+                  "3": {
+                    "masterySetId": 123,
+                    "masteryLevel": "10r@",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r@"
+                  },
+                  "4": {
+                    "masterySetId": 125,
+                    "masteryLevel": "10r@",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r@"
+                  },
+                  "5": {
+                    "masterySetId": 126,
+                    "masteryLevel": "10r@",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r@"
+                  },
+                  "6": {
+                    "masterySetId": 127,
+                    "masteryLevel": "10r@",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r@"
+                  },
+                  "7": {
+                    "masterySetId": 129,
+                    "masteryLevel": "10r@",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r@"
+                  },
+                  "8": {
+                    "masterySetId": 130,
+                    "masteryLevel": "10r@",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r@"
+                  },
+                  "9": {
+                    "masterySetId": 131,
+                    "masteryLevel": "10r@",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r@"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 3
+              },
+              {
+                "exerciseId": 16,
+                "name": "Arch Up",
+                "image": "SLPE4",
+                "group": "Core",
+                "exerciseNotation": "B4",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 4
+              },
+              {
+                "exerciseId": 17,
+                "name": "Twisting Arch Up",
+                "image": "SLPE5",
+                "group": "Core",
+                "exerciseNotation": "B5",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 121,
+                    "masteryLevel": "10r@",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r@"
+                  },
+                  "2": {
+                    "masterySetId": 122,
+                    "masteryLevel": "10r@",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r@"
+                  },
+                  "3": {
+                    "masterySetId": 123,
+                    "masteryLevel": "10r@",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r@"
+                  },
+                  "4": {
+                    "masterySetId": 125,
+                    "masteryLevel": "10r@",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r@"
+                  },
+                  "5": {
+                    "masterySetId": 126,
+                    "masteryLevel": "10r@",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r@"
+                  },
+                  "6": {
+                    "masterySetId": 127,
+                    "masteryLevel": "10r@",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r@"
+                  },
+                  "7": {
+                    "masterySetId": 129,
+                    "masteryLevel": "10r@",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r@"
+                  },
+                  "8": {
+                    "masterySetId": 130,
+                    "masteryLevel": "10r@",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r@"
+                  },
+                  "9": {
+                    "masterySetId": 131,
+                    "masteryLevel": "10r@",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r@"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 5
+              },
+              {
+                "exerciseId": 18,
+                "name": "Circle Arch Up",
+                "image": "SLPE6",
+                "group": "Core",
+                "exerciseNotation": "B6",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 6
+              }
+            ],
+            "Manna": [
+              {
+                "exerciseId": 19,
+                "name": "Tuck-Up",
+                "image": "MNPE1",
+                "group": "Core",
+                "exerciseNotation": "C1",
+                "stepNo": 1,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": true,
+                "usersWorkoutSettingsId": 5212914,
+                "setsAndReps": "3x3r",
+                "order": 1
+              },
+              {
+                "exerciseId": 20,
+                "name": "Straddle Up",
+                "image": "MNPE2",
+                "group": "Core",
+                "exerciseNotation": "C2",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 2
+              },
+              {
+                "exerciseId": 21,
+                "name": "V-Ups",
+                "image": "MNPE3",
+                "group": "Core",
+                "exerciseNotation": "C3",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 25,
+                    "masteryLevel": "15r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "3r"
+                  },
+                  "2": {
+                    "masterySetId": 26,
+                    "masteryLevel": "15r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "3": {
+                    "masterySetId": 27,
+                    "masteryLevel": "15r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "4": {
+                    "masterySetId": 29,
+                    "masteryLevel": "15r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "5": {
+                    "masterySetId": 30,
+                    "masteryLevel": "15r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "9r"
+                  },
+                  "6": {
+                    "masterySetId": 31,
+                    "masteryLevel": "15r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "9r"
+                  },
+                  "7": {
+                    "masterySetId": 33,
+                    "masteryLevel": "15r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "8": {
+                    "masterySetId": 34,
+                    "masteryLevel": "15r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "15r"
+                  },
+                  "9": {
+                    "masterySetId": 35,
+                    "masteryLevel": "15r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "15r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 3
+              },
+              {
+                "exerciseId": 22,
+                "name": "1/2 Tuck Hanging Leg Lift",
+                "image": "MNPE4",
+                "group": "Core",
+                "exerciseNotation": "C4",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 4
+              },
+              {
+                "exerciseId": 23,
+                "name": "1/2 Hanging Leg Lift",
+                "image": "MNPE5",
+                "group": "Core",
+                "exerciseNotation": "C5",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 5
+              },
+              {
+                "exerciseId": 24,
+                "name": "Negative Hanging Leg Lift ",
+                "image": "MNPE6",
+                "group": "Core",
+                "exerciseNotation": "C6",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 133,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "2": {
+                    "masterySetId": 134,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "3": {
+                    "masterySetId": 135,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "4": {
+                    "masterySetId": 137,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "5": {
+                    "masterySetId": 138,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "6": {
+                    "masterySetId": 139,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "7": {
+                    "masterySetId": 141,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4rx10s"
+                  },
+                  "8": {
+                    "masterySetId": 142,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5rx10s"
+                  },
+                  "9": {
+                    "masterySetId": 143,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5rx10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 6
+              }
+            ]
+          },
+          "LEVEL 2": {
+            "Front Lever": [
+              {
+                "exerciseId": 101,
+                "name": "Negative Body Lever Straddle",
+                "image": "FLPE7",
+                "group": "Core",
+                "exerciseNotation": "A7",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 133,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "2": {
+                    "masterySetId": 134,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "3": {
+                    "masterySetId": 135,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "4": {
+                    "masterySetId": 137,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "5": {
+                    "masterySetId": 138,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "6": {
+                    "masterySetId": 139,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "7": {
+                    "masterySetId": 141,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4rx10s"
+                  },
+                  "8": {
+                    "masterySetId": 142,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5rx10s"
+                  },
+                  "9": {
+                    "masterySetId": 143,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5rx10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 7
+              },
+              {
+                "exerciseId": 102,
+                "name": "Negative Body Lever Single Leg",
+                "image": "FLPE8",
+                "group": "Core",
+                "exerciseNotation": "A8",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 133,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "2": {
+                    "masterySetId": 134,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "3": {
+                    "masterySetId": 135,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "4": {
+                    "masterySetId": 137,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "5": {
+                    "masterySetId": 138,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "6": {
+                    "masterySetId": 139,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "7": {
+                    "masterySetId": 141,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4rx10s"
+                  },
+                  "8": {
+                    "masterySetId": 142,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5rx10s"
+                  },
+                  "9": {
+                    "masterySetId": 143,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5rx10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 8
+              },
+              {
+                "exerciseId": 103,
+                "name": "Negative Body Lever",
+                "image": "FLPE9",
+                "group": "Core",
+                "exerciseNotation": "A9",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 133,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "2": {
+                    "masterySetId": 134,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "3": {
+                    "masterySetId": 135,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "4": {
+                    "masterySetId": 137,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "5": {
+                    "masterySetId": 138,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "6": {
+                    "masterySetId": 139,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "7": {
+                    "masterySetId": 141,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4rx10s"
+                  },
+                  "8": {
+                    "masterySetId": 142,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5rx10s"
+                  },
+                  "9": {
+                    "masterySetId": 143,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5rx10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 9
+              },
+              {
+                "exerciseId": 104,
+                "name": "Body Lever",
+                "image": "FLPE10",
+                "group": "Core",
+                "exerciseNotation": "A10",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 10
+              },
+              {
+                "exerciseId": 105,
+                "name": "Negative Vertical Body Lever",
+                "image": "FLPE11",
+                "group": "Core",
+                "exerciseNotation": "A11",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 133,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "2": {
+                    "masterySetId": 134,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1rx10s"
+                  },
+                  "3": {
+                    "masterySetId": 135,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "4": {
+                    "masterySetId": 137,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2rx10s"
+                  },
+                  "5": {
+                    "masterySetId": 138,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "6": {
+                    "masterySetId": 139,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3rx10s"
+                  },
+                  "7": {
+                    "masterySetId": 141,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4rx10s"
+                  },
+                  "8": {
+                    "masterySetId": 142,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5rx10s"
+                  },
+                  "9": {
+                    "masterySetId": 143,
+                    "masteryLevel": "5rx10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5rx10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 11
+              },
+              {
+                "exerciseId": 106,
+                "name": "Vertical Body Lever",
+                "image": "FLPE12",
+                "group": "Core",
+                "exerciseNotation": "A12",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 12
+              },
+              {
+                "exerciseId": 107,
+                "name": "Single Bar Inverted Hang",
+                "image": "FLPE13",
+                "group": "Core",
+                "exerciseNotation": "A13",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 13
+              },
+              {
+                "exerciseId": 108,
+                "name": "Kip Extension",
+                "image": "FLPE14",
+                "group": "Core",
+                "exerciseNotation": "A14",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 14
+              }
+            ],
+            "Side Lever": [
+              {
+                "exerciseId": 113,
+                "name": "Straddle Reverse Leg Lift",
+                "image": "SLPE7",
+                "group": "Core",
+                "exerciseNotation": "B7",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 7
+              },
+              {
+                "exerciseId": 114,
+                "name": "Reverse Leg Lift",
+                "image": "SLPE8",
+                "group": "Core",
+                "exerciseNotation": "B8",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 8
+              },
+              {
+                "exerciseId": 115,
+                "name": "Stall Bar Reverse Leg Lift",
+                "image": "SLPE9",
+                "group": "Core",
+                "exerciseNotation": "B9",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 9
+              },
+              {
+                "exerciseId": 116,
+                "name": "1/2 Windshield Wiper",
+                "image": "SLPE10",
+                "group": "Core",
+                "exerciseNotation": "B10",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 10
+              },
+              {
+                "exerciseId": 117,
+                "name": "Windshield Wipers",
+                "image": "SLPE11",
+                "group": "Core",
+                "exerciseNotation": "B11",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 11
+              },
+              {
+                "exerciseId": 118,
+                "name": "Side Arch Body Hold",
+                "image": "SLPE12",
+                "group": "Core",
+                "exerciseNotation": "B12",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 12
+              }
+            ],
+            "Manna": [
+              {
+                "exerciseId": 119,
+                "name": "Hanging Leg Lift ",
+                "image": "MNPE7",
+                "group": "Core",
+                "exerciseNotation": "C7",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 7
+              },
+              {
+                "exerciseId": 120,
+                "name": "Undergrip Hanging Leg Lift",
+                "image": "MNPE8",
+                "group": "Core",
+                "exerciseNotation": "C8",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 8
+              },
+              {
+                "exerciseId": 121,
+                "name": "V-to-L Hanging Leg Lift",
+                "image": "MNPE9",
+                "group": "Core",
+                "exerciseNotation": "C9",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 9
+              },
+              {
+                "exerciseId": 122,
+                "name": "1/2 L-Sit",
+                "image": "MNSE1",
+                "group": "Core",
+                "exerciseNotation": "C10",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 85,
+                    "masteryLevel": "60s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "2": {
+                    "masterySetId": 86,
+                    "masteryLevel": "60s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12s"
+                  },
+                  "3": {
+                    "masterySetId": 87,
+                    "masteryLevel": "60s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24s"
+                  },
+                  "4": {
+                    "masterySetId": 89,
+                    "masteryLevel": "60s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "5": {
+                    "masterySetId": 90,
+                    "masteryLevel": "60s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36s"
+                  },
+                  "6": {
+                    "masterySetId": 91,
+                    "masteryLevel": "60s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36s"
+                  },
+                  "7": {
+                    "masterySetId": 93,
+                    "masteryLevel": "60s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48s"
+                  },
+                  "8": {
+                    "masterySetId": 94,
+                    "masteryLevel": "60s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60s"
+                  },
+                  "9": {
+                    "masterySetId": 95,
+                    "masteryLevel": "60s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 10
+              },
+              {
+                "exerciseId": 123,
+                "name": "1/2 L-sit Single Leg Extension",
+                "image": "MNSE2",
+                "group": "Core",
+                "exerciseNotation": "C11",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 121,
+                    "masteryLevel": "10r@",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r@"
+                  },
+                  "2": {
+                    "masterySetId": 122,
+                    "masteryLevel": "10r@",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r@"
+                  },
+                  "3": {
+                    "masterySetId": 123,
+                    "masteryLevel": "10r@",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r@"
+                  },
+                  "4": {
+                    "masterySetId": 125,
+                    "masteryLevel": "10r@",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r@"
+                  },
+                  "5": {
+                    "masterySetId": 126,
+                    "masteryLevel": "10r@",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r@"
+                  },
+                  "6": {
+                    "masterySetId": 127,
+                    "masteryLevel": "10r@",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r@"
+                  },
+                  "7": {
+                    "masterySetId": 129,
+                    "masteryLevel": "10r@",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r@"
+                  },
+                  "8": {
+                    "masterySetId": 130,
+                    "masteryLevel": "10r@",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r@"
+                  },
+                  "9": {
+                    "masterySetId": 131,
+                    "masteryLevel": "10r@",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r@"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 11
+              },
+              {
+                "exerciseId": 124,
+                "name": "1/2 L-sit Double Leg Extension",
+                "image": "MNSE3",
+                "group": "Core",
+                "exerciseNotation": "C12",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 12
+              }
+            ]
+          },
+          "LEVEL 3": {
+            "Front Lever": [
+              {
+                "exerciseId": 145,
+                "name": "Negative Front Pull",
+                "image": "FLPE15",
+                "group": "Core",
+                "exerciseNotation": "A15",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 15
+              },
+              {
+                "exerciseId": 146,
+                "name": "Front Pull",
+                "image": "FLPE16",
+                "group": "Core",
+                "exerciseNotation": "A16",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 16
+              },
+              {
+                "exerciseId": 147,
+                "name": "Open Front Lever",
+                "image": "FLSE1",
+                "group": "Core",
+                "exerciseNotation": "A17",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 17
+              },
+              {
+                "exerciseId": 148,
+                "name": "Open Front Lever Bent Single Leg",
+                "image": "FLSE2",
+                "group": "Core",
+                "exerciseNotation": "A18",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 18
+              },
+              {
+                "exerciseId": 149,
+                "name": "Open Front Lever Bent Double Leg",
+                "image": "FLSE3",
+                "group": "Core",
+                "exerciseNotation": "A19",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 19
+              },
+              {
+                "exerciseId": 150,
+                "name": "1/2 Straddle Front Lever",
+                "image": "FLSE4",
+                "group": "Core",
+                "exerciseNotation": "A20",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 20
+              }
+            ],
+            "Side Lever": [
+              {
+                "exerciseId": 155,
+                "name": "Side Arch Body Rock",
+                "image": "SLPE13",
+                "group": "Core",
+                "exerciseNotation": "B13",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 37,
+                    "masteryLevel": "30r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6r"
+                  },
+                  "2": {
+                    "masterySetId": 38,
+                    "masteryLevel": "30r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "3": {
+                    "masterySetId": 39,
+                    "masteryLevel": "30r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12r"
+                  },
+                  "4": {
+                    "masterySetId": 41,
+                    "masteryLevel": "30r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12r"
+                  },
+                  "5": {
+                    "masterySetId": 42,
+                    "masteryLevel": "30r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18r"
+                  },
+                  "6": {
+                    "masterySetId": 43,
+                    "masteryLevel": "30r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18r"
+                  },
+                  "7": {
+                    "masterySetId": 45,
+                    "masteryLevel": "30r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24r"
+                  },
+                  "8": {
+                    "masterySetId": 46,
+                    "masteryLevel": "30r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30r"
+                  },
+                  "9": {
+                    "masterySetId": 47,
+                    "masteryLevel": "30r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 13
+              },
+              {
+                "exerciseId": 156,
+                "name": "Arch Body Hold",
+                "image": "SLPE14",
+                "group": "Core",
+                "exerciseNotation": "B14",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 85,
+                    "masteryLevel": "60s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "2": {
+                    "masterySetId": 86,
+                    "masteryLevel": "60s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12s"
+                  },
+                  "3": {
+                    "masterySetId": 87,
+                    "masteryLevel": "60s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24s"
+                  },
+                  "4": {
+                    "masterySetId": 89,
+                    "masteryLevel": "60s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "5": {
+                    "masterySetId": 90,
+                    "masteryLevel": "60s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36s"
+                  },
+                  "6": {
+                    "masterySetId": 91,
+                    "masteryLevel": "60s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36s"
+                  },
+                  "7": {
+                    "masterySetId": 93,
+                    "masteryLevel": "60s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48s"
+                  },
+                  "8": {
+                    "masterySetId": 94,
+                    "masteryLevel": "60s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60s"
+                  },
+                  "9": {
+                    "masterySetId": 95,
+                    "masteryLevel": "60s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 14
+              },
+              {
+                "exerciseId": 157,
+                "name": "Arch Body Rock",
+                "image": "SLPE15",
+                "group": "Core",
+                "exerciseNotation": "B15",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 49,
+                    "masteryLevel": "60r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12r"
+                  },
+                  "2": {
+                    "masterySetId": 50,
+                    "masteryLevel": "60r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12r"
+                  },
+                  "3": {
+                    "masterySetId": 51,
+                    "masteryLevel": "60r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24r"
+                  },
+                  "4": {
+                    "masterySetId": 53,
+                    "masteryLevel": "60r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24r"
+                  },
+                  "5": {
+                    "masterySetId": 54,
+                    "masteryLevel": "60r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36r"
+                  },
+                  "6": {
+                    "masterySetId": 55,
+                    "masteryLevel": "60r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36r"
+                  },
+                  "7": {
+                    "masterySetId": 57,
+                    "masteryLevel": "60r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48r"
+                  },
+                  "8": {
+                    "masterySetId": 58,
+                    "masteryLevel": "60r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60r"
+                  },
+                  "9": {
+                    "masterySetId": 59,
+                    "masteryLevel": "60r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 15
+              },
+              {
+                "exerciseId": 158,
+                "name": "Side Lever Block",
+                "image": "SLSE1",
+                "group": "Core",
+                "exerciseNotation": "B16",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 16
+              },
+              {
+                "exerciseId": 159,
+                "name": "Side Lever Block Twist",
+                "image": "SLSE2",
+                "group": "Core",
+                "exerciseNotation": "B17",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 17
+              },
+              {
+                "exerciseId": 160,
+                "name": "Side Lever Block Press",
+                "image": "SLSE3",
+                "group": "Core",
+                "exerciseNotation": "B18",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 18
+              }
+            ],
+            "Manna": [
+              {
+                "exerciseId": 161,
+                "name": "L-sit Scissors",
+                "image": "MNSE4",
+                "group": "Core",
+                "exerciseNotation": "C13",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 13
+              },
+              {
+                "exerciseId": 162,
+                "name": "L-Sit",
+                "image": "MNSE5",
+                "group": "Core",
+                "exerciseNotation": "C14",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 14
+              },
+              {
+                "exerciseId": 163,
+                "name": "1/2 Straddle L",
+                "image": "MNSE6",
+                "group": "Core",
+                "exerciseNotation": "C15",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 15
+              },
+              {
+                "exerciseId": 164,
+                "name": "1/2 Straddle L Single Extension",
+                "image": "MNSE7",
+                "group": "Core",
+                "exerciseNotation": "C16",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 16
+              },
+              {
+                "exerciseId": 165,
+                "name": "1/2 Straddle L Double Extension",
+                "image": "MNSE8",
+                "group": "Core",
+                "exerciseNotation": "C17",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 17
+              },
+              {
+                "exerciseId": 166,
+                "name": "Straddle L",
+                "image": "MNSE9",
+                "group": "Core",
+                "exerciseNotation": "C18",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 18
+              }
+            ]
+          },
+          "LEVEL 4": {
+            "Front Lever": [
+              {
+                "exerciseId": 185,
+                "name": "1/2 Straddle Front Lever Scissor",
+                "image": "FLSE5",
+                "group": "Core",
+                "exerciseNotation": "A21",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 21
+              },
+              {
+                "exerciseId": 186,
+                "name": "1/2 Front Lever",
+                "image": "FLSE6",
+                "group": "Core",
+                "exerciseNotation": "A22",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 22
+              },
+              {
+                "exerciseId": 187,
+                "name": "Single Leg Straddle Front Lever",
+                "image": "FLSE7",
+                "group": "Core",
+                "exerciseNotation": "A23",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 23
+              },
+              {
+                "exerciseId": 188,
+                "name": "Straddle Front Lever",
+                "image": "FLSE8",
+                "group": "Core",
+                "exerciseNotation": "A24",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 24
+              },
+              {
+                "exerciseId": 189,
+                "name": "Single Leg Front Lever",
+                "image": "FLSE9",
+                "group": "Core",
+                "exerciseNotation": "A25",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 25
+              },
+              {
+                "exerciseId": 190,
+                "name": "1/2 Front Pull",
+                "image": "FLSE10",
+                "group": "Core",
+                "exerciseNotation": "A26",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 26
+              },
+              {
+                "exerciseId": 191,
+                "name": "Front Lever",
+                "image": "FLSE11",
+                "group": "Core",
+                "exerciseNotation": "A27",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 27
+              }
+            ],
+            "Side Lever": [
+              {
+                "exerciseId": 196,
+                "name": "Side Lever Inverted Hold",
+                "image": "SLSE4",
+                "group": "Core",
+                "exerciseNotation": "B19",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 19
+              },
+              {
+                "exerciseId": 197,
+                "name": "Straddle Side Lever Pull",
+                "image": "SLSE5",
+                "group": "Core",
+                "exerciseNotation": "B20",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 20
+              },
+              {
+                "exerciseId": 198,
+                "name": "Scissoring Side Lever Pull",
+                "image": "SLSE6",
+                "group": "Core",
+                "exerciseNotation": "B21",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 21
+              },
+              {
+                "exerciseId": 199,
+                "name": "Closed Side Lever Pull",
+                "image": "SLSE7",
+                "group": "Core",
+                "exerciseNotation": "B22",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 22
+              },
+              {
+                "exerciseId": 200,
+                "name": "Negative Side Lever Pull",
+                "image": "SLSE8",
+                "group": "Core",
+                "exerciseNotation": "B23",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 23
+              },
+              {
+                "exerciseId": 201,
+                "name": "Side Lever Pull",
+                "image": "SLSE9",
+                "group": "Core",
+                "exerciseNotation": "B24",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 24
+              },
+              {
+                "exerciseId": 202,
+                "name": "Side Lever",
+                "image": "SLSE10",
+                "group": "Core",
+                "exerciseNotation": "B25",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 25
+              }
+            ],
+            "Manna": [
+              {
+                "exerciseId": 203,
+                "name": "Elevated Reverse Plank",
+                "image": "MNSE10",
+                "group": "Core",
+                "exerciseNotation": "C19",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 85,
+                    "masteryLevel": "60s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "2": {
+                    "masterySetId": 86,
+                    "masteryLevel": "60s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "12s"
+                  },
+                  "3": {
+                    "masterySetId": 87,
+                    "masteryLevel": "60s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "24s"
+                  },
+                  "4": {
+                    "masterySetId": 89,
+                    "masteryLevel": "60s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "5": {
+                    "masterySetId": 90,
+                    "masteryLevel": "60s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "36s"
+                  },
+                  "6": {
+                    "masterySetId": 91,
+                    "masteryLevel": "60s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "36s"
+                  },
+                  "7": {
+                    "masterySetId": 93,
+                    "masteryLevel": "60s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "48s"
+                  },
+                  "8": {
+                    "masterySetId": 94,
+                    "masteryLevel": "60s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "60s"
+                  },
+                  "9": {
+                    "masterySetId": 95,
+                    "masteryLevel": "60s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "60s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 19
+              },
+              {
+                "exerciseId": 204,
+                "name": "1/2 Middle Split Hold",
+                "image": "MNSE11",
+                "group": "Core",
+                "exerciseNotation": "C20",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 20
+              },
+              {
+                "exerciseId": 205,
+                "name": "1/2 Middle Split Hold Single Extension",
+                "image": "MNSE12",
+                "group": "Core",
+                "exerciseNotation": "C21",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 13,
+                    "masteryLevel": "10r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "2": {
+                    "masterySetId": 14,
+                    "masteryLevel": "10r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2r"
+                  },
+                  "3": {
+                    "masterySetId": 15,
+                    "masteryLevel": "10r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4r"
+                  },
+                  "4": {
+                    "masterySetId": 17,
+                    "masteryLevel": "10r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "5": {
+                    "masterySetId": 18,
+                    "masteryLevel": "10r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6r"
+                  },
+                  "6": {
+                    "masterySetId": 19,
+                    "masteryLevel": "10r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6r"
+                  },
+                  "7": {
+                    "masterySetId": 21,
+                    "masteryLevel": "10r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8r"
+                  },
+                  "8": {
+                    "masterySetId": 22,
+                    "masteryLevel": "10r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10r"
+                  },
+                  "9": {
+                    "masterySetId": 23,
+                    "masteryLevel": "10r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 21
+              },
+              {
+                "exerciseId": 206,
+                "name": "1/2 Middle Split Hold Double Extension",
+                "image": "MNSE13",
+                "group": "Core",
+                "exerciseNotation": "C22",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 22
+              },
+              {
+                "exerciseId": 207,
+                "name": "Middle Split Hold",
+                "image": "MNSE14",
+                "group": "Core",
+                "exerciseNotation": "C23",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 73,
+                    "masteryLevel": "30s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "6s"
+                  },
+                  "2": {
+                    "masterySetId": 74,
+                    "masteryLevel": "30s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "3": {
+                    "masterySetId": 75,
+                    "masteryLevel": "30s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "12s"
+                  },
+                  "4": {
+                    "masterySetId": 77,
+                    "masteryLevel": "30s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "12s"
+                  },
+                  "5": {
+                    "masterySetId": 78,
+                    "masteryLevel": "30s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "18s"
+                  },
+                  "6": {
+                    "masterySetId": 79,
+                    "masteryLevel": "30s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "18s"
+                  },
+                  "7": {
+                    "masterySetId": 81,
+                    "masteryLevel": "30s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "24s"
+                  },
+                  "8": {
+                    "masterySetId": 82,
+                    "masteryLevel": "30s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "30s"
+                  },
+                  "9": {
+                    "masterySetId": 83,
+                    "masteryLevel": "30s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "30s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 23
+              },
+              {
+                "exerciseId": 208,
+                "name": "Manna Press",
+                "image": "MNSE15",
+                "group": "Core",
+                "exerciseNotation": "C24",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 1,
+                    "masteryLevel": "5r",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "1r"
+                  },
+                  "2": {
+                    "masterySetId": 2,
+                    "masteryLevel": "5r",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "1r"
+                  },
+                  "3": {
+                    "masterySetId": 3,
+                    "masteryLevel": "5r",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "2r"
+                  },
+                  "4": {
+                    "masterySetId": 5,
+                    "masteryLevel": "5r",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "2r"
+                  },
+                  "5": {
+                    "masterySetId": 6,
+                    "masteryLevel": "5r",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "3r"
+                  },
+                  "6": {
+                    "masterySetId": 7,
+                    "masteryLevel": "5r",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "3r"
+                  },
+                  "7": {
+                    "masterySetId": 9,
+                    "masteryLevel": "5r",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "4r"
+                  },
+                  "8": {
+                    "masterySetId": 10,
+                    "masteryLevel": "5r",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "5r"
+                  },
+                  "9": {
+                    "masterySetId": 11,
+                    "masteryLevel": "5r",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "5r"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 24
+              },
+              {
+                "exerciseId": 209,
+                "name": "Manna",
+                "image": "MNSE16",
+                "group": "Core",
+                "exerciseNotation": "C25",
+                "stepNo": null,
+                "masterySteps": {
+                  "1": {
+                    "masterySetId": 61,
+                    "masteryLevel": "10s",
+                    "weekNum": 1,
+                    "sets": 3,
+                    "repsOrSecs": "2s"
+                  },
+                  "2": {
+                    "masterySetId": 62,
+                    "masteryLevel": "10s",
+                    "weekNum": 2,
+                    "sets": 5,
+                    "repsOrSecs": "2s"
+                  },
+                  "3": {
+                    "masterySetId": 63,
+                    "masteryLevel": "10s",
+                    "weekNum": 3,
+                    "sets": 3,
+                    "repsOrSecs": "4s"
+                  },
+                  "4": {
+                    "masterySetId": 65,
+                    "masteryLevel": "10s",
+                    "weekNum": 5,
+                    "sets": 4,
+                    "repsOrSecs": "4s"
+                  },
+                  "5": {
+                    "masterySetId": 66,
+                    "masteryLevel": "10s",
+                    "weekNum": 6,
+                    "sets": 4,
+                    "repsOrSecs": "6s"
+                  },
+                  "6": {
+                    "masterySetId": 67,
+                    "masteryLevel": "10s",
+                    "weekNum": 7,
+                    "sets": 5,
+                    "repsOrSecs": "6s"
+                  },
+                  "7": {
+                    "masterySetId": 69,
+                    "masteryLevel": "10s",
+                    "weekNum": 9,
+                    "sets": 4,
+                    "repsOrSecs": "8s"
+                  },
+                  "8": {
+                    "masterySetId": 70,
+                    "masteryLevel": "10s",
+                    "weekNum": 10,
+                    "sets": 4,
+                    "repsOrSecs": "10s"
+                  },
+                  "9": {
+                    "masterySetId": 71,
+                    "masteryLevel": "10s",
+                    "weekNum": 11,
+                    "sets": 5,
+                    "repsOrSecs": "10s"
+                  }
+                },
+                "selected": false,
+                "usersWorkoutSettingsId": 0,
+                "setsAndReps": null,
+                "order": 25
+              }
+            ]
+          }
+        }
+      }
+      dispatch({
+        type: SET_PROGRESSION,
+        allProgressions: responseData,
+        loading: false,
+        name: courseName,
+        showEditModal: true,
+        date: date
+      })
+      // Sentry.captureException(error);
     });
 }

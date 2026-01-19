@@ -68,6 +68,7 @@ export default function LegacyCards(props) {
   }
 
   const handleEditLegacy = () => {
+    console.log("inside handleEditLegacy",dateKey, workoutIndex, dateKeyIndex)
     dispatch(GetAllWorkoutInfo(dateKey, workoutIndex, dateKeyIndex))
   }
 
@@ -79,11 +80,11 @@ export default function LegacyCards(props) {
             <Typography variant="h5" className={classes.cardTitle}>
               {props.category}
             </Typography>
-            {!props.postAWS &&
+            {/* {!props.postAWS && */}
               <Button className={classes.cardHeaderButton} onClick={handleEditLegacy}>
                 Edit
               </Button>
-            }
+            {/* } */}
 
           </>
         }

@@ -65,10 +65,7 @@ function AvatarDropDown(props) {
   const handleOpen = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-
   const [isOpen, setIsOpen] = useState(false)
-  const postAWS = localStorage.getItem('postAWS');
-  console.log("postAWS in freemembers:",typeof postAWS)
   // eslint-disable-next-line
   const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
 
@@ -77,8 +74,11 @@ function AvatarDropDown(props) {
   return (
     <Component handleOpen={handleOpen} variant='contained' anchorEl={anchorEl} handleClose={handleClose} forceFreeStyles>
       <MenuItem href="https://www.gymnasticbodies.com/my-account/" component={Link} className={classes.menuList}>Manage Subscription</MenuItem>
-      {
+      {/* {
         isFreeMember ? null : postAWS != "true" ? <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem> : null
+      } */}
+      {
+        isFreeMember ? null : <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem>
       }
       <Divider />
       <MenuItem className={classes.menuList} onClick={() => {

@@ -72,10 +72,85 @@ export const mainCourses = [
     courseName: 'Movement',
     imgUrl: 'movement.png',
     nameId: 'M',
+    associatedCourses: [
+      {
+        name: "Quadrupedal Warm Up",
+        nameId: "SMS",
+        imgUrl: "movement-quadrupedalwarmup.jpg"
+      },
+      {
+        name: "Shoulder Roll",
+        nameId: "SFS",
+        imgUrl: "movement-shoulderroll.jpg"
+      },
+      {
+        name: "Forward Roll",
+        nameId: "STB",
+        imgUrl: "movement-forwardroll.jpg"
+      },
+      {
+        name: "Backward Roll",
+        nameId: "SMS",
+        imgUrl: "movement-backwardroll.jpg"
+      },
+      {
+        name: "Handstand Forward Roll",
+        nameId: "SFS",
+        imgUrl: "movement-handstandforwardroll.jpg"
+      },
+      {
+        name: "Back Extension Development",
+        nameId: "STB",
+        imgUrl: "movement-backextensiondevelopment.jpg"
+      },
+      {
+        name: "Cartwheel Development",
+        nameId: "SMS",
+        imgUrl: "movement-cartwheeldevelopment.jpg"
+      },
+      {
+        name: "Cartwheel Refinement",
+        nameId: "SFS",
+        imgUrl: "movement-cartwheelrefinement.jpg"
+      },
+      {
+        name: "Integrated Roll Series",
+        nameId: "STB",
+        imgUrl: "movement-integratedrollseries.jpg"
+      },
+
+    ]
   },
   {
     courseName: 'Rings',
     imgUrl: 'rings.png',
     nameId: 'R',
+    associatedCourses: [
+      {
+        "name": "Ring mobility R1>iM1-8",
+        "nameId": "SMS",
+        "imgUrl": "rings-ringmobilityr1>im1-8.jpg"
+      },
+      {
+        "name": "Reverse Muscle Up",
+        "nameId": "SFS",
+        "imgUrl": "rings-reversemuscleup.jpg"
+      },
+      {
+        "name": "LARS",
+        "nameId": "STB",
+        "imgUrl": "rings-lars.jpg"
+      },
+      {
+        "name": "Ring support",
+        "nameId": "SFS",
+        "imgUrl": "rings-ringsupport.jpg"
+      },
+      {
+        "name": "Back Lever",
+        "nameId": "STB",
+        "imgUrl": "rings-backlever.jpg"
+      }
+    ]
   }
 ]

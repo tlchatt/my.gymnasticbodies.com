@@ -6,7 +6,8 @@ import { getLevelPLan } from './LevelsActions';
 import * as Sentry from "@sentry/react";
 import { AxiosConfig } from '../util'
 
-import { getLegacyDataBYO, openEditLegacyModalBYO, handleLegacyLogCheck} from './WorkoutBuilderActions'
+import { getLegacyDataBYO, openEditLegacyModalBYO, handleLegacyLogCheck } from './WorkoutBuilderActions'
+import { useSelector } from 'react-redux';
 
 
 export const SET_PROGRESSION = 'SET_PROGRESSION';
@@ -21,7 +22,7 @@ export const GetUserPorgressions = (courseName, todaysDate) => async (dispatch, 
   const state = getState();
   const userData = state.login;
 
-  let config= {
+  let config = {
     method: 'get',
     url: `${API}/workout-service/programs/users/${userData.UserId}/date/${todaysDate}?workoutType=${courseName}`,
     headers: {
@@ -222,7 +223,7 @@ export const handleLegacyLog = (date, exerciseId, mobilityStatus, autoProg, step
       masterySets: steps,
       setsAndRepsDTOList: logList
     }
-    Axios(AxiosConfig('post', `/byo/log/program/users/${userData.UserId}?workoutType=${legacyPage.courseId}`, userData.webToken, {data: body}))
+    Axios(AxiosConfig('post', `/byo/log/program/users/${userData.UserId}?workoutType=${legacyPage.courseId}`, userData.webToken, { data: body }))
       .then(res => {
         dispatch(handleLegacyLogCheck());
         dispatch(getLegacyDataBYO(legacyPage.name, legacyPage.dateIndex));
@@ -420,55 +421,76 @@ export const handleDeleteProgression = (exerciseId, isLevels = false) => (dispat
 }
 
 export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = false) => (dispatch, getState) => {
+  console.log("export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = false) => (dispatch, getState) => {")
   const state = getState();
+  let data = state.data.allData
+  const postAWS = state.login.postAWS
   const userData = state.login;
+  console.log("userData:", userData)
   const legacyPage = state.legacyCourse;
+  console.log("legacyPage:", legacyPage)
   const isBuildYourOwn = state.legacyCourse.isBuildYourOwn;
-
+  console.log("isBuildYourOwn:", isBuildYourOwn)
+  console.log("postAWS:", postAWS)
+  console.log("exerciseId:", exerciseId)
+  console.log("masterySetId:", masterySetId)
+  console.log("workoutType:", legacyPage.courseId)
+  console.log("date is:", legacyPage.byoDate)
   let config;
   console.log("in LegacyAction/handleAddProgression")
-  if (isBuildYourOwn) {
-    config = AxiosConfig(
-      'PUT',
-      `/byo/settings/users/${userData.UserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.courseId}&date=${legacyPage.byoDate}`,
-      userData.webToken
-    )
-  }
-  else {
-    config = AxiosConfig(
-      'PUT',
-      `/workout-service/users/${userData.UserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.name}&date=${date}`,
-      userData.webToken
-    )
+  if (postAWS) {
+    console.log("data is:", data)
+    if (isBuildYourOwn) {
+      config = AxiosConfig(
+        'PUT',
+        `/byo/settings/users/${userData.UserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.courseId}&date=${legacyPage.byoDate}`,
+        userData.webToken
+      )
+    }
+  } else {
+    if (isBuildYourOwn) {
+      config = AxiosConfig(
+        'PUT',
+        `/byo/settings/users/${userData.UserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.courseId}&date=${legacyPage.byoDate}`,
+        userData.webToken
+      )
+    }
+    else {
+      config = AxiosConfig(
+        'PUT',
+        `/workout-service/users/${userData.UserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.name}&date=${date}`,
+        userData.webToken
+      )
+    }
+    Axios(config)
+      .then(res => {
+        if (isLevels) {
+          dispatch(getLevelPLan())
+          dispatch(GetUserPorgressions(legacyPage.name, date))
+        }
+        else if (isBuildYourOwn) {
+          dispatch(getLegacyDataBYO(legacyPage.name, legacyPage.dateIndex));
+          dispatch(openEditLegacyModalBYO());
+          dispatch(handleLegacyLogCheck());
+        }
+        else {
+          dispatch(getUpdatedUserSchedule());
+          dispatch(GetUserPorgressions(legacyPage.name, date))
+        }
+        dispatch(showToast('Successfully updated ' + legacyPage.name, 'success'))
+      }).catch(err => {
+        dispatch(showToast('Something went wrong.', 'error'))
+        Sentry.captureException(err)
+      })
   }
 
-  Axios(config)
-    .then(res => {
-      if (isLevels) {
-        dispatch(getLevelPLan())
-        dispatch(GetUserPorgressions(legacyPage.name, date))
-      }
-      else if (isBuildYourOwn) {
-        dispatch(getLegacyDataBYO(legacyPage.name, legacyPage.dateIndex));
-        dispatch(openEditLegacyModalBYO());
-        dispatch(handleLegacyLogCheck());
-      }
-      else {
-        dispatch(getUpdatedUserSchedule());
-        dispatch(GetUserPorgressions(legacyPage.name, date))
-      }
-      dispatch(showToast('Successfully updated ' + legacyPage.name, 'success'))
-    }).catch(err => {
-      dispatch(showToast('Something went wrong.', 'error'))
-      Sentry.captureException(err)
-    })
 }
 
 export const getUpdatedUserSchedule = () => (dispatch, getState) => {
   const state = getState();
   const userData = state.login;
 
-  let config= {
+  let config = {
     method: 'GET',
     url: `${API}/myschedule/detailed-view/users/${userData.UserId}`,
     headers: {

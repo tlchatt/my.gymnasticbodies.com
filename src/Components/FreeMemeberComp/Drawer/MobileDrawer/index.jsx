@@ -342,7 +342,19 @@ export default function MobileDrawer(props) {
         }
         return false;
       }
-    }
+    },
+    {
+      text: 'Courses',
+      cb: () => handleCallBackFunction('Courses'),
+      imageName: 'FocusGroups.png',
+      ids: [],
+      isActive: () => {
+        if (openDrawer.componentId === 'Courses') {
+          return true;
+        }
+        return false;
+      }
+    },
   ]
 }
 else{

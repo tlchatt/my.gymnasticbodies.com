@@ -1,4 +1,4 @@
-import React,  { useState, useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Divider, Typography, makeStyles, Button, Card } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import Collapse from '@material-ui/core/Collapse';
@@ -8,7 +8,7 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import StarOutlinedIcon from '@material-ui/icons/StarOutlined';
 import CloseIcon from '@material-ui/icons/Close';
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 
 import AreYouSure from '../UtilComponents/AreYouSure';
@@ -65,7 +65,7 @@ const WeekRow = props => {
   const {
     playWorkout,
     openPlayer,
-    showButtons,
+    showButtons = false,
     isSavedWorkout,
     openFaveModal,
     openLoadFavModal,
@@ -80,10 +80,14 @@ const WeekRow = props => {
     customButtons,
     showEditWokrout,
     EditWorkout,
-    isBuildYourOwn,
+    isBuildYourOwn = false,
     showMarkAllDone
   } = props;
-  console.log("openPlayer in WeekRow:",openPlayer)
+  console.log("playWorkout:",playWorkout)
+  console.log("showButtons:", showButtons)
+  console.log("isBuildYourOwn:", isBuildYourOwn)
+  console.log("openPlayer in WeekRow:", openPlayer)
+
   useEffect(() => {
     if (isOpenInitial) {
       setOpenCollapse(true);
@@ -101,7 +105,7 @@ const WeekRow = props => {
   }
 
   const userLevel = useSelector(state => state.login.levelId);
-
+  console.log("between(userLevel, 2, 4)", between(userLevel, 2, 4))
   return (
     <>
       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -113,22 +117,22 @@ const WeekRow = props => {
             <div style={{ flex: 1 }} />
             {
               showButtons && !hideSaved && <IconButton onClick={openFaveModal} disabled={isSavedWorkout}>
-                { isSavedWorkout ? <StarOutlinedIcon className={classes.isSavedWorkout} /> : <StarOutlineIcon />}
+                {isSavedWorkout ? <StarOutlinedIcon className={classes.isSavedWorkout} /> : <StarOutlineIcon />}
               </IconButton>
             }
-            <IconButton onClick={ ()=>setOpenCollapse(!openCollapse)}>
-              { openCollapse ? <ArrowDropUpIcon /> : <ArrowDropDownIcon /> }
+            <IconButton onClick={() => setOpenCollapse(!openCollapse)}>
+              {openCollapse ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
             </IconButton>
 
           </Grid>
-          {/* {
+          {
             showButtons
               ? <>
                 <Grid item xs={6} sm={3} md={3} lg={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {
                     isBuildYourOwn
                       ? null
-                      :  between(userLevel, 2, 4) ? null : <Button
+                      : between(userLevel, 2, 4) ? <Button
                         startIcon={
                           openPlayer
                             ? <CloseIcon />
@@ -143,7 +147,7 @@ const WeekRow = props => {
                         disabled={isPreviousDay}
                       >
                         {`${openPlayer ? 'Close' : 'Play'}`} Workout
-                      </Button>
+                      </Button> : null
                   }
                 </Grid>
                 <Grid item xs={6} sm={showEditWokrout ? 4 : 4} md={4} lg={5} style={{ display: 'flex', alignItems: 'center', paddingRight: 12, justifyContent: 'flex-end' }}>
@@ -160,7 +164,7 @@ const WeekRow = props => {
                 </Grid>
               </>
               : null
-          } */}
+          }
         </Grid>
         {
           (openPlayer && showButtons && !isBuildYourOwn) &&
@@ -187,7 +191,7 @@ const WeekRow = props => {
       <AreYouSure
         open={open}
         handleClose={() => setOpen(!open)}
-        message={clearDay ? `Clear ${props.dayOfWeek} workout?` :'Mark all Completed?'}
+        message={clearDay ? `Clear ${props.dayOfWeek} workout?` : 'Mark all Completed?'}
         cbMessage='Yes, please.'
         cb={hadnleCallBack}
       />

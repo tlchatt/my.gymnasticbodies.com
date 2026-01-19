@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Drawer from "react-drag-drawer";
 import clsx from "clsx";
 import { IconButton } from '@material-ui/core'
@@ -13,6 +13,7 @@ import BuildYourOwn from '../BuildYourOwn'
 
 import "./index.scss";
 import ContactUs from "../Support";
+import CourseLibrary from "../../../../Containers/CourseLibrary";
 
 const TestingDrawer = props => {
   const { open, toggle, isDrawerOpen, componentId } = props;
@@ -27,8 +28,12 @@ const TestingDrawer = props => {
         return <FocusCycles />;
       case "FitnessQuiz":
         return <FitnessQuiz handleClose={toggle} />;
-        case "ContactUs":
+      case "ContactUs":
         return <ContactUs handleClose={toggle} />;
+      case "FitnessQuiz":
+        return <FitnessQuiz handleClose={toggle} />;
+      case "Courses":
+        return <CourseLibrary basicLayout />;
       case "Thrive":
         return <Thrive open={open} />;
       case "History":
@@ -44,7 +49,7 @@ const TestingDrawer = props => {
     document.body.style.overflow = "";
   }
   useEffect(() => {
-    return () =>  document.body.style.overflow = ""
+    return () => document.body.style.overflow = ""
   }, []);
   return (
     <Drawer

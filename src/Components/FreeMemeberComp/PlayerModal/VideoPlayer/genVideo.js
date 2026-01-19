@@ -1,5 +1,5 @@
-const utilFunctions =  {
-  createFollowAlongPlaylist: async ( dayView, dateKey, arrayToProccess, singleProg, preVideo, leftRightArray, roundsVideos ) => {
+const utilFunctions = {
+  createFollowAlongPlaylist: async (dayView, dateKey, arrayToProccess, singleProg, preVideo, leftRightArray, roundsVideos) => {
     const workout = arrayToProccess.map(workout => {
       let sets = 0;
       if (workout?.repsOrSecs?.charAt(workout?.repsOrSecs?.length - 1) === 's') {
@@ -16,7 +16,7 @@ const utilFunctions =  {
           videoB: workout.videos[1].mediaId,
           sets: sets,
         }
-      }else{
+      } else {
         //PC
         return {
           video: workout.mediaId,
