@@ -322,7 +322,7 @@ export default function MiniDrawer(props) {
       {
         text: 'Courses',
         cb: () => handleCallBackFunction('Courses'),
-        imageName: 'FocusGroups.png',
+        imageName: 'nutrition.png',
         ids: [],
         isActive: () => {
           if (openDrawer.componentId === 'Courses') {

@@ -16,6 +16,7 @@ import SnackBar from '../../SnakBar';
 import EmailForm from './EmailReset';
 import CreateAccount from './CreateAccount';
 import PasswordRest from './PasswordReset'
+import ContactUs from "../../FreeMemeberComp/Drawer/Support";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     width: '100%',
     maxWidth: '500px',
-    justifyContent:'center'
+    justifyContent: 'center'
   },
   avatar: {
     margin: theme.spacing(1),
@@ -61,12 +62,12 @@ const LoginFrom = (props) => {
       <NavLink {...props} />
     </div>
   )
-
+  let contactForm = false
   let loginForm;
 
   if (props.loading) {
     loginForm = (
-      <CircularProgress className={classes.loader}/>
+      <CircularProgress className={classes.loader} />
     );
   }
   else {
@@ -84,7 +85,7 @@ const LoginFrom = (props) => {
           autoFocus
           onChange={(event) => props.handleUserName(event)}
           error={!props.validEmail}
-          helperText={props.validEmail ? ''  : 'Please Enter a Valid Email'}
+          helperText={props.validEmail ? '' : 'Please Enter a Valid Email'}
           inputProps={{ 'data-hj-whitelist': 'true' }}
         />
         <TextField
@@ -121,32 +122,68 @@ const LoginFrom = (props) => {
         <Box mt={5}>
           <Copyright />
         </Box>
-        <SnackBar open={props.fail} variation='error'/>
+        <SnackBar open={props.fail} variation='error' />
       </form>
     );
   }
+
+
+  function handleContactForm(event) {
+    let contactFormDiv = document.querySelectorAll("#contactFormDiv")[0]
+    let displayOfContactForm = contactFormDiv.style.display
+    if (displayOfContactForm == "none") {
+      contactFormDiv.style.display = "grid"
+      contactFormDiv.style.alignItems = "center"
+    }else{
+      contactFormDiv.style.display = "none"
+    }
+
+
+  }
+
   return (
-    <div className={classes.paper}>
-      <NavLink to="/" exact className={classes.logo} />
-      {
-        props.isMaintenance && props.isMaintenance.showHeadsUp && !props.isMaintenance.maintenance
-          ? <Typography variant='body2' align='center' style={{ marginTop: 8, letterSpacing: '0.2px', color: 'red' }} >{props.isMaintenance.headsUp}</Typography>
-          : null
-      }
-      {
-        props.isMaintenance && props.isMaintenance.maintenance
-          ? <Typography variant='h5' align='center' style={{ marginTop: 8, letterSpacing: '0.2px', color: 'red' }} >{props.isMaintenance.note}</Typography>
-          : <Switch>
-            <Route path="/create-account" exact component={CreateAccount} />
-            <Route path="/reset" exact component={EmailForm} />
-            <Route path="/reset-password/:id/:token" exact component={PasswordRest} />
-            <Route path="/" exact>
-              {loginForm}
-            </Route>
-            <Route render={() => <Redirect to="/" />} />
-          </Switch>
-      }
-    </div>
+    <>
+      <div className={classes.paper} id="loginFormDiv">
+        <NavLink to="/" exact className={classes.logo} />
+        {
+          props.isMaintenance && props.isMaintenance.showHeadsUp && !props.isMaintenance.maintenance
+            ? <Typography variant='body2' align='center' style={{ marginTop: 8, letterSpacing: '0.2px', color: 'red' }} >{props.isMaintenance.headsUp}</Typography>
+            : null
+        }
+        {
+          props.isMaintenance && props.isMaintenance.maintenance
+            ? <Typography variant='h5' align='center' style={{ marginTop: 8, letterSpacing: '0.2px', color: 'red' }} >{props.isMaintenance.note}</Typography>
+            : <Switch>
+              <Route path="/create-account" exact component={CreateAccount} />
+              <Route path="/reset" exact component={EmailForm} />
+              <Route path="/reset-password/:id/:token" exact component={PasswordRest} />
+              <Route path="/" exact>
+                {loginForm}
+              </Route>
+              <Route render={() => <Redirect to="/" />} />
+            </Switch>
+        }
+      </div>
+      <div style={{zIndex:"2", position: "absolute", bottom: "0", right: "0", margin:"0 16px" }}>
+        <Button
+          type="button"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          onClick={(event) => handleContactForm(event)}
+        >
+          Contact Us
+        </Button>
+
+
+
+
+      </div>
+      <div id="contactFormDiv" style={{ display: "none", position:"absolute",zIndex:"1" }}>
+        <ContactUs />
+      </div>
+    </>
   );
 };
 

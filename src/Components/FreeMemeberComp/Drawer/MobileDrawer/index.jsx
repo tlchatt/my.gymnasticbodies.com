@@ -346,7 +346,7 @@ export default function MobileDrawer(props) {
     {
       text: 'Courses',
       cb: () => handleCallBackFunction('Courses'),
-      imageName: 'FocusGroups.png',
+      imageName: 'nutrition.png',
       ids: [],
       isActive: () => {
         if (openDrawer.componentId === 'Courses') {

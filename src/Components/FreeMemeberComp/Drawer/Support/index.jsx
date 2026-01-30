@@ -226,6 +226,7 @@ const ContactUs = (props) => {
 
   if (sectionId === 'Suggestion') return <Suggestion userInputs={userInputs} lowestScore={lowestScore} handleClose={props.handleClose} />
 
+    console.log("sectionId:",sectionId)
   
   return sectionId === 'initial'
     ? <InitialQuiz setSectionId={() => setSectionId("UpperBodyOne")} />
