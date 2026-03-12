@@ -71,11 +71,10 @@ const LoginFrom = (props) => {
         <NavLink {...props} />
       </div>
     )
-
   })
 
   let loginForm;
-
+  
   if (props.loading) {
     loginForm = (
       <CircularProgress className={classes.loader} />
@@ -131,16 +130,16 @@ const LoginFrom = (props) => {
 
           </Grid>
         </Grid>
-        <Grid container>
+        {/* <Grid container>
           <Grid item xs style={{ textAlign: "right" }}>
             <Link component={Test} to="/paymentPortal" variant="body1">
               Payment Portal
             </Link>
-            {/* <Route path="/paymentPortal" exact component={EmailForm} /> */}
+            
 
 
           </Grid>
-        </Grid>
+        </Grid> */}
         <Box mt={5}>
           <Copyright />
           <div style={{ zIndex: "2", display: "grid", justifyItems: "center" }}>
