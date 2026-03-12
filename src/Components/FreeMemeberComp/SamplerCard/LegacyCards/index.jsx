@@ -3,7 +3,7 @@ import { makeStyles, Button } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import AutorenewIcon from '@material-ui/icons/Autorenew';
 
 import CardContent from './LegacyCardContnet';
@@ -62,16 +62,16 @@ export default function LegacyCards(props) {
   const classes = useStyles();
   const { workoutIndex, dateKey, dateKeyIndex, handleLegacyPlayer, isBuildYourOwn } = props;
   const dispatch = useDispatch();
-
+  const isInDrawer = useSelector(state => state.legacyCourse);
   if (!props.chosenProgs.length) {
     return <EmptyLegacyCard {...props} />
   }
 
   const handleEditLegacy = () => {
-    console.log("inside handleEditLegacy",dateKey, workoutIndex, dateKeyIndex)
+    console.log("inside handleEditLegacy", dateKey, workoutIndex, dateKeyIndex)
     dispatch(GetAllWorkoutInfo(dateKey, workoutIndex, dateKeyIndex))
+    console.log("isInDrawer:",isInDrawer)
   }
-
   return (
     <Card className={classes.root} elevation={3} square >
       <CardHeader
@@ -81,9 +81,9 @@ export default function LegacyCards(props) {
               {props.category}
             </Typography>
             {/* {!props.postAWS && */}
-              <Button className={classes.cardHeaderButton} onClick={handleEditLegacy}>
-                Edit
-              </Button>
+            <Button className={classes.cardHeaderButton} onClick={handleEditLegacy}>
+              Edit
+            </Button>
             {/* } */}
 
           </>

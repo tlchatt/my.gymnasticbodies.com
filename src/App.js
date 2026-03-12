@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { Hidden } from '@material-ui/core';
 import Header from './Components/Header'
 import Footer from './Components/Footer'
 import MobileFooter from './Components/MobileFooter'
-import Interceptor from  './Components/UtilComponents/Interceptor'
+import Interceptor from './Components/UtilComponents/Interceptor'
 import SnackBar from './Components/SnakBar'
 
 // Page imports
@@ -37,7 +37,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 // Redux Actions
 import * as actions from './Store/Action';
-import {Reset} from './Store/Action/LegacyAction'
+import { Reset } from './Store/Action/LegacyAction'
 import firebase from './HOC/firebase';
 import AlertNotice from './HOC/Alert';
 
@@ -112,16 +112,16 @@ function App(props) {
   }
 
   if (isMaintenance.maintenance) {
+    console.log("1")
     routes = (
       <Switch>
-        <Route path="/" render={(props) => <Login isMaintenance={isMaintenance} {...props}/>} />
-        <Route render={() => <Redirect to="/" />}/>
+        <Route path="/" render={(props) => <Login isMaintenance={isMaintenance} {...props} />} />
+        <Route render={() => <Redirect to="/" />} />
       </Switch>
     );
   }
-
-
   else if (props.showAllAccessSite && props.isAuth) {
+    console.log("2")
     routes = (
       <Interceptor>
         <Switch>
@@ -134,53 +134,59 @@ function App(props) {
       </Interceptor>
     );
   }
-
   else if (props.isAuth) {
+    console.log("3")
     routes = (
       <Interceptor>
         <Header />
         <Switch>
-          <Route path="/course-library" exact component={CourseLibrary}/>
-          <Route path="/edit-user" exact component={EditUser}/>
-          <Route path="/admin" exact component={AdminDashboard}/>
-          <Route path="/thrive-profile" exact component={ThriveProfile}/>
-          <Route path="/thrive-tasks" exact component={ThriveTasks}/>
-          <Route path="/thrive-lessons" exact component={ThriveLessons}/>
-          <Route path="/eqiupment-list" exact component={EqiupmentList}/>
+          <Route path="/course-library" exact component={CourseLibrary} />
+          <Route path="/edit-user" exact component={EditUser} />
+          <Route path="/admin" exact component={AdminDashboard} />
+          <Route path="/thrive-profile" exact component={ThriveProfile} />
+          <Route path="/thrive-tasks" exact component={ThriveTasks} />
+          <Route path="/thrive-lessons" exact component={ThriveLessons} />
+          <Route path="/eqiupment-list" exact component={EqiupmentList} />
           <Route path="/advocates" exact component={Advocates} />
-          <Route path="/learn-more" exact component={LearnMoreLevels}/>
-          <Route path="/history" exact component={History}/>
-          <Route path="/class-finder/:category" exact component={ClassFinder}/>
-          <Route path="/class-finder" exact component={ClassFinder}/>
-          <Route path="/get-started" exact component={GetStarted}/>
-          <Route path="/dashboard" exact component={Dashboard}/>
-          <Route path="/" exact render={(props) => <WelcomePage isMaintenance={isMaintenance} {...props}/>} />
-          <Route render={() => <Redirect to="/" />}/>
+          <Route path="/learn-more" exact component={LearnMoreLevels} />
+          <Route path="/history" exact component={History} />
+          <Route path="/class-finder/:category" exact component={ClassFinder} />
+          <Route path="/class-finder" exact component={ClassFinder} />
+          <Route path="/get-started" exact component={GetStarted} />
+          <Route path="/dashboard" exact component={Dashboard} />
+          <Route path="/" exact render={(props) => <WelcomePage isMaintenance={isMaintenance} {...props} />} />
+          <Route render={() => <Redirect to="/" />} />
         </Switch>
         <Hidden only={['xs', 'sm']}>
           <Footer />
         </Hidden>
         <Hidden only={['md', 'lg', 'xl']}>
-          <MobileFooter/>
+          <MobileFooter />
         </Hidden>
-        <DemoModal/>
+        <DemoModal />
       </Interceptor>
     );
   }
   else {
+    console.log("4")
     routes = (
       <Switch>
-        <Route path="/" render={(props) => <Login isMaintenance={isMaintenance} {...props}/>} />
-        <Route render={() => <Redirect to="/" />}/>
+        <Route path="/" render={(props) => <Login isMaintenance={isMaintenance} {...props} />} />
+        <Route path="/paymentPortal" render={(props) => <paymentPortal {...props} />} />
+        {/* <Route render={() => <Redirect to="/" />} /> */}
+
       </Switch>
     );
   }
   return (
+
     <div className="App">
       {routes}
-      <SnackBar/>
-      <AlertNotice open={showAlertModal} message={isMaintenance.modalNote} handleClose={ handleModalClose }/>
+      <SnackBar />
+      <AlertNotice open={showAlertModal} message={isMaintenance.modalNote} handleClose={handleModalClose} />
     </div>
+
+
   );
 }
 
@@ -200,4 +206,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default withRouter( connect( mapStateToProps,mapDispatchToProps )( App ) );
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

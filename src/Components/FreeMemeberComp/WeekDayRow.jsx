@@ -83,10 +83,6 @@ const WeekRow = props => {
     isBuildYourOwn = false,
     showMarkAllDone
   } = props;
-  console.log("playWorkout:",playWorkout)
-  console.log("showButtons:", showButtons)
-  console.log("isBuildYourOwn:", isBuildYourOwn)
-  console.log("openPlayer in WeekRow:", openPlayer)
 
   useEffect(() => {
     if (isOpenInitial) {
@@ -105,7 +101,6 @@ const WeekRow = props => {
   }
 
   const userLevel = useSelector(state => state.login.levelId);
-  console.log("between(userLevel, 2, 4)", between(userLevel, 2, 4))
   return (
     <>
       <Grid item xs={12} sm={12} md={12} lg={12}>

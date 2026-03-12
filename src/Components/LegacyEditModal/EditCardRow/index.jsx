@@ -54,10 +54,11 @@ const GroupRow = props => {
   const handleLeftClick = () => {
     if (scrollRef.current) scrollRef.current.scrollLeft -= 250;
   }
-
+  console.log("props in GroupRow:",props)
   let prorgressionData = props.data;
   prorgressionData = prorgressionData.filter(prog => prog.exerciseNotation !== 'A0')
 
+  console.log("prorgressionData:",prorgressionData)
   let progAmount = prorgressionData.length;
 
 

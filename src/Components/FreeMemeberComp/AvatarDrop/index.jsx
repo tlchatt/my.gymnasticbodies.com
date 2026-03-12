@@ -7,7 +7,6 @@ import {
 import { NavLink } from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
 import { connect, useSelector } from 'react-redux';
-
 import * as actions from '../../../Store/Action/index';
 
 
@@ -60,6 +59,7 @@ function AvatarDropDown(props) {
   const classes = useStyles();
   const isAdmin = useSelector(state => state.login.isAdmin ? true : false);
   const isFreeMember = useSelector(state => state.login.isFreeMember);
+  const userInfo = useSelector(state => state);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const handleOpen = (event) => setAnchorEl(event.currentTarget);
@@ -71,9 +71,30 @@ function AvatarDropDown(props) {
 
   const Component = props.isMobile ? FreeHamberger : HeaderButton
 
+
+  const manageSubscription = (e) => {
+
+    console.log("clicked", userInfo)
+    // router.push(`${testUrl}/accountDetails`)
+    let endpoint = 'https://app.gymnasticbodies.com/accountDetails'
+    // let endpoint = 'http://localhost:3001/accountDetails'
+    // let userName = localStorage.getItem('username')
+    let authToken = localStorage.getItem('authToken');
+    let userId = localStorage.getItem('userId');
+    // let username = localStorage.getItem('username');
+    
+    console.log("authToken in Workout page:", authToken)
+    
+    // window.location.href = `${endpoint}?token=${authToken}&userId=${userId}&username=${username}`;
+    window.location.href = `${endpoint}?token=${authToken}&userId=${userId}`;
+
+
+  }
+
   return (
     <Component handleOpen={handleOpen} variant='contained' anchorEl={anchorEl} handleClose={handleClose} forceFreeStyles>
-      <MenuItem href="https://www.gymnasticbodies.com/my-account/" component={Link} className={classes.menuList}>Manage Subscription</MenuItem>
+      {/* <MenuItem href="https://www.gymnasticbodies.com/my-account/" component={Link} className={classes.menuList}>Manage Subscription</MenuItem> */}
+      <MenuItem onClick={(e) => manageSubscription(e)} component={Link} className={classes.menuList}>Manage Subscription</MenuItem>
       {/* {
         isFreeMember ? null : postAWS != "true" ? <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem> : null
       } */}

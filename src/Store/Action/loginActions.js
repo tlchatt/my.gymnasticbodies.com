@@ -129,7 +129,8 @@ export const Login = (username, password) => dispatch => {
 
       localStorage.setItem('timezone', timezone);
       localStorage.setItem('postAWS', false);
-      
+
+
       let userConfig = {
         headers: {
           "Content-Type": "application/json",
@@ -206,8 +207,41 @@ export const Login = (username, password) => dispatch => {
             localStorage.setItem('username', username);
             localStorage.setItem('userId', res.data.contactId);
             console.log("decoded:", decoded)
-            res.data.postAWS = false
+
             console.log("res.data later in login else is:", res.data)
+            res.data.postAWS = false
+            
+            if (!res.data.postAWS) {//true for new users and false for old
+              
+              //call subscription route, with reason registerWPass
+              //info to pass: password, name, username (as email), postAWS 
+              const config = {
+                headers: {
+                  "Content-Type": "application/json"
+                }
+              }
+              let data = {
+                password: password,
+                email: username,
+                name: res.data.fname,
+                postAWS: false,
+                reason: "registerWPass"
+              }
+              axios.post(`https://gymnasticbodies-com.vercel.app/api/user/subscription`, data, config)
+                .then(res => {
+                  
+                  let neonUserId = res.data.data.id
+                  console.log("neonUserId from res is:", neonUserId)
+                  localStorage.setItem('userId', neonUserId);
+                  // dispatch(action);
+                })
+                .catch(error => {
+                  // Sentry.captureException(error);
+                })
+
+            }
+
+
             dispatch(
               LoginAsync(
                 authToken,
@@ -230,7 +264,7 @@ export const Login = (username, password) => dispatch => {
     .catch(err => {
       dispatch(LoginNew(username, password))
     });
-}
+}//old user login, postAWS = false
 
 export const LoginNew = (username, password) => dispatch => {
   console.log(" inside export const LoginNew = (username, password) => dispatch => {")
@@ -350,7 +384,7 @@ export const LoginNew = (username, password) => dispatch => {
       dispatch(loginFail())
       Sentry.captureException(err);
     });
-}
+}//new user failover login, postAWS = true
 
 const LoginAsync = (webToken, data, userState, timezone) => {
   /*
@@ -424,10 +458,10 @@ const LoginAsync = (webToken, data, userState, timezone) => {
     //"cid": 411847
   }
   console.log('LoginAsync userState', userState)
+  // console.log('LoginAsync userData', data)
+
+
   //console.log('LoginAsync lukeState', lukeState)
-
-
-  console.log('LoginAsync userData', data)
   //console.log('LoginAsync lukeData', lukeData)
   // userState.userLevel = lukeState.userLevel
   //userState.contactId = lukeState.contactId
@@ -447,22 +481,57 @@ const LoginAsync = (webToken, data, userState, timezone) => {
 
 export const authCheckState = (props) => (dispatch, getState) => {
   const state = getState();
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+  const urlParams = new URLSearchParams(window.location.search);
+  console.log("window.location length:", urlParams)
+  console.log("urlParams:",urlParams)
+  let authToken, refreshToken, refreshExpireTime, authExpireTime, timezone, postAWS, userId, userName, name
+  if (urlParams.size > 0) {
+    authToken = urlParams.get('authToken');
+    refreshToken = urlParams.get('refreshToken');
+    refreshExpireTime = urlParams.get('refreshExpireTime');
+    authExpireTime = urlParams.get('AuthExpirationDate');
+    timezone = urlParams.get('timezone');
+    postAWS = urlParams.get('postAWS');
+    userId = urlParams.get('userId');
+    userName = urlParams.get('username');
+    name = urlParams.get('name');
+
+    console.log("1:", { authToken, refreshToken, refreshExpireTime, authExpireTime, timezone })
+
+    localStorage.setItem('authToken', authToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('refreshExpireTime', refreshExpireTime);
+    localStorage.setItem('AuthExpirationDate', authExpireTime);
+    localStorage.setItem('timezone', timezone);
+    localStorage.setItem('postAWS', postAWS);
+    localStorage.setItem('userId', userId);
+    localStorage.setItem('username', userName);
+    localStorage.setItem('name', name);
+  } else {
+    authToken = localStorage.getItem('authToken');
+    refreshToken = localStorage.getItem('refreshToken');
+    refreshExpireTime = localStorage.getItem('refreshExpireTime');
+    authExpireTime = localStorage.getItem('AuthExpirationDate');
+    timezone = localStorage.getItem('timezone');
+    postAWS = localStorage.getItem('postAWS');
+    userId = localStorage.getItem('userId');
+    userName = localStorage.getItem('username');
+    name = localStorage.getItem('name');
+  }
+
   console.log("inside authCheckState:", state)
-  const authToken = localStorage.getItem('authToken');
-  const refreshToken = localStorage.getItem('refreshToken');
   const userLevelID = localStorage.getItem('userLevelID');
-  const refreshExpireTime = localStorage.getItem('refreshExpireTime');
-  const authExpireTime = localStorage.getItem('AuthExpirationDate');
-  const timezone = localStorage.getItem('timezone');
-  const userId = localStorage.getItem('userId');
-  const userName = localStorage.getItem('username');
-  const name = localStorage.getItem('name');
-  const postAWS = localStorage.getItem('postAWS');
 
   console.log("values in authCheckState:", { authToken, refreshToken, userLevelID, refreshExpireTime, authExpireTime, timezone, userId, userName, name })
   console.log("postAWS:", postAWS)
 
   if (!authToken || !refreshToken || !refreshExpireTime || !authExpireTime || !timezone) {
+    console.log("here")
     dispatch(setDidTryAL());
     dispatch(Logout());
   }
@@ -489,74 +558,74 @@ export const authCheckState = (props) => (dispatch, getState) => {
       dispatch(setDidTryAL());
       dispatch(Logout());
     } else {
-      console.log("authToken exists postAWS:",postAWS)
-      
-        let decodedGoal = {
-          "fname": name ? name : "User",
-          "sub": userName,
-          "lname": "",
-          "tz": moment.tz.guess(),
-          "tagids": [
-            102,
-            122,
-            224,
-            226,
-            228,
-            330,
-            446,
-            612,
-            616,
-            620,
-            632,
-            698,
-            788,
-            1036,
-            1301
-          ],
-          "exp": 1765920038,
-          "iat": 1765833638,
-          "cid": 411847,
-          "new": true
-        }
-        decodedGoal.cid = userId
-        if (postAWS == "true") {
-          decodedGoal.postAWS = true
-        }
+      console.log("authToken exists postAWS:", postAWS)
 
-        let resGoal2 = { ///welcome/v1/users luke
-          "fname": "",
-          "lname": "",
-          "contactId": 411847,
-          "emailId": moment.tz.guess(),
-          "isAllAccessUser": true,
-          "isThriveUser": true,
-          "isAdmin": false,
-          "playerScript": "?exp=1765831927306&sig=2a54c1144b98adaf46b0fc66a0b5a5a5",
-          "guidedPlanAccessLevels": [
-            0,
-            1,
-            2,
-            3,
-            4
-          ],
-          "userLevel": levelObj[userLevelID]?.userLevel ? levelObj[userLevelID]?.userLevel : "Advanced One",
-          "levelId": userLevelID ? userLevelID : 3
-        }
-        resGoal2.fname = name
-        let freeMember = false
-        console.log("resGoal2:", resGoal2)
-        dispatch(
-          LoginAsync(
-            authToken,
-            decodedGoal,
-            {
-              ...resGoal2,
-              showAllAccessSite: true,
-              isFreeMember: freeMember
-            },
-            timezone)
-        )
-      
+      let decodedGoal = {
+        "fname": name ? name : "User",
+        "sub": userName,
+        "lname": "",
+        "tz": moment.tz.guess(),
+        "tagids": [
+          102,
+          122,
+          224,
+          226,
+          228,
+          330,
+          446,
+          612,
+          616,
+          620,
+          632,
+          698,
+          788,
+          1036,
+          1301
+        ],
+        "exp": 1765920038,
+        "iat": 1765833638,
+        "cid": 411847,
+        "new": true
+      }
+      decodedGoal.cid = userId
+      if (postAWS == "true") {
+        decodedGoal.postAWS = true
+      }
+
+      let resGoal2 = { ///welcome/v1/users luke
+        "fname": "",
+        "lname": "",
+        "contactId": 411847,
+        "emailId": moment.tz.guess(),
+        "isAllAccessUser": true,
+        "isThriveUser": true,
+        "isAdmin": false,
+        "playerScript": "?exp=1765831927306&sig=2a54c1144b98adaf46b0fc66a0b5a5a5",
+        "guidedPlanAccessLevels": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "userLevel": levelObj[userLevelID]?.userLevel ? levelObj[userLevelID]?.userLevel : "Advanced One",
+        "levelId": userLevelID ? userLevelID : 3
+      }
+      resGoal2.fname = name
+      let freeMember = false
+      console.log("resGoal2:", resGoal2)
+      dispatch(
+        LoginAsync(
+          authToken,
+          decodedGoal,
+          {
+            ...resGoal2,
+            showAllAccessSite: true,
+            isFreeMember: freeMember
+          },
+          timezone)
+      )
+
 
       /*if (authExpirationDate <= currentDate) {
         console.log('hello')

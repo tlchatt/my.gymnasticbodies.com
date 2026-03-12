@@ -500,7 +500,7 @@ const FitnessQuiz = (props) => {
             <Icon ClassName={styles.SVG} Style={SVGStyle} Name={icon} />
             <label className={styles.Label} style={LabelStyle}>
               {content &&
-                <Typography variant='paragraph' gutterBottom className={classes.title} id="responsive-dialog-title" align='center'>{content}</Typography>
+                <Typography variant='body2' gutterBottom className={classes.title} id="responsive-dialog-title" align='center'>{content}</Typography>
               }
               {type === "textarea" &&
                 <textarea type={type} id={id} name={id} className={styles.TextArea} style={InputStyle}

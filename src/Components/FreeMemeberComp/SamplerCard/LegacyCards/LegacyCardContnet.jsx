@@ -128,7 +128,6 @@ export default function CourseCardContent(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const workoutInfoObjectkeys = Object.keys(workoutInfo);
 
   return (

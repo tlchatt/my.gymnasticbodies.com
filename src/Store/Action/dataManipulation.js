@@ -9977,6 +9977,7 @@ export const getData = () => (dispatch, getState) => {
 
     const state = getState();
     const { levelId, timezone } = state.login;
+    
     let data = {}
     data = levelId == 1 ? { ...intermediateOne } : levelId == 2 ? { ...intermediateTwo } : levelId == 3 ? { ...advancedOne } : { ...advancedTwo };
     const firstAndLast = [getCalanderDate(timezone, 'MMMM DD YYYY')[0], getCalanderDate(timezone, 'MMMM DD YYYY')[6]];
@@ -9997,10 +9998,9 @@ export const getData = () => (dispatch, getState) => {
 }
 
 export const updateData = (data) => (dispatch, getState) => {
-
+    
     // let data = dispatch(getData())
     const state = getState();
-
     const { UserId, levelId } = state.login;
     const { userSchedule } = state.levels;
     let workoutSchedule = data ? _.cloneDeep(data) : {};
@@ -10008,28 +10008,33 @@ export const updateData = (data) => (dispatch, getState) => {
         userId: UserId,
         type: "levelPath"
     }
+
     Axios.get(NEWAPI + '/api/user/userStatus', {
         params: userData
     }, config)
         .then(res => {
-            console.log("res is:", res)
+            // console.log("res is:", res)
             let logs = res.data.filter(obj => obj.logs).map(obj => obj.logs)[0];//getting only the logs from response data
             let newData = {}
             logs.map((log) => {
                 newData[log.userScheduleDate] = log.data
             })
+            // console.log("newData:", newData)
             const commonDates = Object.keys(data).filter(key => key in newData);
+            // console.log("commonDates:", commonDates)
 
-
-            //simple class update
+            // console.log("data:", data)
+            //class and program update
             commonDates.forEach(date => {
-                newData[date].forEach(newItem => {//data in db
+                newData[date].forEach(newItem => {//data from db
+                    // console.log("newItem:", newItem)
                     const orgItem = data[date].find(item =>
                         item.scheduleId === newItem.scheduleId && item.classId === newItem.classId
                     );
+                    // console.log("orgItem:", orgItem)
                     if (orgItem) {//class or program in log data type that matched original data
                         if (newItem.type === "Class") {
-                            
+
                             let newLogValue = newItem?.isLogged ? newItem?.isLogged : newItem?.workout?.isLogged
                             orgItem.workout.isLogged = newLogValue
                         } else if (newItem.type === "Program") {
@@ -10037,10 +10042,16 @@ export const updateData = (data) => (dispatch, getState) => {
                         }
                     } else {//program type with chosenprogs structure
                         if (newItem.type === "Program") {
+                            // console.log("newItem?.chosenProgs:", newItem?.chosenProgs)
                             newItem?.chosenProgs?.forEach(prog => {
                                 let exerciseId = prog.exerciseId
                                 let sectionName = prog.section
+                                // console.log("prog is:", prog)
+                                // console.log("data[date]:", data[date])
+                                // console.log("levelId:", levelId)
+                                // console.log("exerciseId:", exerciseId, "\nsectionName:", sectionName)
                                 data[date].forEach(item => {
+                                    // console.log("item.workout:", item.workout)
                                     if (item.type == "Program" && `LEVEL ${levelId}` in item.workout) {
                                         let orgExercise = item?.workout[`LEVEL ${levelId}`][sectionName]
                                         if (orgExercise) {
@@ -10048,6 +10059,8 @@ export const updateData = (data) => (dispatch, getState) => {
                                                 orgExercise[0] = prog
                                             }
                                         }
+                                        //check if the program has workoutInfo
+                                        // console.log("data[date]:", data[date])
                                     }
                                 })
                             })

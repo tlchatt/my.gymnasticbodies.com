@@ -1,4 +1,6 @@
 import React from "react";
+import { IconButton, Typography } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
@@ -6,10 +8,6 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from "@material-ui/core/styles";
-import { NavLink } from "react-router-dom";
-import { connect } from 'react-redux';
-import { Route, Redirect, Switch } from 'react-router-dom';
-import { Typography } from '@material-ui/core'
 
 import Copyright from "./Copyright";
 import SnackBar from '../../SnakBar';
@@ -17,6 +15,10 @@ import EmailForm from './EmailReset';
 import CreateAccount from './CreateAccount';
 import PasswordRest from './PasswordReset'
 import ContactUs from "../../FreeMemeberComp/Drawer/Support";
+
+import { NavLink } from "react-router-dom";
+import { connect } from 'react-redux';
+import { Route, Redirect, Switch } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -62,7 +64,16 @@ const LoginFrom = (props) => {
       <NavLink {...props} />
     </div>
   )
-  let contactForm = false
+  const Test = React.forwardRef((props, ref) => {
+    return (
+      <div style={{ display: 'contents' }} ref={ref}>
+        {/* <NavLink {...props} /> */}
+        <NavLink {...props} />
+      </div>
+    )
+
+  })
+
   let loginForm;
 
   if (props.loading) {
@@ -117,10 +128,32 @@ const LoginFrom = (props) => {
             <Link component={LinkRef} to="/reset" exact variant="body1">
               Forgot your password?
             </Link>
+
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs style={{ textAlign: "right" }}>
+            <Link component={Test} to="/paymentPortal" variant="body1">
+              Payment Portal
+            </Link>
+            {/* <Route path="/paymentPortal" exact component={EmailForm} /> */}
+
+
           </Grid>
         </Grid>
         <Box mt={5}>
           <Copyright />
+          <div style={{ zIndex: "2", display: "grid", justifyItems: "center" }}>
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={(event) => handleContactForm(event)}
+            >
+              Contact Support
+            </Button>
+          </div>
         </Box>
         <SnackBar open={props.fail} variation='error' />
       </form>
@@ -134,22 +167,21 @@ const LoginFrom = (props) => {
     if (displayOfContactForm == "none") {
       contactFormDiv.style.display = "grid"
       contactFormDiv.style.alignItems = "center"
-    }else{
+    } else {
       contactFormDiv.style.display = "none"
     }
-
-
   }
 
   return (
     <>
+      <script type="text/javascript" src="https://jstest.authorize.net/v1/Accept.js" charSet="utf-8"></script>
       <div className={classes.paper} id="loginFormDiv">
         <NavLink to="/" exact className={classes.logo} />
-        {
+        {/* {
           props.isMaintenance && props.isMaintenance.showHeadsUp && !props.isMaintenance.maintenance
             ? <Typography variant='body2' align='center' style={{ marginTop: 8, letterSpacing: '0.2px', color: 'red' }} >{props.isMaintenance.headsUp}</Typography>
             : null
-        }
+        } */}
         {
           props.isMaintenance && props.isMaintenance.maintenance
             ? <Typography variant='h5' align='center' style={{ marginTop: 8, letterSpacing: '0.2px', color: 'red' }} >{props.isMaintenance.note}</Typography>
@@ -160,27 +192,18 @@ const LoginFrom = (props) => {
               <Route path="/" exact>
                 {loginForm}
               </Route>
+              {/* <Route path="/paymentPortal" exact component={paymentPortal} /> */}
               <Route render={() => <Redirect to="/" />} />
             </Switch>
         }
-      </div>
-      <div style={{zIndex:"2", position: "absolute", bottom: "0", right: "0", margin:"0 16px" }}>
-        <Button
-          type="button"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-          onClick={(event) => handleContactForm(event)}
-        >
-          Contact Us
-        </Button>
-
-
 
 
       </div>
-      <div id="contactFormDiv" style={{ display: "none", position:"absolute",zIndex:"1" }}>
+
+      <div id="contactFormDiv" style={{ display: "none", position: "absolute", zIndex: "1" }}>
+        <IconButton className='close-button' aria-label="close" onClick={handleContactForm}>
+          <CloseIcon />
+        </IconButton>
         <ContactUs />
       </div>
     </>

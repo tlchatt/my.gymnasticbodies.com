@@ -10,6 +10,7 @@ const initailState = {
 }
 
 const LoginSuccess = (state, action) => {
+  console.log("action.userState:",action.userState)
   return updateObject(state, {
     auth: true,
     webToken: action.webToken,

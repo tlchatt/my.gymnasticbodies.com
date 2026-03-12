@@ -11,6 +11,9 @@ const initailState = {
 }
 
 const SetProgression = (state, action) => {
+  console.log("state:",state)
+  console.log("action:",action)
+  console.log("action.allProgressions:",action.allProgressions)
   return updateObject(state, {
     selectedProgessions: action.selectedProgression,
     allProgressions: action.allProgressions,

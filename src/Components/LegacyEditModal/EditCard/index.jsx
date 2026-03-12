@@ -78,15 +78,22 @@ const useStyles = makeStyles(theme => ({
 }))
 // onClick={() => props.handleDrawer(`${props.groupName}${props.index + 1} - SomeName`)
 const EditCard = props => {
+
+  console.log("inside EditCard")
   const classes = useStyles();
   const theme = useTheme();
 
   const phoneScreen = useMediaQuery(theme.breakpoints.down(415));
   const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [masterySet, setMasterySetValue] = React.useState(null);
   const disptach = useDispatch();
   const { progression } = props;
   const [progId, setProgId] = React.useState();
   const postAWS = useSelector(state => state.login.postAWS)
+
+  let masteryStepsArray, masterySetIndex, masterySetValue
+
+
   useEffect(() => {
     if (progression.stepNo) {
       setProgId(progression.masterySteps[progression.stepNo].masterySetId);
@@ -95,6 +102,8 @@ const EditCard = props => {
       setProgId(progression.masterySteps[1].masterySetId);
     }
   }, [progression])
+
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -105,22 +114,37 @@ const EditCard = props => {
   };
 
   const handleDelete = () => {
-    disptach(handleDeleteProgression(progression.exerciseId, props.isLevels));
+    const masteryStepsArray = Object.values(progression?.masterySteps);
+    const masterySetIndex = masteryStepsArray.findIndex((set) => set.masterySetId === progId);
+    const masterySet = masteryStepsArray[masterySetIndex];
+    masterySet.step = masterySetIndex - 1
+    console.log("masterySet delete inside:", masterySet)
+
+    disptach(handleDeleteProgression(progression.exerciseId, props.isLevels, masterySet, props.date));
     setAnchorEl(null);
   }
 
   const handleDropDown = (e) => {
     setProgId(parseInt(e.target.value))
-  }
 
+
+    // console.log("masteryStepsArray:",masteryStepsArray)
+
+    // repValue = masterySet.sets + "x" + masterySet.repsOrSecs
+    // console.log("repValue:",repValue)
+    // console.log("masterySet outside:", masterySet)
+    // setMasterySetValue(masterySet)
+  }
   const handleAdd = () => {
-    console.log("progression.exerciseId", progression.exerciseId)
-    console.log("progId", progId)
-    console.log("props.date", props.date)
-    console.log("props.isLevels", props.isLevels)
-    disptach(handleAddProgression(progression.exerciseId, progId, props.date, props.isLevels));
+    const masteryStepsArray = Object.values(progression?.masterySteps);
+    const masterySetIndex = masteryStepsArray.findIndex((set) => set.masterySetId === progId);
+    const masterySet = masteryStepsArray[masterySetIndex];
+    masterySet.step = masterySetIndex + 1
+    console.log("masterySet add inside:", masterySet)
+    disptach(handleAddProgression(progression.exerciseId, progId, props.date, props.isLevels, props.progression, masterySet));
     setAnchorEl(null);
   }
+
 
   return (
     <Card className={classes.root} elevation={3}>
@@ -162,33 +186,10 @@ const EditCard = props => {
         {
           progression.selected
             ? [
-              !postAWS ? <MenuItem onClick={handleDelete} key='Remove'>Remove</MenuItem> : null,
+              <MenuItem onClick={handleDelete} key='Remove'>Remove</MenuItem>,
               <MenuItem onClick={() => disptach(OpenModal(progression.exerciseId))} key='See Demo'>See Demo</MenuItem>,
-              !postAWS ? 
-              <MenuItem onClick={handleAdd} key='Update'>Update Step</MenuItem> : null,
-              !postAWS ?  <MenuItem key='Add DropDown'>
-                <FormControl>
-                  <InputLabel id="step-native-simple">Steps</InputLabel>
-                  <Select
-                    inputProps={{
-                      name: 'step',
-                      id: 'step-native-simple',
-                    }}
-                    native={true}
-                    value={progId}
-                    onChange={handleDropDown}
-                  >
-                    <StepsList steps={progression.masterySteps} />
-                  </Select>
-                </FormControl>
-              </MenuItem> : null,
-            ]
-            : [
-              !postAWS ?
-                <MenuItem onClick={handleAdd} key='Add Button'>Add</MenuItem>
-                : null,
-              <MenuItem onClick={() => disptach(OpenModal(progression.exerciseId))} key='See Demo'>See Demo</MenuItem>,
-              !postAWS ? 
+
+              <MenuItem onClick={handleAdd} key='Update'>Update Step</MenuItem>,
               <MenuItem key='Add DropDown'>
                 <FormControl>
                   <InputLabel id="step-native-simple">Steps</InputLabel>
@@ -204,7 +205,30 @@ const EditCard = props => {
                     <StepsList steps={progression.masterySteps} />
                   </Select>
                 </FormControl>
-              </MenuItem> : null
+              </MenuItem>,
+            ]
+            : [
+
+              <MenuItem onClick={handleAdd} key='Add Button'>Add</MenuItem>
+              ,
+              <MenuItem onClick={() => disptach(OpenModal(progression.exerciseId))} key='See Demo'>See Demo</MenuItem>,
+              <MenuItem key='Add DropDown'>
+                <FormControl>
+                  <InputLabel id="step-native-simple">Steps</InputLabel>
+                  <Select
+                    inputProps={{
+                      name: 'step',
+                      id: 'step-native-simple',
+                    }}
+                    native={true}
+                    value={progId}
+                    onChange={handleDropDown}
+
+                  >
+                    <StepsList steps={progression.masterySteps} />
+                  </Select>
+                </FormControl>
+              </MenuItem>
             ]
         }
       </Menu>
