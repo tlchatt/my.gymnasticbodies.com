@@ -3,6 +3,7 @@ import { Typography, makeStyles, Grid, Card, Button } from '@material-ui/core';
 import ReactJWPlayer from 'react-jw-player';
 import { useSelector } from 'react-redux';
 import Interweave from 'interweave';
+import VideoComp from '../../../../VideoComp';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -34,19 +35,24 @@ const useStyles = makeStyles(theme => ({
 const CoursePreivewData = (props) => {
   const classes = useStyles();
   const playerSignedUrl = useSelector(state => state.login.signedUrl);
+
   return (
     <>
       {
         !props.isSubCoursePreview ? <Grid item xs={12} sm={10} md={10} lg={12} className={classes.videoGrid} >
           <Card elevation={6} style={{ margin: '12px auto', maxWidth: 710 }}>
-            <ReactJWPlayer
+            {/* <ReactJWPlayer
               playerId='my-CoursePreivewData'
               playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
               playlist={`https://content.jwplatform.com/feeds/${props.mediaId}`}
               customProps={{ nextUpDisplay: false }}
               onError={(err) => console.log("onError", err)}
               onSetupError={(err) => console.log("onSetupError", err)}
-            />
+            /> */}
+            {/* {props?.mediaUrl && */}
+            <VideoComp url={props?.url} />
+            {/* } */}
+
           </Card>
         </Grid>
           : null
@@ -61,7 +67,7 @@ const CoursePreivewData = (props) => {
       </Grid>
       {
         props.returnToCourses
-          ? <Grid item xs={12} sm={12} md={12} lg={12} style={{justifyContent: 'center', display: 'flex'}}>
+          ? <Grid item xs={12} sm={12} md={12} lg={12} style={{ justifyContent: 'center', display: 'flex' }}>
             <Button className={classes.button} color="primary" onClick={props.returnToCourses}>
               {props.returnToText ? props.returnToText : 'Return To Courses'}
             </Button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactJWPlayer from 'react-jw-player';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,6 +14,8 @@ import { connect } from 'react-redux';
 // import DiscortChat from './DiscordChat'
 import RelatedCards from './RelatedCoursesCards'
 import WorkoutCard from './WorkoutCards'
+import { getAndCheckMedia } from '../../lib/commonFunctions';
+import VideoComp from '../VideoComp';
 
 
 const useSytles = makeStyles(theme => ({
@@ -78,6 +80,15 @@ function NonLegacyModal(props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { mediaId, courseTitle } = props;
+  const [url, setUrl] = useState();
+
+  const handleCheckMedia = async () => {
+
+    let mediaUrl = await getAndCheckMedia(mediaId);
+    setUrl(mediaUrl)
+  };
+
+  handleCheckMedia()
 
   return (
     <Dialog
@@ -97,7 +108,7 @@ function NonLegacyModal(props) {
         <Grid container justifyContent='center'>
           <Grid item xs={12} sm={10} md={10} lg={10}>
             <Paper elevation={2}>
-              {
+              {/* {
                 props.open && !props.mainCourses && (!props.hideForStretchMainVideo || props.mainId !== 59257 ) && props.mediaId
                   ? <ReactJWPlayer
                       playerId='non-legacy-player'
@@ -108,6 +119,11 @@ function NonLegacyModal(props) {
                       onError={(err) => console.log("onError", err)}
                       onSetupError={(err) => console.log("onSetupError", err)}
                     />
+                  : null
+              } */}
+              {
+                props.open && !props.mainCourses && (!props.hideForStretchMainVideo || props.mainId !== 59257) && props.mediaId
+                  ? <VideoComp url={url} />
                   : null
               }
             </Paper>
@@ -126,64 +142,64 @@ function NonLegacyModal(props) {
           {
             props.subText
               ? <Grid item xs={12} sm={10} md={10} lg={10}>
-                  <Typography className={classes.bodyText} variant="body1" gutterBottom component='div'>
-                    <Interweave content={props.subText}/>
-                  </Typography>
-                </Grid>
+                <Typography className={classes.bodyText} variant="body1" gutterBottom component='div'>
+                  <Interweave content={props.subText} />
+                </Typography>
+              </Grid>
               : null
           }
           {/* <DiscortChat courseTitle={courseTitle} /> */}
           {
             props.mainCourses && props.mainCourses.length
               ? <Grid item xs={12} sm={10} md={10} lg={10}>
-                 <Typography className={classes.title} align='center'>Workouts</Typography>
-                  <Grid container justifyContent='center'>
-                    {
-                      props.mainCourses.map((courseInfo, index) => <WorkoutCard
-                        courseInfo={courseInfo}
-                        key={index}
-                        img={courseInfo.image_url}
-                        handleSuggestedCourse={props.handleSuggestedCourse}
-                        mainId={props.mainId}
-                      />)
-                    }
-                  </Grid>
+                <Typography className={classes.title} align='center'>Workouts</Typography>
+                <Grid container justifyContent='center'>
+                  {
+                    props.mainCourses.map((courseInfo, index) => <WorkoutCard
+                      courseInfo={courseInfo}
+                      key={index}
+                      img={courseInfo.image_url}
+                      handleSuggestedCourse={props.handleSuggestedCourse}
+                      mainId={props.mainId}
+                    />)
+                  }
                 </Grid>
+              </Grid>
               : null
           }
           {
             props.relatedCourses && props.relatedCourses.length
               ? <Grid item xs={12} sm={10} md={10} lg={10}>
-                 <Typography className={classes.title} align='center'>{ props.mainId !== 59257 ? 'Related Courses' : 'Workouts'}</Typography>
-                  <Grid container justifyContent='center'>
-                    {
-                      props.relatedCourses.map((courseInfo, index) => <RelatedCards
-                        courseInfo={courseInfo}
-                        key={index}
-                        img={courseInfo.image_url}
-                        handleSuggestedCourse={props.handleSuggestedCourse}
-                      />)
-                    }
-                  </Grid>
+                <Typography className={classes.title} align='center'>{props.mainId !== 59257 ? 'Related Courses' : 'Workouts'}</Typography>
+                <Grid container justifyContent='center'>
+                  {
+                    props.relatedCourses.map((courseInfo, index) => <RelatedCards
+                      courseInfo={courseInfo}
+                      key={index}
+                      img={courseInfo.image_url}
+                      handleSuggestedCourse={props.handleSuggestedCourse}
+                    />)
+                  }
                 </Grid>
+              </Grid>
               : null
           }
           {
             props.RelatedSubCourses && props.RelatedSubCourses.length
               ? <Grid item xs={12} sm={10} md={10} lg={10}>
-                 <Typography className={classes.title} align='center'>Workouts</Typography>
-                  <Grid container justifyContent='center'>
-                    {
-                      props.RelatedSubCourses.map((courseInfo, index) => <WorkoutCard
-                        courseInfo={courseInfo}
-                        key={index}
-                        img={courseInfo.image_url}
-                        handleSuggestedCourse={props.handleSuggestedCourse}
-                        mainId={props.mainId}
-                      />)
-                    }
-                  </Grid>
+                <Typography className={classes.title} align='center'>Workouts</Typography>
+                <Grid container justifyContent='center'>
+                  {
+                    props.RelatedSubCourses.map((courseInfo, index) => <WorkoutCard
+                      courseInfo={courseInfo}
+                      key={index}
+                      img={courseInfo.image_url}
+                      handleSuggestedCourse={props.handleSuggestedCourse}
+                      mainId={props.mainId}
+                    />)
+                  }
                 </Grid>
+              </Grid>
               : null
           }
         </Grid>

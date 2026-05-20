@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function CoursePreviewCards(props) {
+  // console.log("props:",props)
   const classes = useStyles();
   const dispatch = useDispatch();
 

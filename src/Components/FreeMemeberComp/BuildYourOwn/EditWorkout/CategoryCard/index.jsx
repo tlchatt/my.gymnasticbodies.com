@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -8,12 +8,12 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import clsx from 'clsx';
-import axios from 'axios'
 import { useDispatch } from 'react-redux';
 
 import MobileContent from './MobileConent'
 import EditWorkout from '../CoursePreview/MobileCoursePreview';
 import { removeCategory, addNewCategory } from '../../../../../Store/Action/WorkoutBuilderActions'
+import { getAndCheckMedia } from '../../../../../lib/commonFunctions';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -86,7 +86,7 @@ export default function CategoryCard(props) {
   const classes = useStyles(props);
   const [timeStamp, setTimeStamp] = React.useState('');
   const dispatch = useDispatch();
-
+  const [mediaUrl, setMediaUrl] = useState();
   const {
     courseData,
     hasData,
@@ -96,17 +96,55 @@ export default function CategoryCard(props) {
   } = props;
 
   const { mediaId } = courseData;
+  console.log("timeStamp:", timeStamp)
 
-  useEffect(() => {
-    const fetchDurration = () => {
-      axios.get(`https://content.jwplatform.com/feeds/${mediaId}`).then(res => {
-        setTimeStamp(display(res.data.playlist[0].duration))
-      })
+  // console.log("mediaId in CategoryCard", courseData)
+  useEffect(async () => {
+
+    try {
+      const handleCheckMedia = async (mediaId) => {
+
+        const url = await getAndCheckMedia(mediaId);
+        // console.log("result is:", result)
+        if (url) setMediaUrl(url);
+      };
+      handleCheckMedia(mediaId)
+      let video
+      if (mediaUrl) {
+        // 1. Create element
+        video = document.createElement('video');
+        video.src = mediaUrl;
+        video.preload = 'metadata'; // Optimized for loading only metadata
+
+        // 2. Listen for duration to load
+        video.onloadedmetadata = () => {
+          let timestamp = video.duration
+          const minutes = Math.floor(timestamp / 60);
+          const seconds = Math.floor(timestamp % 60);
+          let readableTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          // console.log(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+          setTimeStamp(readableTime);
+        };
+      }
+
+      return () => {
+        // remove the metadata info
+        video.onloadedmetadata = null;
+        video.src = '';
+      };
+
+    } catch (err) {
+
     }
-    if (hasData && !isLegacy && mediaId ) {
-      fetchDurration();
-    }
-  }, [hasData, isLegacy, mediaId])
+    // const fetchDurration = () => {
+    //   axios.get(`https://content.jwplatform.com/feeds/${mediaId}`).then(res => {
+    //     setTimeStamp(display(res.data.playlist[0].duration))
+    //   })
+    // }
+    // if (hasData && !isLegacy && mediaId) {
+    //   fetchDurration();
+    // }
+  }, [mediaUrl, hasData, isLegacy, mediaId])
 
   const handleAddNewCat = () => {
     dispatch(addNewCategory(props.category, props.sectionIndex, props.sectionType, props.count))

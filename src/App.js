@@ -154,7 +154,7 @@ function App(props) {
           <Route path="/class-finder" exact component={ClassFinder} />
           <Route path="/get-started" exact component={GetStarted} />
           <Route path="/dashboard" exact component={Dashboard} />
-          <Route path="/" exact render={(props) => <WelcomePage isMaintenance={isMaintenance} {...props} />} />
+          {/* <Route path="/" exact render={(props) => <WelcomePage isMaintenance={isMaintenance} {...props} />} /> */}
           <Route render={() => <Redirect to="/" />} />
         </Switch>
         <Hidden only={['xs', 'sm']}>
@@ -172,11 +172,14 @@ function App(props) {
     routes = (
       <Switch>
         <Route path="/" render={(props) => <Login isMaintenance={isMaintenance} {...props} />} />
-        <Route path="/paymentPortal" render={(props) => <paymentPortal {...props} />} />
-        {/* <Route render={() => <Redirect to="/" />} /> */}
+        {/*<Route path="/paymentPortal" render={(props) => <paymentPortal {...props} />} />
+        <Route render={() => <Redirect to="/" />} /> */}
 
       </Switch>
     );
+    console.log("check here")
+    //get the renewal date for the usersetting from the db
+    
   }
   return (
 

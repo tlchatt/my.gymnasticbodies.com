@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   makeStyles,
   Grid,
@@ -17,6 +17,8 @@ import { NavLink } from "react-router-dom";
 
 // Custom components
 import * as actions from '../../../../Store/Action';
+import VideoComp from '../../../VideoComp';
+import { getAndCheckMedia } from '../../../../lib/commonFunctions';
 
 const styles = makeStyles(theme => ({
   gfTitle: {
@@ -29,7 +31,7 @@ const styles = makeStyles(theme => ({
       marginTop: '4px'
     }
   },
-  container:{
+  container: {
     display: props => props.active === true ? 'flex' : 'none',
     flexDirection: 'column',
     padding: '8px'
@@ -76,7 +78,7 @@ const styles = makeStyles(theme => ({
   alignCenter: {
     textAlign: 'center'
   },
-  resetLink:{
+  resetLink: {
     width: 'fit-content',
     margin: 'auto',
     cursor: 'pointer'
@@ -87,6 +89,7 @@ const styles = makeStyles(theme => ({
 
 const Recommendation = (props) => {
   const classes = styles(props);
+  const [url, setUrl] = useState();
   let myReco = useRef();
   const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
 
@@ -122,6 +125,13 @@ const Recommendation = (props) => {
       if (counterArray[0] <= 1 && counterArray[1] <= 1 && counterArray[2] <= 1 && counterArray[3] <= 1 && counterArray[4] <= 1) myReco.current = 'levelOne';
 
     }
+    const handleCheckMedia = async () => {
+
+      let mediaUrl = await getAndCheckMedia(Recommendations[myReco.current].mediaId);
+      setUrl(mediaUrl)
+    };
+    handleCheckMedia()
+
   }, [props.data]);
 
   const history = useHistory();
@@ -138,18 +148,18 @@ const Recommendation = (props) => {
   return (
     <div className={classes.container}>
       <Grid item xs={12} sm={12} md={12} lg={12} className={[classes.margin8].join(' ')}>
-          <h2 className={classes.gfTitle}>Your Results</h2>
+        <h2 className={classes.gfTitle}>Your Results</h2>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={[classes.flex].join(' ')}>
-        <SmileyFaces data={props.data ?props.data:{} }/>
+        <SmileyFaces data={props.data ? props.data : {}} />
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={[classes.margin8].join(' ')}>
         <h2 className={classes.gfTitle}>Our Recomndations</h2>
         <h3 className={classes.gfSubText}>The ideal workout plan based on your results.</h3>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.padding}>
-        <Paper elevation={2} style={{minHeight: 215}}>
-          {
+        <Paper elevation={2} style={{ minHeight: 215 }}>
+          {/* {
             myReco.current ?
               <ReactJWPlayer
                 playerId='quiz-player'
@@ -159,13 +169,18 @@ const Recommendation = (props) => {
                 onSetupError={(err) => console.log("onSetupError", err)}
               />
               : ''
+          } */}
+          {
+            myReco.current ?
+              <VideoComp url={url} />
+              : ''
           }
 
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={[classes.margin8].join(' ')}>
-        <h2 className={classes.gfTitle} style={{margin: 0}}>{myReco.current ? Recommendations[myReco.current].title : '' }</h2>
-        <h3 className={classes.gfParaText}>{myReco.current ? Recommendations[myReco.current].summary : '' }</h3>
+        <h2 className={classes.gfTitle} style={{ margin: 0 }}>{myReco.current ? Recommendations[myReco.current].title : ''}</h2>
+        <h3 className={classes.gfParaText}>{myReco.current ? Recommendations[myReco.current].summary : ''}</h3>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={[classes.margin8, classes.alignCenter].join(' ')}>
         <Button
@@ -175,7 +190,7 @@ const Recommendation = (props) => {
           onClick={
             myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag)
               ? handleSubmit
-              : (e) => {}
+              : (e) => { }
           }
           component={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? 'button' : 'a'}
           href={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? null : 'https://www.gymnasticbodies.com/class-finder/'}
@@ -191,15 +206,15 @@ const Recommendation = (props) => {
 
         </Button>
       </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12} className={[ classes.alignCenter].join(' ')}>
-        <h2 className={classes.gfTitle} style={{margin: 0, fontSize: '20px'}}> - Or - </h2>
+      <Grid item xs={12} sm={12} md={12} lg={12} className={[classes.alignCenter].join(' ')}>
+        <h2 className={classes.gfTitle} style={{ margin: 0, fontSize: '20px' }}> - Or - </h2>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={[classes.margin8, classes.alignCenter].join(' ')}>
         <Button component={LinkRef} to='/' variant='contained' color='primary' className={classes.gfButtonLarge}>
           Home
         </Button>
       </Grid>
-      <Link onClick={ e => props.reset(e)} underline="always" color='inherit' className={`${classes.resetLink} ${classes.alignCenter}`}>Reset</Link>
+      <Link onClick={e => props.reset(e)} underline="always" color='inherit' className={`${classes.resetLink} ${classes.alignCenter}`}>Reset</Link>
     </div>
   );
 }

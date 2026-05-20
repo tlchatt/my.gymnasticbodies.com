@@ -38,6 +38,7 @@ const EditWorkout = (props) => {
   });
 
   const buildYourOwn = useSelector(state => state.buildYourOwn);
+  
   const webToken = useSelector(state => state.login.webToken);
   // Will need to add some kinda check to see if the user is single point
   const isSinnglePoint = useSelector(state => !state.login.isAllAccessUser);

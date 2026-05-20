@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactJWPlayer from 'react-jw-player';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,6 +10,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import Interweave from 'interweave';
 import { useSelector } from 'react-redux';
+import VideoComp from '../VideoComp';
 
 
 const useSytles = makeStyles(theme => ({
@@ -72,9 +73,10 @@ const ThriveModal = props => {
   const classes = useSytles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const { mediaId, title } = props;
+  const { mediaId, title, url } = props;
+  
   const signedUrl = useSelector(state => state.login.signedUrl)
-
+  let postAWS = useSelector(state => state.login.postAWS);
   return (
     <Dialog
       open={props.open}
@@ -96,15 +98,20 @@ const ThriveModal = props => {
           </Grid>
           <Grid item xs={12} sm={10} md={10} lg={10}>
             <Paper elevation={2}>
-              {
+              {/* {
                 props.open && props.mediaId
                   ? <ReactJWPlayer
-                      playerId='thrive-player'
-                      playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${signedUrl}`}
-                      playlist={`https://content.jwplatform.com/feeds/${mediaId}`}
-                      onError={(err) => console.log("onError", err)}
-                      onSetupError={(err) => console.log("onSetupError", err)}
-                    />
+                    playerId='thrive-player'
+                    playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${signedUrl}`}
+                    playlist={`https://content.jwplatform.com/feeds/${mediaId}`}
+                    onError={(err) => console.log("onError", err)}
+                    onSetupError={(err) => console.log("onSetupError", err)}
+                  />
+                  : null
+              } */}
+              {
+                props.open && url
+                  ? <VideoComp url={url} key={url}/>
                   : null
               }
             </Paper>

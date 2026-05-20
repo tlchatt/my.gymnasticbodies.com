@@ -129,7 +129,8 @@ export default function CourseCardContent(props) {
     setAnchorEl(null);
   };
   const workoutInfoObjectkeys = Object.keys(workoutInfo);
-
+  // console.log("workoutInfo:",workoutInfo)//"HBPPE1IM"
+  
   return (
     <>
       <div className={clsx(classes.subCardContent, { [classes.extraMargin]: props.extraMargin })}>
@@ -139,6 +140,8 @@ export default function CourseCardContent(props) {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           {
             workoutInfoObjectkeys.map((key, index) => {
+              // console.log("workoutInfo[key].videos[0].videoName:",workoutInfo[key].videos[0].videoName)
+              // console.log("handleLegacyPlayer:",handleLegacyPlayer)
               return (
                 
                   <div className={classes.innerContent} key={index}>

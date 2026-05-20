@@ -115,8 +115,6 @@ export default function DailyView(props) {
     setOpenPlayer(true);
   }
 
-
-
   return (
     <div className={classes.root}>
       <Card style={{ width: 480, borderRadius: 8, minHeight: 710, height: '100%' }} elevation={4}>

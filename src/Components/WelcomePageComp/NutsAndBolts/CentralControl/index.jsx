@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactJWPlayer from 'react-jw-player';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,6 +10,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 // import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import { useTheme } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux'
+import { getAndCheckMedia } from '../../../../lib/commonFunctions';
+import VideoComp from '../../../VideoComp';
 
 
 const useSytles = makeStyles(theme => ({
@@ -73,7 +75,15 @@ function CentralControl(props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const signedUrl = useSelector(state => state.login.signedUrl)
+  const [url, setUrl] = useState();
 
+  useEffect(() => {
+    const handleCheckMedia = async () => {
+      let mediaUrl = await getAndCheckMedia("w3ModWzX");
+      setUrl(mediaUrl)
+    };
+    handleCheckMedia()
+  })
   return (
     <Dialog
       open={props.open}
@@ -93,7 +103,7 @@ function CentralControl(props) {
           <Grid item xs={12} sm={10} md={10} lg={10}>
             <Typography className={classes.title}>Central Control</Typography>
             <Paper elevation={2}>
-              {
+              {/* {
                 props.open ?
                   <ReactJWPlayer
                     playerId='my-jwplayer'
@@ -103,10 +113,15 @@ function CentralControl(props) {
                     onSetupError={(err) => console.log("onSetupError", err)}
                   />
                 : null
+              } */}
+              {
+                props.open ?
+                  <VideoComp url={url} />
+                  : null
               }
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={10} md={10} lg={10} style={{padding: 8}}>
+          <Grid item xs={12} sm={10} md={10} lg={10} style={{ padding: 8 }}>
             <Typography className={classes.bodyText} variant="body1" gutterBottom>Every time you log on, you will see your welcome page. Go straight to your workout, check out your courses, or see what tools are in your toolbox. The dashboard is your guide to using our workout interface. Add, delete, and reposition your classes for the week.</Typography>
           </Grid>
         </Grid>

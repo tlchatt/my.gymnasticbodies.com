@@ -82,7 +82,7 @@ function AvatarDropDown(props) {
     let authToken = localStorage.getItem('authToken');
     let userId = localStorage.getItem('userId');
     // let username = localStorage.getItem('username');
-    
+    // userId = 'ac83a88e-02a2-4be1-883f-9cc0f79d3c87'
     console.log("authToken in Workout page:", authToken)
     
     // window.location.href = `${endpoint}?token=${authToken}&userId=${userId}&username=${username}`;

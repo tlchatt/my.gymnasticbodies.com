@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Typography, makeStyles, Grid, Box, Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useSelector } from 'react-redux'
@@ -8,6 +8,7 @@ import ThriveLessonsRow from '../../Thrive/ThriveLessonRow'
 import ThriveModal from '../../Thrive/ThriveModal';
 import UnlockAll from '../../Thrive/UnlockAll'
 import ResetThrive from '../../Thrive/ResetThrive'
+import { getAndCheckMedia } from '../../../lib/commonFunctions';
 
 
 const useStyles = makeStyles(theme => ({
@@ -58,6 +59,8 @@ export default function ThriveLessons(props) {
   const [loading, setLoading] = useState(true);
   const [lessons, setLessons] = useState([]);
 
+  const [url, setUrl] = useState();
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
     title: '',
@@ -88,13 +91,30 @@ export default function ThriveLessons(props) {
       });
   }
 
-
+  useEffect(() => {//updates the state setModalData whenever the url value is available
+    if (url) {
+      setModalData((prevModalData) => ({
+        ...prevModalData,
+        url: url,
+      }));
+    }
+  }, [url]);
 
   const handleOpenModal = (title, subText, mediaId) => {
+    let mediaUrl
+    if (mediaId) {
+      const handleCheckMedia = async () => {
+        mediaUrl = await getAndCheckMedia(mediaId)
+        setUrl(mediaUrl)
+
+      };
+      handleCheckMedia()
+    }
     setModalData({
       title: title,
       subText: subText,
-      mediaId: mediaId
+      mediaId: mediaId,
+      url: url
     });
     setModalOpen(true);
   }
@@ -156,7 +176,6 @@ export default function ThriveLessons(props) {
         props.showToast('Something went wrong. No worried we\'ve been notified!', 'error')
       });
   }
-
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={12} lg={12} style={{ marginTop: 8 }}>
@@ -166,7 +185,7 @@ export default function ThriveLessons(props) {
             : <Box>
               <Typography variant="h6" className={classes.parts}>Part 1</Typography>
               {
-                lessons.slice(0, 10).map((lesson, index) => <ThriveLessonsRow key={index}  handleOpenModal={handleOpenModal} {...lesson} />)
+                lessons.slice(0, 10).map((lesson, index) => <ThriveLessonsRow key={index} handleOpenModal={handleOpenModal} {...lesson} />)
               }
               <Typography variant="h6" className={classes.parts}>Part 2</Typography>
               {
@@ -185,9 +204,12 @@ export default function ThriveLessons(props) {
           </Box>
         </Grid>
       </Grid>
-      <ThriveModal open={modalOpen} close={handleCloseModal} {...modalData} />
+      {url &&
+        <ThriveModal open={modalOpen} key={url} close={handleCloseModal} {...modalData} />
+      }
+
       <UnlockAll open={open} handleClose={() => setOpen(false)} handleUnlock={handleUnlock} />
-      <ResetThrive open={reset} handleClose={() => setReset(false)} handleReset={handleReset}/>
+      <ResetThrive open={reset} handleClose={() => setReset(false)} handleReset={handleReset} />
     </Grid>
   );
 }

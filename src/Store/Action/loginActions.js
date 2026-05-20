@@ -210,9 +210,9 @@ export const Login = (username, password) => dispatch => {
 
             console.log("c", res.data)
             res.data.postAWS = false
-            
+
             if (!res.data.postAWS) {//true for new users and false for old
-              
+
               //call subscription route, with reason registerWPass
               //info to pass: password, name, username (as email), postAWS 
               const config = {
@@ -226,16 +226,26 @@ export const Login = (username, password) => dispatch => {
                 name: res.data.fname,
                 postAWS: false,
                 reason: "registerWPass",
-                awsCustomerId:res?.data?.contactId
+                awsCustomerId: res?.data?.contactId
               }
               // axios.post(`https://gymnasticbodies-com.vercel.app/api/user/subscription`, data, config)
               axios.post(`http://localhost:3001/api/user/subscription`, data, config)
                 .then(res => {
-                  
+                  console.log("res.data.data:", res.data)
                   let neonUserId = res.data.data.id
                   console.log("neonUserId from res is:", neonUserId)
                   localStorage.setItem('userId', neonUserId);
-                  // dispatch(action);
+                  //get the userSettings using the userId
+                  let settingsData = JSON?.parse(res?.data?.settings?.data)
+                  console.log("settingsData:", settingsData)
+                  let todaysDate = new Date()
+                  const nextPayment = new Date(settingsData.renewaldate)
+                  let endpoint = 'https://app.gymnasticbodies.com/accountDetails'
+                  // let endpoint = 'http://localhost:3001/accountDetails'
+                  let authToken = localStorage.getItem('authToken');
+                  // if (nextPayment && settingsData?.term !== "oneTime" && settingsData?.term !== "N/A" && nextPayment < todaysDate) {
+                  //   window.location.href = `${endpoint}?token=${authToken}&userId=${neonUserId}`;
+                  // }
                 })
                 .catch(error => {
                   // Sentry.captureException(error);
@@ -490,7 +500,7 @@ export const authCheckState = (props) => (dispatch, getState) => {
   }
   const urlParams = new URLSearchParams(window.location.search);
   console.log("window.location length:", urlParams)
-  console.log("urlParams:",urlParams)
+  console.log("urlParams:", urlParams)
   let authToken, refreshToken, refreshExpireTime, authExpireTime, timezone, postAWS, userId, userName, name
   if (urlParams.size > 0) {
     authToken = urlParams.get('authToken');

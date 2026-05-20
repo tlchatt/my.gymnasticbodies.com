@@ -52,6 +52,7 @@ const WorkoutPlanner = (props) => {
     open: false
   };
   const [legacyModalPlayer, setLegacyModalPlayer] = useState(initialLegacyState);
+
   const [hideIcons, setHideIcons] = useState(false);
 
   const {
@@ -72,6 +73,7 @@ const WorkoutPlanner = (props) => {
   const isAllAccessUser = useSelector(state => state.login.isAllAccessUser);
   let postAWS = useSelector(state => state.login.postAWS);
   console.log("postAWS is:", postAWS)
+  console.log("singelVideo:",singelVideo)
   const openPlayerModal = (prog, isIndividualVideo = false) => {
     closeMainPlayer();
     setSingleVideo({ ...prog, isIndividualVideo, isBuildYourOwn });
@@ -86,6 +88,7 @@ const WorkoutPlanner = (props) => {
   }
 
   const handleLegacyPlayer = (videoTitle, steps, instructions, focusPoints, videoUrl, technicalTips) => {
+    
     closeMainPlayer();
     setLegacyModalPlayer({
       videoTitle,
@@ -99,7 +102,6 @@ const WorkoutPlanner = (props) => {
   }
 
   const CardType = cardType && cardType === 'BeginnerCard' ? CourseCards : SamplerCard;
-
 
   return (
     <div className={classes.gridContainer}>
@@ -119,7 +121,9 @@ const WorkoutPlanner = (props) => {
             >
               {
                 data.isLegacy
-                  ? <LegacyCards
+                  ? 
+                  //displays programs content on the daily view
+                  <LegacyCards
                     {...data}
                     workoutIndex={index}
                     dateKey={dateKey}
@@ -128,7 +132,9 @@ const WorkoutPlanner = (props) => {
                     isBuildYourOwn={isBuildYourOwn}
                     postAWS={postAWS}
                   />
-                  : <CardType
+                  :
+                  //displays Workout content on the daily view
+                  <CardType
                     {...data}
                     openPlayerModal={openPlayerModal}
                     dateKey={dateKey}
@@ -172,6 +178,7 @@ const WorkoutPlanner = (props) => {
       {
         <VideoModal open={openPlayer} handleClose={() => setOpenPlayer(!openPlayer)} {...singelVideo} levelsPlayer={props.levelsPlayer}>
           <VideoPlayer open={openPlayer} singleProg={[singelVideo]} levelsPlayer={props.levelsPlayer} withIcons={hideIcons} isBuildYourOwn={isBuildYourOwn} dateKey={dateKey} />
+
         </VideoModal>
       }
       {

@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import utilFunctions from './genVideo';
 
 import { getNewSignedUrl } from '../../../../Store/Action/loginActions';
+import { getAndCheckMedia } from '../../../../lib/commonFunctions';
+import VideoComp from '../../../VideoComp';
 
 
 const preVideo = ['Q3ZceB5O', '5l7lZtsw', 'y1Ves9uz', 'aoGlNem1', 'Qgf6i6Rq'];
@@ -38,18 +40,21 @@ const roundsVideos = ['dv3fDTHu', 'p27gF1IA', '3fYLcxKE', 'GSI3BdwX', 'CumrD3vW'
 const VideoPlayer = props => {
   const playerSignedUrl = useSelector(state => state.login.signedUrl);
   const dayView = useSelector(state => state.freeMember.dayView);
+  let postAWS = useSelector(state => state.login.postAWS);
   // const { open, singleProg, dateKey, levelsPlayer, withIcons, isBeginnerPlan} = props;
   //PC
   const { open, singleProg, dateKey, levelsPlayer = true, withIcons, isBeginnerPlan = true } = props;
   const beginnerVideos = useSelector(state => state.levels.userSchedule);
   const byoSchedule = useSelector(state => state.buildYourOwn.userSchedule);
   const [followAlongArray, setFollowAlongArray] = useState([])
+  const [mediaUrl, setMediaUrl] = useState();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     async function getAutoPilotData() {
       let data = await utilFunctions.createFollowAlongPlaylist(dayView, dateKey, singleProg ? singleProg : dayView[dateKey].exerciseListForDay, singleProg, preVideo, leftRightArray, roundsVideos);
+      console.log("data 1 is:", data)
       setFollowAlongArray(data ? data : []);
     }
 
@@ -77,17 +82,26 @@ const VideoPlayer = props => {
       beginnerVideos[dateKey].classesList = classesList
 
       let data = await utilFunctions.generateBeginnerFollowAlong(beginnerVideos[dateKey].classesList)
+      console.log("data 2 is:", data)
+      const handleCheckMedia = async () => {
+        let url = await getAndCheckMedia(data)
+
+        setFollowAlongArray(url);
+      };
+      handleCheckMedia()
 
       setFollowAlongArray(data ? data : []);
     }
 
     async function getLevelsFollowAllong() {
       let data = await utilFunctions.generateLevelsFollowAlong(beginnerVideos[dateKey])
+      console.log("data 3 is:", data)
       setFollowAlongArray(data ? data : []);
     }
 
     async function buildIndividualWorkout(prog) {
       let data = await utilFunctions.generateIndividualWorkout(prog, roundsVideos, byoSchedule, dateKey)
+      console.log("data 4 is:", data)
       setFollowAlongArray(data ? data : []);
     }
 
@@ -97,7 +111,21 @@ const VideoPlayer = props => {
           buildIndividualWorkout(singleProg[0]);
         }
         else {
-          setFollowAlongArray(`https://content.jwplatform.com/feeds/${singleProg[0].mediaId}`)
+
+
+          // if (postAWS) {
+          const handleCheckMedia = async () => {
+            // const url = `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/${videoId}.mp4`;
+            let url = await getAndCheckMedia(singleProg[0].mediaId)
+            // console.log("result is:", result)
+            setFollowAlongArray(url);
+          };
+
+          handleCheckMedia()
+          // } 
+          // else {
+          //   setFollowAlongArray(`https://content.jwplatform.com/feeds/${singleProg[0].mediaId}`)
+          // }
         }
       }
       else if (levelsPlayer && !singleProg && isBeginnerPlan) {
@@ -132,6 +160,20 @@ const VideoPlayer = props => {
     return () => { head.removeChild(link); }
   }, [withIcons]);
 
+
+  useEffect(() => {
+    console.log("props is:", props)
+    const handleCheckMedia = async () => {
+      let mediaId = props?.singleProg[0]?.videos[0]?.mediaId
+      if (props?.singleProg[0]?.videos?.length > 1) {
+        console.error("handle it, more than one video found in singleProg")
+      }
+      const url = await getAndCheckMedia(mediaId);
+      // console.log("result is:", result)
+      if (url) setMediaUrl(url);
+    };
+    handleCheckMedia()
+  })
   const handleOnError = (errorObj) => {
     console.log('handleOnError', errorObj.code);
   }
@@ -144,10 +186,11 @@ const VideoPlayer = props => {
   }
 
 
+  console.log("followAlongArray:", followAlongArray)
   return (
     <>
-      {
-        props.open && followAlongArray.length ?
+      {/* {
+        !postAWS && props.open && followAlongArray.length ?
           <ReactJWPlayer
             playerId='my-jwplayer'
             playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
@@ -156,6 +199,16 @@ const VideoPlayer = props => {
             onError={handleOnError}
             onSetupError={handleOnSetupError}
           />
+          : null
+      } */}
+      {
+        props.open && followAlongArray?.length && !mediaUrl ?
+          <VideoComp url={followAlongArray} />
+          : null
+      }
+      {
+        props.open && mediaUrl ?
+          <VideoComp url={mediaUrl} />
           : null
       }
     </>

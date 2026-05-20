@@ -12,6 +12,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { CloseModal } from '../../Store/Action/DemoModalActions';
 import PlayerPreview from './PlayerPreview';
+import VideoComp from '../VideoComp';
+import { getAndCheckMedia } from '../../lib/commonFunctions';
 
 
 const useSytles = makeStyles(theme => ({
@@ -67,13 +69,14 @@ const useSytles = makeStyles(theme => ({
 }))
 
 const DemoPlayer = props => {
+  console.log("props in demo player:", props)
   const theme = useTheme();
   const phoneScreen = useMediaQuery(theme.breakpoints.down(415));
   const playerSignedUrl = useSelector(state => state.login.signedUrl);
   const dispatch = useDispatch();
 
   const classes = useSytles(phoneScreen);
-  const [mediaUrl, setMediaUrl] = useState();
+  const [url, setUrl] = useState();
   const [title, setTitle] = useState('');
 
   const open = useSelector(state => state.demoModal.open);
@@ -83,16 +86,37 @@ const DemoPlayer = props => {
 
   useEffect(() => {
     if (playerData.Strength) {
-      setMediaUrl(`https://content.jwplatform.com/feeds/${playerData.Strength.videos[0].videoName}`)
+      console.log("Strength", playerData.Strength.videos[0].videoName)
+      // setUrl(`https://content.jwplatform.com/feeds/${playerData.Strength.videos[0].videoName}`)
+      const handleCheckMedia = async () => {
+
+        let mediaUrl = await getAndCheckMedia(playerData.Strength.videos[0].videoName);
+        setUrl(mediaUrl)
+      };
+      handleCheckMedia()
       setTitle(playerData.Strength.demoVideoName)
     }
     if (playerData.Mobility && !playerData.Strength) {
-      setMediaUrl(`https://content.jwplatform.com/feeds/${playerData.Mobility.videos[0].videoName}`)
+      console.log("Mobility", playerData.Mobility.videos[0].videoName)
+      // setUrl(`https://content.jwplatform.com/feeds/${playerData.Mobility.videos[0].videoName}`)
+      const handleCheckMedia = async () => {
+
+        let mediaUrl = await getAndCheckMedia(playerData.Mobility.videos[0].videoName);
+        setUrl(mediaUrl)
+      };
+      handleCheckMedia()
     }
   }, [playerData])
 
   const handleVideo = (videoName, videoUrl) => {
-    setMediaUrl(`https://content.jwplatform.com/feeds/${videoUrl}`)
+    console.log("videoName, videoUrl:", videoName, videoUrl)
+    const handleCheckMedia = async () => {
+
+      let mediaUrl = await getAndCheckMedia(videoUrl);
+      setUrl(mediaUrl)
+    };
+    handleCheckMedia()
+    // setUrl(`https://content.jwplatform.com/feeds/${videoUrl}`)
     setTitle(videoName)
   }
 
@@ -110,32 +134,38 @@ const DemoPlayer = props => {
         scroll='body'
       >
         <MuiDialogTitle disableTypography className={classes.modalHead}>
-          <Typography variant="h6">{playerData.Strength ? playerData.Strength.name : 'Pregession' } Demo</Typography>
+          <Typography variant="h6">{playerData.Strength ? playerData.Strength.name : 'Pregession'} Demo</Typography>
           <IconButton aria-label="close" className={classes.closeButton} onClick={() => dispatch(CloseModal())}>
             <CloseIcon />
           </IconButton>
         </MuiDialogTitle>
         <DialogContent classes={{ root: classes.padding }}>
-          {
-            open && mediaUrl
+          {/* {
+            open && url
               ? <ReactJWPlayer
-                  playerId='demo-player-modal'
-                  playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
-                  playlist={mediaUrl}
-                  onError={(err) => console.log("onError", err)}
-                  onSetupError={(err) => console.log("onSetupError", err)}
-                />
+                playerId='demo-player-modal'
+                playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
+                playlist={url}
+                onError={(err) => console.log("onError", err)}
+                onSetupError={(err) => console.log("onSetupError", err)}
+              />
+              : null
+          } */}
+          {
+            open && url
+              ? <VideoComp url={url} />
               : null
           }
+
           <div className={classes.body}>
-            <Typography variant="h6" align="center">{ title }</Typography>
+            <Typography variant="h6" align="center">{title}</Typography>
             <Grid container justifyContent='center' >
               {
                 playerData.Strength && playerData.Strength.videos && playerData.Strength.videos.length
                   ? <Grid item xs={12} sm={6} md={6} lg={6} className={classes.grid}>
-                    <Typography variant='h6' align="center" style={{marginBottom: 8}}>Strength Demo Video</Typography>
+                    <Typography variant='h6' align="center" style={{ marginBottom: 8 }}>Strength Demo Video</Typography>
                     <PlayerPreview
-                      handlePlayer={() => handleVideo(playerData.Strength.demoVideoName , playerData.Strength.videos[0].videoName)}
+                      handlePlayer={() => handleVideo(playerData.Strength.demoVideoName, playerData.Strength.videos[0].videoName)}
                       imageName={playerData.Strength.imageName}
                       videoTitle={playerData.Strength.demoVideoName}
                     />
@@ -145,9 +175,9 @@ const DemoPlayer = props => {
               {
                 playerData.Mobility && playerData.Mobility.videos && playerData.Mobility.videos.length
                   ? <Grid item xs={12} sm={6} md={6} lg={6} className={classes.grid}>
-                    <Typography variant='h6' align="center" style={{marginBottom: 8}}>Mobility Demo Video</Typography>
+                    <Typography variant='h6' align="center" style={{ marginBottom: 8 }}>Mobility Demo Video</Typography>
                     <PlayerPreview
-                      handlePlayer={() => handleVideo(playerData.Mobility.demoVideoName , playerData.Mobility.videos[0].videoName)}
+                      handlePlayer={() => handleVideo(playerData.Mobility.demoVideoName, playerData.Mobility.videos[0].videoName)}
                       imageName={playerData.Mobility.imageName}
                       videoTitle={playerData.Mobility.demoVideoName}
                     />

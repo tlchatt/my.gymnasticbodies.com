@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function LegacyCards(props) {
-  console.log("props in LegacyCards:", props)
+  
   const classes = useStyles();
   const { workoutIndex, dateKey, dateKeyIndex, handleLegacyPlayer, isBuildYourOwn } = props;
   const dispatch = useDispatch();
@@ -68,9 +68,9 @@ export default function LegacyCards(props) {
   }
 
   const handleEditLegacy = () => {
-    console.log("inside handleEditLegacy", dateKey, workoutIndex, dateKeyIndex)
+    // console.log("inside handleEditLegacy", dateKey, workoutIndex, dateKeyIndex)
     dispatch(GetAllWorkoutInfo(dateKey, workoutIndex, dateKeyIndex))
-    console.log("isInDrawer:",isInDrawer)
+    // console.log("isInDrawer:", isInDrawer)
   }
   return (
     <Card className={classes.root} elevation={3} square >
@@ -99,6 +99,7 @@ export default function LegacyCards(props) {
         }}
       />
       <div style={{ display: 'flex' }}>
+        {/* displays programs on the daily view */}
         {
           props.chosenProgs.map((prog, index) =>
             <CardContent

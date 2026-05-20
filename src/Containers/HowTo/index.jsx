@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Grid,
   makeStyles,
@@ -10,8 +10,10 @@ import { useSelector } from 'react-redux'
 import ReactJWPlayer from 'react-jw-player';
 
 import Wrapper from '../../Components/UtilComponents/Wrapper'
+import { getAndCheckMedia } from '../../lib/commonFunctions';
+import VideoComp from '../../Components/VideoComp';
 
-const useStyles = makeStyles(theme=>({
+const useStyles = makeStyles(theme => ({
   background: { background: '#eeeeee', marginBottom: 12 },
   image: {
     width: '128px',
@@ -40,31 +42,40 @@ const useStyles = makeStyles(theme=>({
   },
   cardMedia: {
     paddingBottom: '80%',
-    aspectRatio: 20/16
+    aspectRatio: 20 / 16
   }
 }))
 
 const howTos = {
   'white-board': {
-    mediaId: 'McZSmgTw' ,
+    mediaId: 'McZSmgTw',
     title: 'White Board',
   },
   'guided-plans': {
-    mediaId: 'kDN7cnxE' ,
+    mediaId: 'kDN7cnxE',
     title: 'Guided Plans',
   },
   'build-your-own': {
-    mediaId: '3o98KK3H' ,
+    mediaId: '3o98KK3H',
     title: 'Build Your Own',
   }
 }
 
 const Advocates = (props) => {
   const classes = useStyles();
+  const [url, setUrl] = useState();
   const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
   const signedUrl = useSelector(state => state.login.signedUrl);
   const params = props.match.params;
   const allowedParams = ['white-board', 'guided-plans', 'build-your-own'];
+  // console.log("howTos[params.route].mediaId:", howTos[params.route].mediaId)
+  
+  const handleCheckMedia = async () => {
+    
+    let mediaUrl = await getAndCheckMedia(howTos[params.route].mediaId);
+    setUrl(mediaUrl)
+  };
+  handleCheckMedia()
 
   if (!allowedParams.includes(params.route)) {
     return <Wrapper basicLayout>
@@ -93,13 +104,14 @@ const Advocates = (props) => {
         <Grid container justifyContent='center'>
           <Grid item xs={11} sm={10} md={10} lg={10}>
             <Paper elevation={4}>
-              <ReactJWPlayer
+              {/* <ReactJWPlayer
                 playerId='my-jwplayer'
                 playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${signedUrl}`}
                 playlist={`https://content.jwplatform.com/feeds/${howTos[params.route].mediaId}.json`}
                 onError={(err) => console.log("onError", err)}
                 onSetupError={(err) => console.log("onSetupError", err)}
-              />
+              /> */}
+              <VideoComp url={url}/>
             </Paper>
           </Grid>
         </Grid>

@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SectionButtons(props) {
   const classes = useStyles(props);
-
+console.log("props.handleButtonSelect:",props.handleButtonSelect)
   return (
     <Grid className={classes.root}>
       <Button onClick={props.handleButtonSelect} variant='outlined' className={clsx(classes.button, { [classes.isSelected]: props.isSelected})}>{props.courseType}</Button>

@@ -10,7 +10,10 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-
+import { get } from '@vercel/blob';
+import { getAndCheckMedia } from '../../../lib/commonFunctions';
+import VideoComp from '../../VideoComp';
+// import ReactPlayer from 'react-player'
 // import DiscordChat from '../../NonLegacyModal/DiscordChat'
 
 const useSytles = makeStyles(theme => ({
@@ -69,21 +72,48 @@ const LegacyWorkoutPLayer = props => {
   const theme = useTheme();
   const phoneScreen = useMediaQuery(theme.breakpoints.down(415));
   const playerSignedUrl = useSelector(state => state.login.signedUrl);
+  let postAWS = useSelector(state => state.login.postAWS);
 
   const classes = useSytles(phoneScreen);
   const [mediaUrl, setMediaUrl] = useState();
 
+  
+
   const { playerData, open, followAlong, isFollowAlong } = props;
+  const [videoName, setVideoName] = useState(playerData.videoUrl);
+  
 
   useEffect(() => {
-    if (open && playerData && !isFollowAlong) {
-      setMediaUrl( `https://content.jwplatform.com/feeds/${playerData.videoUrl}` )
-    }
+    // let videoName = playerData.videoUrl
+    // console.log("videoName:", videoName)
+    
+    // console.log("videoId:", videoId)
+
+    // if (postAWS) {
+    const handleCheckMedia = async (videoName) => {
+      
+      const url = await getAndCheckMedia(videoName);
+      // console.log("result is:", result)
+      if (url) setMediaUrl(url);
+    };
+    handleCheckMedia(videoName)
+    // else {
+    //   if (open && playerData && !isFollowAlong) {
+    //     setMediaUrl(`https://content.jwplatform.com/feeds/${playerData.videoUrl}`)
+    //   }
+    // }
     if (open && followAlong && isFollowAlong) {
       setMediaUrl(followAlong)
     }
-  }, [playerData, open, followAlong, isFollowAlong])
+    // console.log("postAWS:", postAWS)
 
+
+  }, [playerData, open, followAlong, isFollowAlong, videoName])
+  //videoUrl is the videoName
+  // console.log("playerData:", playerData)
+  // if (postAWS) {
+  //   console.log("postAWS tru, mediaUrl:", mediaUrl)
+  // }
   return (
     <React.Fragment>
       <Dialog
@@ -104,8 +134,27 @@ const LegacyWorkoutPLayer = props => {
           </IconButton>
         </MuiDialogTitle>
         <DialogContent classes={{ root: classes.padding }}>
+          {/* {
+            !postAWS && props.open && mediaUrl ?
+              <ReactJWPlayer
+                playerId='legacy-player-modal'
+                playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
+                playlist={mediaUrl}
+                onError={(err) => console.log("onError", err)}
+                onSetupError={(err) => console.log("onSetupError", err)}
+              />
+              :
+              null
+          } */}
           {
             props.open && mediaUrl ?
+              <VideoComp url={mediaUrl} />
+              :
+              null
+          }
+
+          {/* {
+            postAWS && props.open && mediaUrl ?
               <ReactJWPlayer
                 playerId='legacy-player-modal'
                 playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
@@ -114,10 +163,10 @@ const LegacyWorkoutPLayer = props => {
                 onSetupError={(err) => console.log("onSetupError", err)}
               />
               : null
-          }
+          } */}
           <div className={isFollowAlong || props.playerData.hideSecondTitle ? null : classes.body}>
             {
-              props.playerData.hideSecondTitle ? null : <Typography variant="h6" align="center">{props.playerData.videoTitle} { playerData && playerData.videoTitle === "Follow Along" ? null : props.playerData.steps}</Typography>
+              props.playerData.hideSecondTitle ? null : <Typography variant="h6" align="center">{props.playerData.videoTitle} {playerData && playerData.videoTitle === "Follow Along" ? null : props.playerData.steps}</Typography>
             }
             {playerData.instructions && playerData.instructions.length ? <Typography variant="body1" align="center">Equipment: {playerData.instructions[0].equipment}</Typography> : null}
             <Grid container justifyContent='center' >
@@ -137,28 +186,39 @@ const LegacyWorkoutPLayer = props => {
               {
                 playerData.technicalTips && playerData.technicalTips.length
                   ? <Grid item xs={12} sm={5} md={5} lg={5} className={classes.grid}>
-                      <Typography variant='h6' align="center">Technical Videos</Typography>
-                      {playerData.technicalTips.map((techTip, index) => <Typography key={index} variant='body1' className={classes.techVideo} onClick={() => setMediaUrl(`https://content.jwplatform.com/feeds/${techTip.videoName}`)}> <PlayCircleOutlineIcon className={classes.playButton} />Technical Tip {index + 1}</Typography>)}
-                    {
+                    <Typography variant='h6' align="center">Technical Videos</Typography>
+                    {/* {playerData.technicalTips.map((techTip, index) => <Typography key={index} variant='body1' className={classes.techVideo} onClick={() => setMediaUrl(`https://content.jwplatform.com/feeds/${techTip.videoName}`)}> <PlayCircleOutlineIcon className={classes.playButton} />Technical Tip {index + 1}</Typography>)} */}
+                    {playerData.technicalTips.map((techTip, index) => <Typography key={index} variant='body1' className={classes.techVideo} onClick={() => setVideoName(techTip.videoName)}> <PlayCircleOutlineIcon className={classes.playButton} />Technical Tip {index + 1}</Typography>)}
+                    {/* {
                       mediaUrl !== `https://content.jwplatform.com/feeds/${playerData.videoUrl}`
                         ? <Typography
-                            variant='body1'
-                            className={classes.techVideo}
-                            onClick={() => setMediaUrl(`https://content.jwplatform.com/feeds/${playerData.videoUrl}`)}>
-                            <PlayCircleOutlineIcon className={classes.playButton} />{props.playerData.videoTitle}
-                          </Typography>
-                          : ''
+                          variant='body1'
+                          className={classes.techVideo}
+                          onClick={() => setMediaUrl(`https://content.jwplatform.com/feeds/${playerData.videoUrl}`)}>
+                          <PlayCircleOutlineIcon className={classes.playButton} />{props.playerData.videoTitle}
+                        </Typography>
+                        : ''
+                    } */}
+                    {
+                      !playerData.videoUrl.includes(mediaUrl)
+                        ? <Typography
+                          variant='body1'
+                          className={classes.techVideo}
+                          onClick={() => setVideoName(playerData.videoUrl)}>
+                          <PlayCircleOutlineIcon className={classes.playButton} />{props.playerData.videoTitle}
+                        </Typography>
+                        : ''
                     }
-                    </Grid>
+                  </Grid>
                   : null
               }
 
               {
                 playerData.instructions && playerData.instructions.length
                   ? <Grid item xs={12} sm={12} md={12} lg={12} className={classes.grid}>
-                      <Typography variant='h6' align="center"> Instructions </Typography>
-                      {playerData.instructions.map((instructions, index) => <Typography variant='body1' key={index} className={classes.instusction}>{instructions.instructions}</Typography>)}
-                    </Grid>
+                    <Typography variant='h6' align="center"> Instructions </Typography>
+                    {playerData.instructions.map((instructions, index) => <Typography variant='body1' key={index} className={classes.instusction}>{instructions.instructions}</Typography>)}
+                  </Grid>
                   : null
               }
             </Grid>

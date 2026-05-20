@@ -8,6 +8,7 @@ import SectionButtons from './SectionButtons';
 import CoursePreivewData from './CoursePreivewData';
 import IndividualCards from './IndividualCards';
 import BackIcon from './BackIcon'
+import { getAndCheckMedia } from '../../../../../lib/commonFunctions';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -31,11 +32,11 @@ const useStyles = makeStyles(theme => ({
 const CoursePreview = (props) => {
   const { openCollapse, courseType } = props;
   const classes = useStyles();
-
+  console.log("courseType:",courseType)
   const [selectedCategory, setSelectedCategory] = useState('');
   const [subCourse, setSubCourse] = useState({});
   const [previewCourse, setPreviewCourse] = useState({});
-
+  const [url, setUrl] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [showSubcourseInfo, setShowSubcourseInfo] = useState(false);
 
@@ -53,7 +54,6 @@ const CoursePreview = (props) => {
 
 
   const handleButtonSelect = (courseTypeName) => {
-
     if (selectedCategory === courseTypeName) {
       setSelectedCategory('')
     }
@@ -64,12 +64,23 @@ const CoursePreview = (props) => {
   }
 
   const handlePreviewSelections = (courseData) => {
+    console.log("courseData:",courseData) 
     if (courseData.relatedWorkouts && courseData.relatedWorkouts.length) {
       setSubCourse(courseData);
       setShowSubcourseInfo(true);
       setShowPreview(false)
     }
     else {
+
+      const handleCheckMedia = async () => {
+        
+        let url = await getAndCheckMedia(courseData?.mediaId)
+        // console.log("url in coursePreview",url)
+        setUrl(url)
+      };
+
+
+      handleCheckMedia()
       setPreviewCourse(courseData);
       setShowPreview(true);
 
@@ -95,7 +106,6 @@ const CoursePreview = (props) => {
 
   const CardType = props.cardType === 'individualWorkouts' ? IndividualCards : CoursePreviewCards;
 
-
   return (
     <>
       <Typography variant='h5' className={classes.title}>
@@ -108,7 +118,7 @@ const CoursePreview = (props) => {
         }
       </Typography>
       <Collapse in={openCollapse}>
-        <Grid container justifyContent='center' style={{padding: 12}}>
+        <Grid container justifyContent='center' style={{ padding: 12 }}>
           {
             openCollapse && courseType[props.type].showButtons
               ? courseType[props.type].buttons.map((courseTypeName, index) => <SectionButtons
@@ -130,10 +140,11 @@ const CoursePreview = (props) => {
             }
             <Grid container>
               {
-                showSubcourseInfo ? <CoursePreivewData isSubCoursePreview={showSubcourseInfo} {...subCourse} /> : null
+                showSubcourseInfo ? <CoursePreivewData isSubCoursePreview={showSubcourseInfo} {...subCourse} url={url}/> : null
               }
+              {/* displays the course info with the video*/}
               {
-                showPreview ? <CoursePreivewData {...previewCourse} /> : null
+                showPreview ? <CoursePreivewData {...previewCourse} url={url} /> : null
               }
               {
                 openCollapse && props.type && !courseType[props.type].showButtons && !subCourse.relatedWorkouts
@@ -144,7 +155,7 @@ const CoursePreview = (props) => {
                     catType={props.type}
                     sectionIndex={props.sectionIndex}
                     sectionType={props.cardType}
-                    handleOpenCollaps={ props.handleOpenCollaps}
+                    handleOpenCollaps={props.handleOpenCollaps}
                     {...courseData}
                   />)
                   : null
@@ -158,7 +169,7 @@ const CoursePreview = (props) => {
                     catType={props.type}
                     sectionIndex={props.sectionIndex}
                     sectionType={props.cardType}
-                    handleOpenCollaps={ props.handleOpenCollaps}
+                    handleOpenCollaps={props.handleOpenCollaps}
                     {...courseData}
                   />)
                   : null
@@ -172,7 +183,7 @@ const CoursePreview = (props) => {
                     catType={props.type}
                     sectionIndex={props.sectionIndex}
                     sectionType={props.cardType}
-                    handleOpenCollaps={ props.handleOpenCollaps}
+                    handleOpenCollaps={props.handleOpenCollaps}
                     {...courseData}
                   />)
                   : null

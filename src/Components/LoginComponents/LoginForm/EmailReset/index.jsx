@@ -79,29 +79,29 @@ const EmailForm = () => {
       setWait(true);
       Axios.post(NEWAPI + '/api/user/resetLink', data, config)
         .then(res => {
-          /*setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
+          setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
           setTimeout(() => {
             setFail({ isFaield: false, message: '', variation: 'success' });
             setWait(false);
-          }, 2500);*/
-          console.log("res is:",res.data)
-          //redirect user to update their password
-          history.push(`/reset-password/${res.data.id}/none`);
+          }, 2500);
+          // console.log("res is:",res.data)
+          // //redirect user to update their password
+          // history.push(`/reset-password/${res.data.id}/none`);
           
         }).catch(err => {
+          /*setFail({ isFaield: true, message: 'Failed to Send. Please contact us at admin@gymnasticbodies.com to reset your password.', variation: 'error' })//new user alert!
+          Sentry.captureException(err);
+          setTimeout(() => {
+            setFail({ isFaield: false, message: '', variation: 'error' })
+            setWait(false);
+          }, 2500);*/
+          console.error('EmailForm failure')
           setFail({ isFaield: true, message: 'Failed to Send. Please contact us at admin@gymnasticbodies.com to reset your password.', variation: 'error' })//new user alert!
           Sentry.captureException(err);
           setTimeout(() => {
             setFail({ isFaield: false, message: '', variation: 'error' })
             setWait(false);
           }, 2500);
-          /*console.error('EmailForm failure')
-          setFail({ isFaield: true, message: 'Failed to Send Email. Please Try Again.', variation: 'error' })//new user alert!
-          Sentry.captureException(err);
-          setTimeout(() => {
-            setFail({ isFaield: false, message: '', variation: 'error' })
-            setWait(false);
-          }, 2500);*/
         });
       /*axios.get(`${API}/password/lost-password-mail?email=${email.email}`)
         .then(res => {
@@ -166,8 +166,8 @@ const EmailForm = () => {
           onClick={(event) => handleClick(event)}
           disabled={!email.valid || wait}
         >
-          {/* Send Password Reset Email */}
-          Change Password
+          Send Password Reset Email
+          {/* Change Password */}
         </Button>
         <Grid container>
           <Grid item xs style={{ textAlign: "left" }}>
@@ -197,8 +197,8 @@ const EmailForm = () => {
         <Divider className={classes.divider} />
         <Box mt={1}>
           <Typography variant="body1" align="center">
-            {/* No worries, enter your email and we'll send you a link to reset your password. */}
-            No worries, enter your email.
+            No worries, enter your email and we'll send you a link to reset your password.
+            {/* No worries, enter your email. */}
           </Typography>
         </Box>
       </Box>

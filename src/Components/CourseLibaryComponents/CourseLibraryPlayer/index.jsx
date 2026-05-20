@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -9,6 +9,8 @@ import ReactJWPlayer from 'react-jw-player';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
+import VideoComp from '../../VideoComp';
+import { getAndCheckMedia } from '../../../lib/commonFunctions';
 
 
 const useSytles = makeStyles(theme => ({
@@ -65,13 +67,24 @@ const useSytles = makeStyles(theme => ({
 
 const DemoPlayer = props => {
   const theme = useTheme();
+  const [url, setUrl] = useState();
   const phoneScreen = useMediaQuery(theme.breakpoints.down(415));
   const playerSignedUrl = useSelector(state => state.login.signedUrl);
   const classes = useSytles(phoneScreen);
+  const { open, videoName, CloseModal, title } = props;
 
-  const { open, videoName, CloseModal , title} = props;
+  
+  const handleCheckMedia = async () => {
 
+    let mediaUrl = await getAndCheckMedia(videoName);
+    setUrl(mediaUrl)
+  };
 
+  if (videoName != "") {
+    handleCheckMedia()
+  }
+
+  // console.log("videoName::::", videoName)
   return (
     <React.Fragment>
       <Dialog
@@ -92,7 +105,7 @@ const DemoPlayer = props => {
           </IconButton>
         </MuiDialogTitle>
         <DialogContent classes={{ root: classes.padding }}>
-          {
+          {/* {
             open && videoName
               ? <ReactJWPlayer
                   playerId='course-library-player-modal'
@@ -101,6 +114,11 @@ const DemoPlayer = props => {
                   onError={(err) => console.log("onError", err)}
                   onSetupError={(err) => console.log("onSetupError", err)}
                 />
+              : null
+          } */}
+          {
+            open && videoName
+              ? <VideoComp url={url} />
               : null
           }
         </DialogContent>
