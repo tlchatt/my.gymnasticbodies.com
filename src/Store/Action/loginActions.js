@@ -249,8 +249,7 @@ export const Login = (username, password) => dispatch => {
                 reason: "registerWPass",
                 awsCustomerId:res?.data?.contactId
               }
-              // axios.post(`https://gymnasticbodies-com.vercel.app/api/user/subscription`, data, config)
-              axios.post(`http://localhost:3001/api/user/subscription`, data, config)
+              axios.post(`https://app.gymnasticbodies.com/api/user/subscription`, data, config)
                 .then(res => {
                   
                   let neonUserId = res.data.data.id
@@ -408,6 +407,7 @@ export const LoginNew = (username, password) => dispatch => {
         if (renewalRes.ok) {
           const { needsRenewal } = await renewalRes.json();
           if (needsRenewal) {
+            logEvent('my.login.renewal_redirect', { email: username });
             window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}`;
             return;
           }
