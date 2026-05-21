@@ -229,7 +229,7 @@ export const Login = (username, password) => dispatch => {
             localStorage.setItem('userId', res.data.contactId);
             console.log("decoded:", decoded)
 
-            console.log("res.data later in login else is:", res.data)
+            console.log("c", res.data)
             res.data.postAWS = false
             
             if (!res.data.postAWS) {//true for new users and false for old
@@ -246,9 +246,11 @@ export const Login = (username, password) => dispatch => {
                 email: username,
                 name: res.data.fname,
                 postAWS: false,
-                reason: "registerWPass"
+                reason: "registerWPass",
+                awsCustomerId:res?.data?.contactId
               }
-              axios.post(`https://gymnasticbodies-com.vercel.app/api/user/subscription`, data, config)
+              // axios.post(`https://gymnasticbodies-com.vercel.app/api/user/subscription`, data, config)
+              axios.post(`http://localhost:3001/api/user/subscription`, data, config)
                 .then(res => {
                   
                   let neonUserId = res.data.data.id
