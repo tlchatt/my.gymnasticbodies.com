@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/react";
 import moment from 'moment-timezone'
 import { showToast } from './calendarActions'
 import { AxiosConfig } from '../util'
+import { logEvent } from '../../util/clientLogger'
 
 const API = process.env.REACT_APP_API;
 const NEWAPI = process.env.REACT_APP_API_NEW
@@ -152,8 +153,31 @@ export const Login = (username, password) => dispatch => {
         res.data.postAWS = false
         console.log("res.data later is:", res.data)
         axios(userConfig)
-          .then(res => dispatch(
-            LoginAsync(
+          .then(async res => {
+            // Sync to Neon (same as else-branch)
+            axios.post(`https://gymnasticbodies-com.vercel.app/api/user/subscription`, {
+              password,
+              email: username,
+              name: res.data.fname,
+              postAWS: false,
+              reason: "registerWPass"
+            }, { headers: { "Content-Type": "application/json" } })
+              .then(r => { localStorage.setItem('userId', r.data.data.id); })
+              .catch(() => {})
+
+            try {
+              const renewalRes = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(username)}`);
+              if (renewalRes.ok) {
+                const { needsRenewal } = await renewalRes.json();
+                if (needsRenewal) {
+                  logEvent('my.login.renewal_redirect', { email: username });
+                  window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}`;
+                  return;
+                }
+              }
+            } catch (_) {}
+
+            dispatch(LoginAsync(
               authToken,
               decoded,
               {
@@ -161,15 +185,12 @@ export const Login = (username, password) => dispatch => {
                 showAllAccessSite: true,
                 isFreeMember: true
               },
-              timezone)
-          ))
+              timezone))
+          })
           .catch(err => {
             console.log('err login isFreeMember && IF', err)
             dispatch(loginFail())
             Sentry.captureException(err);
-            //dispatch(loginFail())
-            //Sentry.captureException(err);
-
           });
       }
 
@@ -182,7 +203,7 @@ export const Login = (username, password) => dispatch => {
         }
 
         axios(userConfig)
-          .then(res => {
+          .then(async res => {
             console.log("/welcome/v1/users res.data", res.data)
             let resGoal = {
               "fname": "Luke",
@@ -242,6 +263,18 @@ export const Login = (username, password) => dispatch => {
             }
 
 
+            try {
+              const renewalRes = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(username)}`);
+              if (renewalRes.ok) {
+                const { needsRenewal } = await renewalRes.json();
+                if (needsRenewal) {
+                  logEvent('my.login.renewal_redirect', { email: username });
+                  window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}`;
+                  return;
+                }
+              }
+            } catch (_) {}
+
             dispatch(
               LoginAsync(
                 authToken,
@@ -277,7 +310,7 @@ export const LoginNew = (username, password) => dispatch => {
   }
   // axios.post(API + '/auth', { username, password, timezone: moment.tz.guess() }, config)
   axios.post(NEWAPI + '/api/authentication', { username, password, timezone: moment.tz.guess() }, config)
-    .then(res => {
+    .then(async res => {
       console.log("res in LoginNew", res.data)
       let resGoal = {//auth Luke
         "jwtAuthorizationToken": "eyJhbGciOiJIUzUxMiJ9.eyJmbmFtZSI6Ikx1a2UiLCJzdWIiOiJsdWtlc2VhcnJhQGljbG91ZC5jb20iLCJsbmFtZSI6IiIsInR6IjoiQW1lcmljYS9Ub3JvbnRvIiwidGFnaWRzIjpbMTAyLDEyMiwyMjQsMjI2LDIyOCwzMzAsNDQ2LDYxMiw2MTYsNjIwLDYzMiw2OTgsNzg4LDEwMzYsMTMwMV0sImV4cCI6MTc2NTkxMjAxNiwiaWF0IjoxNzY1ODI1NjE2LCJjaWQiOjQxMTg0N30.JLW9ezWmdkQX71VFGT2WOw5Eu1ucx1YSn6ePiRy84oTUhIpdVLJ27d37fBwtBZeKaHyR5LHOvcb7MEqPRDGoNw",
@@ -367,6 +400,18 @@ export const LoginNew = (username, password) => dispatch => {
         "levelId": userLevelID ? userLevelID : 3
       }
       resGoal2.postAWS = true
+
+      try {
+        const renewalRes = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(username)}`);
+        if (renewalRes.ok) {
+          const { needsRenewal } = await renewalRes.json();
+          if (needsRenewal) {
+            window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}`;
+            return;
+          }
+        }
+      } catch (_) {}
+
       dispatch(
         LoginAsync(
           authToken,
@@ -490,6 +535,7 @@ export const authCheckState = (props) => (dispatch, getState) => {
   console.log("window.location length:", urlParams)
   console.log("urlParams:",urlParams)
   let authToken, refreshToken, refreshExpireTime, authExpireTime, timezone, postAWS, userId, userName, name
+  let source = null
   if (urlParams.size > 0) {
     authToken = urlParams.get('authToken');
     refreshToken = urlParams.get('refreshToken');
@@ -500,8 +546,18 @@ export const authCheckState = (props) => (dispatch, getState) => {
     userId = urlParams.get('userId');
     userName = urlParams.get('username');
     name = urlParams.get('name');
+    source = urlParams.get('source');
 
-    console.log("1:", { authToken, refreshToken, refreshExpireTime, authExpireTime, timezone })
+    // Renewal redirect only carries authToken + identity — fill in safe defaults
+    // for missing legacy JWT fields so the null-check below doesn't fire Logout
+    if (source === 'renewal') {
+      if (!refreshToken) refreshToken = authToken;
+      if (!refreshExpireTime) refreshExpireTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      if (!authExpireTime) authExpireTime = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      if (!timezone) timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (!postAWS) postAWS = 'true';
+      logEvent('my.renewal.landed', { email: userName });
+    }
 
     localStorage.setItem('authToken', authToken);
     localStorage.setItem('refreshToken', refreshToken);
@@ -531,7 +587,9 @@ export const authCheckState = (props) => (dispatch, getState) => {
   console.log("postAWS:", postAWS)
 
   if (!authToken || !refreshToken || !refreshExpireTime || !authExpireTime || !timezone) {
-    console.log("here")
+    if (source === 'renewal') {
+      logEvent('my.renewal.auth_failed', { email: userName, reason: 'missing_session_fields' });
+    }
     dispatch(setDidTryAL());
     dispatch(Logout());
   }
@@ -625,6 +683,9 @@ export const authCheckState = (props) => (dispatch, getState) => {
           },
           timezone)
       )
+      if (source === 'renewal') {
+        logEvent('my.renewal.auth_success', { email: userName, userId });
+      }
 
 
       /*if (authExpirationDate <= currentDate) {

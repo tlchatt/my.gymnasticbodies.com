@@ -1,0 +1,61 @@
+my.gymnasticbodies.com main ❯ git pull
+remote: Enumerating objects: 147, done.
+remote: Counting objects: 100% (147/147), done.
+remote: Compressing objects: 100% (29/29), done.
+remote: Total 97 (delta 66), reused 92 (delta 61), pack-reused 0 (from 0)
+Unpacking objects: 100% (97/97), 606.72 KiB | 3.28 MiB/s, done.
+From https://github.com/tlchatt/my.gymnasticbodies.com
+   c32b450..0bb7975  main       -> origin/main
+Updating c32b450..0bb7975
+Fast-forward
+ .env.development                                                                  |     1 +
+ .env.production                                                                   |     1 +
+ package-lock.json                                                                 |  1195 ++-
+ package.json                                                                      |     2 +-
+ src/App.js                                                                        |    66 +-
+ src/Components/FreeMemeberComp/AvatarDrop/index.jsx                               |    30 +-
+ src/Components/FreeMemeberComp/Drawer/MobileDrawer/index.jsx                      |    14 +-
+ src/Components/FreeMemeberComp/Drawer/Support/QuizSections/Initial.jsx            |     2 +-
+ src/Components/FreeMemeberComp/Drawer/Support/index.jsx                           |     1 +
+ src/Components/FreeMemeberComp/Drawer/TestingDrawer/index.jsx                     |    11 +-
+ src/Components/FreeMemeberComp/Drawer/index.jsx                                   |    12 +
+ src/Components/FreeMemeberComp/PlayerModal/VideoPlayer/genVideo.js                |     6 +-
+ src/Components/FreeMemeberComp/PlayerModal/VideoPlayer/index.jsx                  |    25 +-
+ src/Components/FreeMemeberComp/SamplerCard/LegacyCards/LegacyCardContnet.jsx      |     1 -
+ src/Components/FreeMemeberComp/SamplerCard/LegacyCards/index.jsx                  |    17 +-
+ src/Components/FreeMemeberComp/WeekDayRow.jsx                                     |    21 +-
+ src/Components/FreeMemeberComp/WorkoutSampler/index.jsx                           |    20 +-
+ src/Components/LegacyEditModal/EditCard/index.jsx                                 |    49 +-
+ src/Components/LegacyEditModal/EditCardRow/index.jsx                              |     3 +-
+ src/Components/LoginComponents/LoginForm/index.jsx                                |   118 +-
+ src/Containers/CourseLibrary/data.js                                              |    75 +
+ src/Containers/CourseLibrary/index.jsx                                            | 37569 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ src/Containers/NewMemberSite/index.jsx                                            |    15 +-
+ src/Containers/paymentPortal/index.jsx                                            |    60 +
+ src/Store/Action/DemoModalActions.js                                              |  5484 ++++++++++++-
+ src/Store/Action/LegacyAction.js                                                  |   633 +-
+ src/Store/Action/{LevelsActions-loggingBeforeRefactor.js => LevelsActions-old.js} |     0
+ src/Store/Action/LevelsActions.js                                                 |   149 +-
+ src/Store/Action/actionTypes.js                                                   |     1 +
+ src/Store/Action/dataManipulation.js                                              |    27 +-
+ src/Store/Action/loginActions.js                                                  |   233 +-
+ src/Store/Reducers/LegacyModalReducer.js                                          |     3 +
+ src/Store/Reducers/Login.js                                                       |     1 +
+ src/data/AllDataForWorkout.js                                                     | 26151 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/data/FoundationCore.js                                                        | 12339 ++++++++++++++++++++++++++++
+ src/data/FoundationLowerBody.js                                                   |  2800 +++++++
+ src/data/FoundationUpperBody.js                                                   | 11915 +++++++++++++++++++++++++++
+ src/data/allLevelsData.json                                                       | 19236 ++++++++++++++++++++++++++++++++++++++++++++
+ src/data/programCoreData.js                                                       | 26649 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ yarn.lock                                                                         |   557 +-
+ 40 files changed, 144526 insertions(+), 966 deletions(-)
+ create mode 100644 .env.development
+ create mode 100644 .env.production
+ create mode 100644 src/Containers/paymentPortal/index.jsx
+ rename src/Store/Action/{LevelsActions-loggingBeforeRefactor.js => LevelsActions-old.js} (100%)
+ create mode 100644 src/data/AllDataForWorkout.js
+ create mode 100644 src/data/FoundationCore.js
+ create mode 100644 src/data/FoundationLowerBody.js
+ create mode 100644 src/data/FoundationUpperBody.js
+ create mode 100644 src/data/allLevelsData.json
+ create mode 100644 src/data/programCoreData.js
