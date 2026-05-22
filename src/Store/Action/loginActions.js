@@ -100,7 +100,7 @@ const checkAuthTimeout = (expirationTime) => {
 };
 
 export const Login = (username, password) => dispatch => {
-  console.log(" inside export const Login = (username, password) => dispatch => {")
+  logEvent('my.login.attempt', { email: username });
   dispatch(LoginStart());
 
   const config = {
@@ -154,13 +154,16 @@ export const Login = (username, password) => dispatch => {
         console.log("res.data later is:", res.data)
         axios(userConfig)
           .then(async res => {
-            // Sync to Neon (same as else-branch)
-            axios.post(`https://gymnasticbodies-com.vercel.app/api/user/subscription`, {
+            localStorage.setItem('name', res.data.fname);
+            localStorage.setItem('username', username);
+            localStorage.setItem('userId', res.data.contactId);
+            axios.post(`${NEWAPI}/api/user/subscription`, {
               password,
               email: username,
               name: res.data.fname,
               postAWS: false,
-              reason: "registerWPass"
+              reason: "registerWPass",
+              awsCustomerId: res?.data?.contactId
             }, { headers: { "Content-Type": "application/json" } })
               .then(r => { localStorage.setItem('userId', r.data.data.id); })
               .catch(() => {})
@@ -177,6 +180,7 @@ export const Login = (username, password) => dispatch => {
               }
             } catch (_) {}
 
+            logEvent('my.login.success', { email: username });
             dispatch(LoginAsync(
               authToken,
               decoded,
@@ -276,6 +280,7 @@ export const Login = (username, password) => dispatch => {
               }
             } catch (_) {}
 
+            logEvent('my.login.success', { email: username });
             dispatch(
               LoginAsync(
                 authToken,
@@ -414,6 +419,7 @@ export const LoginNew = (username, password) => dispatch => {
         }
       } catch (_) {}
 
+      logEvent('my.login.success', { email: username });
       dispatch(
         LoginAsync(
           authToken,
@@ -428,6 +434,7 @@ export const LoginNew = (username, password) => dispatch => {
 
     })
     .catch(err => {
+      logEvent('my.login.failed', { email: username });
       dispatch(loginFail())
       Sentry.captureException(err);
     });
