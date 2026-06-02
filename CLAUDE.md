@@ -88,13 +88,19 @@ Firebase Realtime DB is used exclusively for maintenance-mode flags and force-re
 
 ## Deployment
 
-Bitbucket Pipelines → S3 + CloudFront.
+**Manual deploy (preferred):** `bash claudeTools/deploy.sh` — builds production, syncs to S3, invalidates CloudFront in one shot.
+
+Bitbucket Pipelines → S3 + CloudFront (legacy pipeline, still wired up).
 
 | Branch | S3 bucket | CloudFront |
 |---|---|---|
-| `master` | `my.react` | `E2TAHYRIUSC1ZN` |
+| `master` | `my.react2026` | `E2TAHYRIUSC1ZN` (`my.gymnasticbodies.com`) |
 | `Develop` | `my.react-testing` | `E1KQMIVMY2A66G` |
 | `Staging` | `my.internal-testing` | `E2NDG89QP09SYX` |
+
+**Important — `my.react2026` bucket:** ACLs are disabled on this bucket (Object Ownership = Bucket owner enforced). Do **not** use `--acl public-read` when syncing — it will fail with `AccessControlListNotSupported`. Public access is granted via bucket policy, not ACLs. The deploy script already handles this correctly.
+
+**`my2026.gymnasticbodies.com`** is a separate subdomain (CloudFront `E19ULFELANCZSE`) also pointing to `my.react2026` — used for internal testing. Not the live site.
 
 ## Environment variables
 

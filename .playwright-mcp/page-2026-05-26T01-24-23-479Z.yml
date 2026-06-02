@@ -1,0 +1,33 @@
+- main [ref=e4]:
+  - generic [ref=e6]:
+    - link [ref=e7] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic:
+          - text: Email Address
+          - generic: "*"
+        - generic [ref=e10]:
+          - textbox "Email Address" [active] [ref=e11]
+          - group
+      - generic [ref=e12]:
+        - generic:
+          - text: Password
+          - generic: "*"
+        - generic [ref=e13]:
+          - textbox "Password" [ref=e14]
+          - group
+      - button "Sign In" [ref=e15] [cursor=pointer]:
+        - generic [ref=e16]: Sign In
+      - link "Forgot your password?" [ref=e20] [cursor=pointer]:
+        - /url: /reset
+      - link "Payment Portal" [ref=e24] [cursor=pointer]:
+        - /url: /paymentPortal
+      - generic [ref=e25]:
+        - paragraph [ref=e26]:
+          - text: Copyright ©
+          - link "GymFit.Tv" [ref=e27] [cursor=pointer]:
+            - /url: https://www.gymnasticbodies.com/
+          - text: "2026."
+        - button "Contact Support" [ref=e29] [cursor=pointer]:
+          - generic [ref=e30]: Contact Support

@@ -174,7 +174,7 @@ export const Login = (username, password) => dispatch => {
                 const { needsRenewal } = await renewalRes.json();
                 if (needsRenewal) {
                   logEvent('my.login.renewal_redirect', { email: username });
-                  window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}`;
+                  window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
                   return;
                 }
               }
@@ -274,7 +274,7 @@ export const Login = (username, password) => dispatch => {
                 const { needsRenewal } = await renewalRes.json();
                 if (needsRenewal) {
                   logEvent('my.login.renewal_redirect', { email: username });
-                  window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}`;
+                  window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
                   return;
                 }
               }
@@ -413,7 +413,7 @@ export const LoginNew = (username, password) => dispatch => {
           const { needsRenewal } = await renewalRes.json();
           if (needsRenewal) {
             logEvent('my.login.renewal_redirect', { email: username });
-            window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}`;
+            window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
             return;
           }
         }

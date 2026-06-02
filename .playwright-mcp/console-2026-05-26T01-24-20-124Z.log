@@ -1,0 +1,18 @@
+[    2636ms] [LOG] App props 12-29-2025 3 {history: Object, location: Object, match: Object, staticContext: undefined, isAuth: false} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    2636ms] [LOG] 4 @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    2646ms] [LOG] window.location length: URLSearchParams @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    2646ms] [LOG] urlParams: URLSearchParams @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    2646ms] [LOG] inside authCheckState: {login: Object, calendar: Object, classes: Array(0), data: Array(0), subClasses: Array(0)} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    2646ms] [LOG] values in authCheckState: {authToken: null, refreshToken: null, userLevelID: null, refreshExpireTime: null, authExpireTime: null} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    2646ms] [LOG] postAWS: null @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    2646ms] [LOG] here @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    2655ms] [LOG] sectionId: initial @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   23977ms] [LOG] sectionId: initial @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   23997ms] [LOG] sectionId: initial @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   29569ms] [LOG]  inside export const Login = (username, password) => dispatch => { @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   29570ms] [LOG] sectionId: initial @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   31083ms] [LOG] /auth res.data {jwtAuthorizationToken: eyJhbGciOiJIUzUxMiJ9.eyJmbmFtZSI6Ikx1a2UiLCJzdWIiO…YhQJTmCXf3aNpE8_-KjTZiahXNrjr7edZPvAnh6w29exYCJnQ, jwtRefreshToken: eyJhbGciOiJIUzUxMiJ9.eyJhbGxhY2Nlc3MiOnRydWUsInN1Y…4sJjtKGH2OUC_DptB_eXHtsADhmj4TXYKEbTeDOFfiscrVetA, timezone: America/Toronto, isAllAccessUser: true, isFreeMember: true} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   31084ms] [LOG] login else @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   31165ms] [LOG] /welcome/v1/users res.data {fname: Luke, lname: , contactId: 411847, emailId: lukesearra@icloud.com, isAllAccessUser: true} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   31165ms] [LOG] decoded: {fname: Luke, sub: lukesearra@icloud.com, lname: , tz: America/Toronto, tagids: Array(15)} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[   31165ms] [LOG] res.data later in login else is: {fname: Luke, lname: , contactId: 411847, emailId: lukesearra@icloud.com, isAllAccessUser: true} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0

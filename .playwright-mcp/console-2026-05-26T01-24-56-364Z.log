@@ -1,0 +1,59 @@
+[     107ms] [LOG] App props 12-29-2025 3 {history: Object, location: Object, match: Object, staticContext: undefined, isAuth: false} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     107ms] [LOG] 4 @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] window.location length: URLSearchParams @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] urlParams: URLSearchParams @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] inside authCheckState: {login: Object, calendar: Object, classes: Array(0), data: Array(0), subClasses: Array(0)} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] values in authCheckState: {authToken: eyJhbGciOiJIUzUxMiJ9.eyJmbmFtZSI6Ikx1a2UiLCJzdWIiO…YhQJTmCXf3aNpE8_-KjTZiahXNrjr7edZPvAnh6w29exYCJnQ, refreshToken: eyJhbGciOiJIUzUxMiJ9.eyJhbGxhY2Nlc3MiOnRydWUsInN1Y…4sJjtKGH2OUC_DptB_eXHtsADhmj4TXYKEbTeDOFfiscrVetA, userLevelID: null, refreshExpireTime: Sat Nov 21 2026 20:24:51 GMT-0500 (Eastern Standard Time), authExpireTime: Tue May 26 2026 21:24:51 GMT-0400 (Eastern Daylight Time)} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] postAWS: false @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] oneDay: 1779845096483 @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] refreshExpireDate: Sat Nov 21 2026 20:24:51 GMT-0500 (Eastern Standard Time) @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] currentDate: Mon May 25 2026 21:24:56 GMT-0400 (Eastern Daylight Time) @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] authToken exists postAWS: false @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     119ms] [LOG] resGoal2: {fname: Luke, lname: , contactId: 411847, emailId: America/New_York, isAllAccessUser: true} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     120ms] [LOG] LoginAsync webToken timezone eyJhbGciOiJIUzUxMiJ9.eyJmbmFtZSI6Ikx1a2UiLCJzdWIiOiJsdWtlc2VhcnJhQGljbG91ZC5jb20iLCJsbmFtZSI6IiIsInR6IjoiQW1lcmljYS9Ub3JvbnRvIiwidGFnaWRzIjpbMTAyLDEyMiwyMjQsMjI2LDIyOCwzMzAsNDQ2LDYxMiw2MTYsNjIwLDYzMiw2OTgsNzg4LDEwMzYsMTMwMV0sImV4cCI6MTc3OTg0NTA5MSwiaWF0IjoxNzc5NzU4NjkxLCJjaWQiOjQxMTg0N30.neQ8EOVGn9blhADtSaLuNXdm4wntv0UFoZPPgYhQJTmCXf3aNpE8_-KjTZiahXNrjr7edZPvAnh6w29exYCJnQ America/Toronto @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     120ms] [LOG] LoginAsync userState {fname: Luke, lname: , contactId: 411847, emailId: America/New_York, isAllAccessUser: true} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     120ms] [LOG] action.userState: {fname: Luke, lname: , contactId: 411847, emailId: America/New_York, isAllAccessUser: true} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     121ms] [LOG] App props 12-29-2025 3 {history: Object, location: Object, match: Object, staticContext: undefined, isAuth: true} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     121ms] [LOG] 2 @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     124ms] [LOG] postAWS in freemembers: false @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     125ms] [LOG] OpenDrawerRedux {open: false, componentId: } @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     125ms] [LOG] openDrawer {open: false, componentId: } @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     136ms] [LOG] getLevelPLan = () =>  `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}`  @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     136ms] [LOG] UserId: 411847 @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     136ms] [LOG] levelId: 3 @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     136ms] [LOG] webToken: eyJhbGciOiJIUzUxMiJ9.eyJmbmFtZSI6Ikx1a2UiLCJzdWIiOiJsdWtlc2VhcnJhQGljbG91ZC5jb20iLCJsbmFtZSI6IiIsInR6IjoiQW1lcmljYS9Ub3JvbnRvIiwidGFnaWRzIjpbMTAyLDEyMiwyMjQsMjI2LDIyOCwzMzAsNDQ2LDYxMiw2MTYsNjIwLDYzMiw2OTgsNzg4LDEwMzYsMTMwMV0sImV4cCI6MTc3OTg0NTA5MSwiaWF0IjoxNzc5NzU4NjkxLCJjaWQiOjQxMTg0N30.neQ8EOVGn9blhADtSaLuNXdm4wntv0UFoZPPgYhQJTmCXf3aNpE8_-KjTZiahXNrjr7edZPvAnh6w29exYCJnQ @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     136ms] [LOG] postAWS in freemembers: false @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     137ms] [LOG] OpenDrawerRedux {open: false, componentId: } @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     137ms] [LOG] openDrawer {open: false, componentId: } @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     141ms] [LOG] getLevelPLan = () =>  `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}`  @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     141ms] [LOG] UserId: 411847 @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     141ms] [LOG] levelId: 3 @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     141ms] [LOG] webToken: eyJhbGciOiJIUzUxMiJ9.eyJmbmFtZSI6Ikx1a2UiLCJzdWIiOiJsdWtlc2VhcnJhQGljbG91ZC5jb20iLCJsbmFtZSI6IiIsInR6IjoiQW1lcmljYS9Ub3JvbnRvIiwidGFnaWRzIjpbMTAyLDEyMiwyMjQsMjI2LDIyOCwzMzAsNDQ2LDYxMiw2MTYsNjIwLDYzMiw2OTgsNzg4LDEwMzYsMTMwMV0sImV4cCI6MTc3OTg0NTA5MSwiaWF0IjoxNzc5NzU4NjkxLCJjaWQiOjQxMTg0N30.neQ8EOVGn9blhADtSaLuNXdm4wntv0UFoZPPgYhQJTmCXf3aNpE8_-KjTZiahXNrjr7edZPvAnh6w29exYCJnQ @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     759ms] [LOG] workoutSchedule before: {MONDAY,MAY 25: Array(3), TUESDAY,MAY 26: Array(4), WEDNESDAY,MAY 27: Array(1), THURSDAY,MAY 28: Array(3), FRIDAY,MAY 29: Array(4)} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     759ms] [LOG] workoutSchedule after: {MONDAY,MAY 25: Array(3), TUESDAY,MAY 26: Array(4), WEDNESDAY,MAY 27: Array(1), THURSDAY,MAY 28: Array(3), FRIDAY,MAY 29: Array(4)} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     762ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     764ms] [LOG] props in LegacyCards: {chosenProgs: Array(3), isLegacy: true, category: Foundation Upper Body, workoutIndex: 2, dateKey: MONDAY,MAY 25} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     768ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     769ms] [LOG] props in LegacyCards: {chosenProgs: Array(3), isLegacy: true, category: Foundation Core, workoutIndex: 2, dateKey: TUESDAY,MAY 26} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     773ms] [LOG] props in LegacyCards: {chosenProgs: Array(1), isLegacy: true, category: Foundation Lower Body, workoutIndex: 3, dateKey: TUESDAY,MAY 26} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     774ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     775ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     775ms] [LOG] props in LegacyCards: {chosenProgs: Array(3), isLegacy: true, category: Foundation Upper Body, workoutIndex: 2, dateKey: THURSDAY,MAY 28} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     777ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     777ms] [LOG] props in LegacyCards: {chosenProgs: Array(3), isLegacy: true, category: Foundation Core, workoutIndex: 2, dateKey: FRIDAY,MAY 29} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     779ms] [LOG] props in LegacyCards: {chosenProgs: Array(1), isLegacy: true, category: Foundation Lower Body, workoutIndex: 3, dateKey: FRIDAY,MAY 29} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[     779ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1131ms] [LOG] workoutSchedule before: {MONDAY,MAY 25: Array(3), TUESDAY,MAY 26: Array(4), WEDNESDAY,MAY 27: Array(1), THURSDAY,MAY 28: Array(3), FRIDAY,MAY 29: Array(4)} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1132ms] [LOG] workoutSchedule after: {MONDAY,MAY 25: Array(3), TUESDAY,MAY 26: Array(4), WEDNESDAY,MAY 27: Array(1), THURSDAY,MAY 28: Array(3), FRIDAY,MAY 29: Array(4)} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1134ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1135ms] [LOG] props in LegacyCards: {chosenProgs: Array(3), isLegacy: true, category: Foundation Upper Body, workoutIndex: 2, dateKey: MONDAY,MAY 25} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1137ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1138ms] [LOG] props in LegacyCards: {chosenProgs: Array(3), isLegacy: true, category: Foundation Core, workoutIndex: 2, dateKey: TUESDAY,MAY 26} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1139ms] [LOG] props in LegacyCards: {chosenProgs: Array(1), isLegacy: true, category: Foundation Lower Body, workoutIndex: 3, dateKey: TUESDAY,MAY 26} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1139ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1140ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1140ms] [LOG] props in LegacyCards: {chosenProgs: Array(3), isLegacy: true, category: Foundation Upper Body, workoutIndex: 2, dateKey: THURSDAY,MAY 28} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1141ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1141ms] [LOG] props in LegacyCards: {chosenProgs: Array(3), isLegacy: true, category: Foundation Core, workoutIndex: 2, dateKey: FRIDAY,MAY 29} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1142ms] [LOG] props in LegacyCards: {chosenProgs: Array(1), isLegacy: true, category: Foundation Lower Body, workoutIndex: 3, dateKey: FRIDAY,MAY 29} @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0
+[    1142ms] [LOG] postAWS is: undefined @ https://my.gymnasticbodies.com/static/js/main.ae2024ee.chunk.js:0

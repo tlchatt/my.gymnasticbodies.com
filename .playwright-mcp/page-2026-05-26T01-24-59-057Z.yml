@@ -1,0 +1,246 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e6] [cursor=pointer]: 
+    - list [ref=e7]:
+      - button "White Board" [ref=e8] [cursor=pointer]:
+        - img "White Board" [ref=e10]
+      - button "Guided Plans" [ref=e11] [cursor=pointer]:
+        - img "Guided Plans" [ref=e13]
+      - button "Build Your Own Workout" [ref=e14] [cursor=pointer]:
+        - img "Build Your Own Workout" [ref=e16]
+      - button "Thrive Nutrition" [ref=e17] [cursor=pointer]:
+        - img "Thrive Nutrition" [ref=e19]
+      - button "Workout History" [ref=e20] [cursor=pointer]:
+        - img "Workout History" [ref=e22]
+      - button "Fitness Placement Quiz" [ref=e23] [cursor=pointer]:
+        - img "Fitness Placement Quiz" [ref=e25]
+      - button "Information" [ref=e26] [cursor=pointer]:
+        - img "Information" [ref=e28]
+  - main [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - heading "May 25 - May 31" [level=4] [ref=e34]
+        - generic [ref=e36]:
+          - generic: View
+          - generic [ref=e37]:
+            - combobox "View" [ref=e38] [cursor=pointer]:
+              - option "Weekly" [selected]
+              - option "Daily"
+            - img
+            - group
+      - button [ref=e40] [cursor=pointer]:
+        - generic [ref=e41]:
+          - img [ref=e42]
+          - img [ref=e44]
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]:
+              - heading "Monday, May 25" [level=5] [ref=e50]
+              - button [ref=e51] [cursor=pointer]:
+                - img [ref=e53]
+            - button "Play Workout" [ref=e56] [cursor=pointer]:
+              - generic [ref=e57]:
+                - img [ref=e59]
+                - text: Play Workout
+            - button "Clear day" [ref=e62] [cursor=pointer]:
+              - generic [ref=e63]: Clear day
+          - generic [ref=e67]:
+            - generic [ref=e69]:
+              - generic [ref=e70]:
+                - button [ref=e72] [cursor=pointer]:
+                  - img [ref=e74]
+                - heading "Warm-Up" [level=5] [ref=e77]
+              - button "7 Minute Warm-Up" [ref=e79] [cursor=pointer]:
+                - generic "7 Minute Warm-Up" [ref=e80]
+                - img [ref=e82]
+              - heading "7 Minute Warm-Up" [level=6] [ref=e85]
+              - button "upload picture" [ref=e87] [cursor=pointer]:
+                - img [ref=e89]
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - button [ref=e99] [cursor=pointer]:
+                  - img [ref=e101]
+                - heading "Mobility" [level=5] [ref=e104]
+              - button "Weighted Mobility" [ref=e106] [cursor=pointer]:
+                - generic "Weighted Mobility" [ref=e107]
+                - img [ref=e109]
+              - heading "Weighted Mobility" [level=6] [ref=e112]
+              - button "upload picture" [ref=e114] [cursor=pointer]:
+                - img [ref=e116]
+            - generic [ref=e123]:
+              - generic [ref=e125]:
+                - heading "Foundation Upper Body" [level=5] [ref=e126]
+                - button "Edit" [ref=e127] [cursor=pointer]:
+                  - generic [ref=e128]: Edit
+              - generic [ref=e129]:
+                - generic [ref=e130]:
+                  - heading "A1 Hollow Back Press - Incline Pushup" [level=6] [ref=e131]:
+                    - text: A1 Hollow Back Press -
+                    - generic [ref=e132]: Incline Pushup
+                  - generic [ref=e133]:
+                    - generic [ref=e134]:
+                      - button "Strength Incline Pushup" [ref=e135] [cursor=pointer]:
+                        - paragraph [ref=e137]: Strength
+                        - generic "Incline Pushup" [ref=e138]
+                        - img [ref=e140]
+                      - heading "3x3r - Incline Pushup" [level=6] [ref=e142]
+                    - generic [ref=e143]:
+                      - button "Mobility German Arm Swing" [ref=e144] [cursor=pointer]:
+                        - paragraph [ref=e146]: Mobility
+                        - generic "German Arm Swing" [ref=e147]
+                        - img [ref=e149]
+                      - heading "3x10r - German Arm Swing" [level=6] [ref=e151]
+                  - generic [ref=e152]:
+                    - group "vertical contained primary button group" [ref=e154]:
+                      - button [disabled]:
+                        - generic:
+                          - img
+                      - button "Step 1 of 9" [disabled]:
+                        - generic: Step 1 of 9
+                      - button [ref=e155] [cursor=pointer]:
+                        - img [ref=e157]
+                    - generic [ref=e159]:
+                      - button "Log" [ref=e160] [cursor=pointer]:
+                        - generic [ref=e161]: Log
+                      - button [ref=e162] [cursor=pointer]:
+                        - img [ref=e164]
+                - separator [ref=e166]
+                - generic [ref=e167]:
+                  - heading "B1 Rope Climb - Incline Row" [level=6] [ref=e168]:
+                    - text: B1 Rope Climb -
+                    - generic [ref=e169]: Incline Row
+                  - generic [ref=e170]:
+                    - generic [ref=e171]:
+                      - button "Strength Incline Row" [ref=e172] [cursor=pointer]:
+                        - paragraph [ref=e174]: Strength
+                        - generic "Incline Row" [ref=e175]
+                        - img [ref=e177]
+                      - heading "3x3r - Incline Row" [level=6] [ref=e179]
+                    - generic [ref=e180]:
+                      - button "Mobility One Arm Upright Lat Lean" [ref=e181] [cursor=pointer]:
+                        - paragraph [ref=e183]: Mobility
+                        - generic "One Arm Upright Lat Lean" [ref=e184]
+                        - img [ref=e186]
+                      - heading "3x15s@ - One Arm Upright Lat Lean" [level=6] [ref=e188]
+                  - generic [ref=e189]:
+                    - group "vertical contained primary button group" [ref=e191]:
+                      - button [disabled]:
+                        - generic:
+                          - img
+                      - button "Step 1 of 9" [disabled]:
+                        - generic: Step 1 of 9
+                      - button [ref=e192] [cursor=pointer]:
+                        - img [ref=e194]
+                    - generic [ref=e196]:
+                      - button "Log" [ref=e197] [cursor=pointer]:
+                        - generic [ref=e198]: Log
+                      - button [ref=e199] [cursor=pointer]:
+                        - img [ref=e201]
+                - separator [ref=e203]
+                - generic [ref=e204]:
+                  - heading "C1 Straddle Planche - Scapular Shrugs" [level=6] [ref=e205]:
+                    - text: C1 Straddle Planche -
+                    - generic [ref=e206]: Scapular Shrugs
+                  - generic [ref=e207]:
+                    - generic [ref=e208]:
+                      - button "Strength Scapular Shrugs" [ref=e209] [cursor=pointer]:
+                        - paragraph [ref=e211]: Strength
+                        - generic "Scapular Shrugs" [ref=e212]
+                        - img [ref=e214]
+                      - heading "3x3r - Scapular Shrugs" [level=6] [ref=e216]
+                    - generic [ref=e217]:
+                      - button "Mobility Swivel Hips" [ref=e218] [cursor=pointer]:
+                        - paragraph [ref=e220]: Mobility
+                        - generic "Swivel Hips" [ref=e221]
+                        - img [ref=e223]
+                      - heading "3x5r - Swivel Hips" [level=6] [ref=e225]
+                  - generic [ref=e226]:
+                    - group "vertical contained primary button group" [ref=e228]:
+                      - button [disabled]:
+                        - generic:
+                          - img
+                      - button "Step 1 of 9" [disabled]:
+                        - generic: Step 1 of 9
+                      - button [ref=e229] [cursor=pointer]:
+                        - img [ref=e231]
+                    - generic [ref=e233]:
+                      - button "Log" [ref=e234] [cursor=pointer]:
+                        - generic [ref=e235]: Log
+                      - button [ref=e236] [cursor=pointer]:
+                        - img [ref=e238]
+          - separator [ref=e240]
+        - generic [ref=e241]:
+          - generic [ref=e242]:
+            - generic [ref=e243]:
+              - heading "Tuesday, May 26" [level=5] [ref=e244]
+              - button [ref=e245] [cursor=pointer]:
+                - img [ref=e247]
+            - button "Play Workout" [ref=e250] [cursor=pointer]:
+              - generic [ref=e251]:
+                - img [ref=e253]
+                - text: Play Workout
+            - button "Clear day" [ref=e256] [cursor=pointer]:
+              - generic [ref=e257]: Clear day
+          - separator [ref=e258]
+        - generic [ref=e259]:
+          - generic [ref=e260]:
+            - generic [ref=e261]:
+              - heading "Wednesday, May 27" [level=5] [ref=e262]
+              - button [ref=e263] [cursor=pointer]:
+                - img [ref=e265]
+            - button "Play Workout" [ref=e268] [cursor=pointer]:
+              - generic [ref=e269]:
+                - img [ref=e271]
+                - text: Play Workout
+            - button "Clear day" [ref=e274] [cursor=pointer]:
+              - generic [ref=e275]: Clear day
+          - separator [ref=e276]
+        - generic [ref=e277]:
+          - generic [ref=e278]:
+            - generic [ref=e279]:
+              - heading "Thursday, May 28" [level=5] [ref=e280]
+              - button [ref=e281] [cursor=pointer]:
+                - img [ref=e283]
+            - button "Play Workout" [ref=e286] [cursor=pointer]:
+              - generic [ref=e287]:
+                - img [ref=e289]
+                - text: Play Workout
+            - button "Clear day" [ref=e292] [cursor=pointer]:
+              - generic [ref=e293]: Clear day
+          - separator [ref=e294]
+        - generic [ref=e295]:
+          - generic [ref=e296]:
+            - generic [ref=e297]:
+              - heading "Friday, May 29" [level=5] [ref=e298]
+              - button [ref=e299] [cursor=pointer]:
+                - img [ref=e301]
+            - button "Play Workout" [ref=e304] [cursor=pointer]:
+              - generic [ref=e305]:
+                - img [ref=e307]
+                - text: Play Workout
+            - button "Clear day" [ref=e310] [cursor=pointer]:
+              - generic [ref=e311]: Clear day
+          - separator [ref=e312]
+        - generic [ref=e313]:
+          - generic [ref=e314]:
+            - generic [ref=e315]:
+              - heading "Saturday, May 30" [level=5] [ref=e316]
+              - button [ref=e317] [cursor=pointer]:
+                - img [ref=e319]
+            - button "Play Workout" [ref=e322] [cursor=pointer]:
+              - generic [ref=e323]:
+                - img [ref=e325]
+                - text: Play Workout
+            - button "Clear day" [ref=e328] [cursor=pointer]:
+              - generic [ref=e329]: Clear day
+          - separator [ref=e330]
+        - generic [ref=e331]:
+          - generic [ref=e333]:
+            - heading "Sunday, May 31" [level=5] [ref=e334]
+            - button [ref=e335] [cursor=pointer]:
+              - img [ref=e337]
+          - option "Upper Body" [selected]
+          - option "Core/Lower body"
+          - option "Stretch"
+          - option "Core/UpperBody"

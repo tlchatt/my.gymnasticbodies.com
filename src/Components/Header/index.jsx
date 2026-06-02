@@ -153,7 +153,8 @@ function PrimarySearchAppBar(props) {
                 : null
             }
             <SubMenu handleOpen={handleOpen} anchorEl={anchorEl} handleClose={handleClose}>
-              <MenuItem href="https://www.gymnasticbodies.com/my-account/" component={Link} className={classes.menuList}>Manage Subscription</MenuItem>
+              <MenuItem component="a" href={`https://app.gymnasticbodies.com/accountDetails?userId=${userId}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}`} className={classes.menuList} onClick={handleClose}>Manage Subscription</MenuItem>
+              <MenuItem component="a" href="/account" className={classes.menuList} onClick={handleClose}>My Account</MenuItem>
               {!postAWS &&
                   <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem>
               }
@@ -164,6 +165,7 @@ function PrimarySearchAppBar(props) {
                   setIsOpen(false)
                 } else {
                   window.Beacon('init', 'eac459f5-02ec-46c7-a03e-929012bfa66a')
+                  window.Beacon('open')
                   setIsOpen(true)
                 }
               }}>{isOpen ? 'Close Support' : 'Open Support'}</MenuItem>

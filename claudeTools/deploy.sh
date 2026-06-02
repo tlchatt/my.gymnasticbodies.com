@@ -4,7 +4,7 @@
 
 set -e
 
-S3_BUCKET="my.react"
+S3_BUCKET="my.react2026"
 CF_DISTRIBUTION="E2TAHYRIUSC1ZN"
 AWS_REGION="us-east-1"
 
@@ -18,7 +18,6 @@ REACT_APP_API='https://api.gymnasticbodies.com' REACT_APP_IS_PRODUCTION='product
 
 echo "==> Syncing to s3://$S3_BUCKET ..."
 aws s3 sync build/ "s3://$S3_BUCKET" \
-  --acl public-read \
   --delete \
   --region "$AWS_REGION"
 
