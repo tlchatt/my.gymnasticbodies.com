@@ -46,6 +46,7 @@ const DetailedView = props => {
     }
     else {
       // check to make sure that there arent 2 of the same item in a row if destination and start are differnt
+      if (!end || !end.taskIds) return;
       for (let i = 0; i < end.taskIds.length ; i++){
         if (props.data.tasks[draggableId].id === props.data.tasks[end.taskIds[i]].id) return;
       }
@@ -123,6 +124,7 @@ const DetailedView = props => {
       {
         props.data.columnOrder.map((columnId, index) => {
           const column = props.data.columns[columnId];
+          if (!column) return null;
           const tasks = column.taskIds.map(taskId => props.data.tasks[taskId]);
 
           return <DayRow day={column} index={index} myClasses={tasks} key={columnId} taskId={column.taskIds} isMobile={isMobile}/>

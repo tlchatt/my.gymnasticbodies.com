@@ -20,6 +20,7 @@ import BuildYourOwn from '../../Components/FreeMemeberComp/BuildYourOwn';
 import InitialPage from '../../Components/FreeMemeberComp/InitialPage';
 
 import CourseLibrary from '../CourseLibrary'
+import ClassFinder from '../ClassFinder'
 import EqiupmentList from '../EqiupmentList'
 import Advocates from '../Advocates';
 import Information from '../Information';
@@ -221,6 +222,8 @@ export default function FreeMembers() {
               <Route path="/eqiupment-list" exact>
                 <EqiupmentList basicLayout />
               </Route>
+              <Route path="/class-finder/:category" exact component={ClassFinder} />
+              <Route path="/class-finder" exact component={ClassFinder} />
               <Route path="/course-library" exact >
                 {
                   isFreeMember

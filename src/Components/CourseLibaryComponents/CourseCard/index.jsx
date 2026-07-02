@@ -45,6 +45,10 @@ export default function CourseCard(props) {
 
   const handleImageName = (title, image) => {
 
+    if (image && image.startsWith('http')) {
+      return image;
+    }
+
     if (contains(title, 'Middle Split')) {
       return 'https://gymfit-images.s3.amazonaws.com/CourseLibraryImages/stretchseriesmiddlesplit.jpg';
     }

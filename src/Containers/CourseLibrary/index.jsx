@@ -8,7 +8,9 @@ import {
   CircularProgress
 } from '@material-ui/core';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { openDrawer } from '../../Store/Reducers/OpenDrawerReducer';
 import clsx from 'clsx';
 
 
@@ -16,6 +18,7 @@ import GridContainer from '../../Components/UtilComponents/Mui-GridContainer'
 import Container from '../../Components/UtilComponents/Container'
 import CourseCards from '../../Components/CourseLibaryComponents/CourseCard'
 import ProgressionRows from '../../Components/CourseLibaryComponents/ProgressionRows'
+import PlaylistRow from '../../Components/CourseLibaryComponents/PlaylistRow'
 import CourseLibraryPlayer from '../../Components/CourseLibaryComponents/CourseLibraryPlayer'
 import OhNoModal from '../../Components/OhNoModal';
 
@@ -3414,6 +3417,8 @@ let FoundationThirdRow = {
 const CourseLibrary = (props) => {
   const classes = useStyles();
   const { webToken, UserId } = useSelector(state => state.login);
+  const dispatch = useDispatch();
+  const history = useHistory();
   const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
   const secondRowRef = useRef();
   const thirdRowRef = useRef();
@@ -3460,7 +3465,15 @@ const CourseLibrary = (props) => {
     }
   }, [allProgs])
 
-  const handleCardClick = row => {  
+  const handleCardClick = row => {
+    if (row.customAction === 'thrive') {
+      dispatch(openDrawer('Thrive'));
+      return;
+    }
+    if (row.customAction === 'classFinder') {
+      history.push('/class-finder');
+      return;
+    }
     if (row.associatedCourses && row.associatedCourses.length > 0) {
       setSecondRow({
         show: true,
@@ -21935,7 +21948,7 @@ const CourseLibrary = (props) => {
                     "exercisesVideoId": 1585,
                     "exerciseId": 288,
                     "tag": 1,
-                    "videoName": "KWnhXawG.json?exp=1768812741404&sig=d6925ee0a408d7e02f698bf7ab6da6d2",
+                    "videoName": "2yO4CxF4.json?exp=1768812741404&sig=d6925ee0a408d7e02f698bf7ab6da6d2",
                     "weekNum": 0,
                     "order": 1
                   }
@@ -25110,7 +25123,7 @@ const CourseLibrary = (props) => {
                     "exercisesVideoId": 1585,
                     "exerciseId": 288,
                     "tag": 1,
-                    "videoName": "KWnhXawG.json?exp=1768812840481&sig=06f6008b8033eb520c421bf6b0f71224",
+                    "videoName": "2yO4CxF4.json?exp=1768812840481&sig=06f6008b8033eb520c421bf6b0f71224",
                     "weekNum": 0,
                     "order": 1
                   }
@@ -28285,7 +28298,7 @@ const CourseLibrary = (props) => {
                     "exercisesVideoId": 1585,
                     "exerciseId": 288,
                     "tag": 1,
-                    "videoName": "KWnhXawG.json?exp=1768812884504&sig=294f2b900b5d03f883c6817228d04f81",
+                    "videoName": "2yO4CxF4.json?exp=1768812884504&sig=294f2b900b5d03f883c6817228d04f81",
                     "weekNum": 0,
                     "order": 1
                   }
@@ -31460,7 +31473,7 @@ const CourseLibrary = (props) => {
                     "exercisesVideoId": 1585,
                     "exerciseId": 288,
                     "tag": 1,
-                    "videoName": "KWnhXawG.json?exp=1768812928166&sig=6d930d639769392d4f3cd1911e86b0e4",
+                    "videoName": "2yO4CxF4.json?exp=1768812928166&sig=6d930d639769392d4f3cd1911e86b0e4",
                     "weekNum": 0,
                     "order": 1
                   }
@@ -34635,7 +34648,7 @@ const CourseLibrary = (props) => {
                     "exercisesVideoId": 1585,
                     "exerciseId": 288,
                     "tag": 1,
-                    "videoName": "KWnhXawG.json?exp=1768813310866&sig=2caa1dac5c16e7e3f0f884a36b3d900f",
+                    "videoName": "2yO4CxF4.json?exp=1768813310866&sig=2caa1dac5c16e7e3f0f884a36b3d900f",
                     "weekNum": 0,
                     "order": 1
                   }
@@ -36699,7 +36712,7 @@ const CourseLibrary = (props) => {
                     "exercisesVideoId": 1585,
                     "exerciseId": 288,
                     "tag": 1,
-                    "videoName": "KWnhXawG.json?exp=1768813343758&sig=426b5e7ab36d10c82bc7325d9a04fc2c",
+                    "videoName": "2yO4CxF4.json?exp=1768813343758&sig=426b5e7ab36d10c82bc7325d9a04fc2c",
                     "weekNum": 0,
                     "order": 1
                   }
@@ -37721,6 +37734,324 @@ const CourseLibrary = (props) => {
           ]
         }
       }
+      if (row.name === 'Foundation Intro') {
+        responseData = {
+          "Foundation Intro": [
+            { name: "Introduction to Front Lever", videoName: "vpnZLIMk" },
+            { name: "Introduction to Straddle Planche", videoName: "QkmNzhul" },
+            { name: "Introduction to Manna", videoName: "iAIdaSQM" },
+            { name: "Introduction to Side Lever", videoName: "ZxfPNKJt" },
+            { name: "Introduction to Single Leg Squat", videoName: "wLQ7eipW" },
+            { name: "Introduction to Rope Climb", videoName: "qahTFk7a" },
+            { name: "Introduction to Hollow Back Press", videoName: "ZRLIsMBx" },
+            { name: "MyGB Walkthrough", videoName: "z7LeOSy3" },
+          ]
+        }
+      }
+      if (row.name === 'Ankle & Knee Restore') {
+        responseData = {
+          "Ankle & Knee Restore": [
+            { name: "Ankle Follow Along", videoName: "3bac3y3F" },
+            { name: "Calf Raises", videoName: "Y0uV6BoN" },
+            { name: "Calf Bend and Straight", videoName: "B8OytW6O" },
+            { name: "Calf Wall Stretch", videoName: "ds3ymefr" },
+            { name: "Outer Ankle Stretch", videoName: "ScPrE25b" },
+            { name: "Inner Ankle Stretch", videoName: "cjmGnLjO" },
+            { name: "Cross Legged Toe Point Stretch", videoName: "VqYU8MEb" },
+            { name: "Step Behind Toe Point Stretch", videoName: "CzVf7Yn6" },
+            { name: "Deepest Squat", videoName: "Hax3EHi4" },
+            { name: "Skiers", videoName: "quyDmcRx" },
+            { name: "Twisting Squats", videoName: "RTf39XMy" },
+            { name: "Inside Squats", videoName: "M70z9Gcv" },
+            { name: "Natural Leg Extensions", videoName: "ZSltGL8j" },
+          ]
+        }
+      }
+      if (row.name === 'Hip Restore') {
+        responseData = {
+          "Hip Restore": [
+            { name: "Hip Follow Along", videoName: "NQWo2jg3" },
+            { name: "Hip Circles", videoName: "ZOZezC65" },
+            { name: "Wall Sumo Squats", videoName: "YqBl4VcH" },
+            { name: "Prone Bent Knee", videoName: "eyPNAAJm" },
+            { name: "Prone Y Stretch", videoName: "h5y9r45K" },
+            { name: "Wide Butterfly", videoName: "f2JwY9l4" },
+            { name: "Supine Butterfly", videoName: "83NuHC33" },
+            { name: "Supine Bent Knee", videoName: "laiG57nW" },
+            { name: "Supine Glute Stretch", videoName: "VhqeghVu" },
+            { name: "Supine Cross-Legged Glute Stretch", videoName: "URSSjLMW" },
+          ]
+        }
+      }
+      if (row.name === 'Hamstring Restore') {
+        responseData = {
+          "Hamstring Restore": [
+            { name: "Hamstring Follow Along", videoName: "ypg0ScnW" },
+            { name: "Standing Straight Leg", videoName: "W1wRyY9j" },
+            { name: "Elevated Bent Knee", videoName: "zX80bDPe" },
+            { name: "Elevated Straight Leg", videoName: "d7RdO2Vl" },
+            { name: "Standing Straight Leg Hold", videoName: "JaFfE2Sy" },
+            { name: "Elevated Straight Leg Flex to Point", videoName: "GaQ0ULPY" },
+            { name: "Elevated Straight Rotations", videoName: "A6PUqvuP" },
+            { name: "Bent Knee to Straighten", videoName: "SU9KoopR" },
+          ]
+        }
+      }
+      if (row.name === 'Quad Restore') {
+        responseData = {
+          "Quad Restore": [
+            { name: "Quad Follow Along", videoName: "wurqqQec" },
+            { name: "Supine PPT", videoName: "QTGVosfL" },
+            { name: "Kneeling PPT", videoName: "9jyKR7My" },
+            { name: "Wide Kneeling PPT", videoName: "qElzBN5U" },
+            { name: "Kneeling Quad Stretch", videoName: "Ihu0Wtho" },
+            { name: "Prone Quad Stretch", videoName: "yCIn3bHC" },
+            { name: "Glute Bridge PPT", videoName: "czQvoI3m" },
+            { name: "Bretzel", videoName: "9Qgp0L53" },
+            { name: "Single Leg Glute", videoName: "Li4z1J2j" },
+          ]
+        }
+      }
+      if (row.name === 'Thoracic Restore') {
+        responseData = {
+          "Thoracic Restore": [
+            { name: "Follow Along", videoName: "Rg4k8tNb" },
+            { name: "Cat-Cow", videoName: "wYmZPHTA" },
+            { name: "Quadruped Rotations", videoName: "dT4RjBSo" },
+            { name: "Kneeling Bent Arm Cat", videoName: "PKygJWno" },
+            { name: "Seated Torso Twist", videoName: "Lw6yvi9p" },
+            { name: "Shoulder Bridge", videoName: "sHCeQEoQ" },
+            { name: "Book Opener Stretch", videoName: "b0QMfJeQ" },
+            { name: "Half Superman", videoName: "s82lyskr" },
+            { name: "Forearm Cobra Stretch", videoName: "gIv8FRPd" },
+            { name: "Forearm Cobra Rocks to Floor Cat", videoName: "sSRrkUCz" },
+            { name: "Supported Fish Pose", videoName: "xfmL1n3a" },
+            { name: "Standing Single Arm Wall Angel", videoName: "WkRmvz1T" },
+            { name: "Standing Double Arm Wall Angel", videoName: "WvQ7N6Hs" },
+          ]
+        }
+      }
+      if (row.name === 'Scapula Restore') {
+        responseData = {
+          "Scapula Restore": [
+            { name: "Follow Along", videoName: "P86IauCL" },
+            { name: "Standing Elevation and Depression", videoName: "iyasHFQG" },
+            { name: "Standing Protraction and Retraction", videoName: "R6RtgXHq" },
+            { name: "Standing Forward Shoulder Circles", videoName: "e1Kl8SB3" },
+            { name: "Standing Backward Shoulder Circles", videoName: "TtRvpOeW" },
+            { name: "Wall Elevation and Depression", videoName: "cvIzaEly" },
+            { name: "Wall Protraction and Retraction", videoName: "HHhO0fRS" },
+            { name: "Wall Standing Scap Circles", videoName: "PPhVvdAi" },
+            { name: "Wall Hand Rotations", videoName: "2Wm3MgGt" },
+          ]
+        }
+      }
+      if (row.name === 'Shoulder Restore') {
+        responseData = {
+          "Shoulder Restore": [
+            { name: "Follow Along", videoName: "oKa1rSlq" },
+            { name: "Bent Arm Circles", videoName: "PttGbdIb" },
+            { name: "Standing Half Shoulder Extension", videoName: "Q7Ipfkha" },
+            { name: "Hand Behind Back", videoName: "FJbkSVpb" },
+            { name: "Lateral Trap Stretch", videoName: "dKPk22aQ" },
+            { name: "Assisted Hang", videoName: "kYw4r7GQ" },
+            { name: "Reach Above Head Bent Arms", videoName: "taf3cqUX" },
+            { name: "Back Against Wall Raised Dowel", videoName: "xTvGsZmk" },
+            { name: "Bent Arm Lateral Lift", videoName: "dq3uSs6R" },
+            { name: "Prone Capsule Stretch", videoName: "ULlrD6jj" },
+            { name: "Letter T", videoName: "OeVreK2R" },
+            { name: "Cactus Down", videoName: "4Itd9ppU" },
+            { name: "Cactus Up", videoName: "lPCehtdq" },
+          ]
+        }
+      }
+      if (row.name === 'Elements 1') {
+        responseData = {
+          "Elements 1": [
+            { name: "Week 1 - Core & Lower Body", videoName: "HHRT3v7E" },
+            { name: "Week 1 - Upper Body", videoName: "hQWuMZvH" },
+            { name: "Week 3 - Core & Lower Body", videoName: "fSt3rrqv" },
+            { name: "Week 3 - Upper Body", videoName: "dR7zwJpL" },
+            { name: "Week 6 - Core & Lower Body", videoName: "5OoEkhNc" },
+            { name: "Week 6 - Upper Body", videoName: "ADqwJRdG" },
+            { name: "Week 9 - Core & Lower Body", videoName: "qwkQ0Rpb" },
+            { name: "Week 9 - Upper Body", videoName: "kRG5ejOz" },
+            { name: "Week 11 - Core & Lower Body", videoName: "Yl3kLHf6" },
+            { name: "Week 11 - Upper Body", videoName: "tlRqzssB" },
+          ]
+        }
+      }
+      if (row.name === 'Elements 2') {
+        responseData = {
+          "Elements 2": [
+            { name: "Week 1 - Core & Lower Body", videoName: "hUA22fAR" },
+            { name: "Week 1 - Upper Body", videoName: "WeF8D1x7" },
+            { name: "Week 3 - Core & Lower Body", videoName: "I2FuaOSK" },
+            { name: "Week 3 - Upper Body", videoName: "uqwneU6A" },
+            { name: "Week 6 - Core & Lower Body", videoName: "YcQ8fDSx" },
+            { name: "Week 6 - Upper Body", videoName: "7BLoSQDK" },
+            { name: "Week 9 - Core & Lower Body", videoName: "boX889qx" },
+            { name: "Week 9 - Upper Body", videoName: "qKNpnSdN" },
+            { name: "Week 11 - Core & Lower Body", videoName: "jAGMNBH1" },
+            { name: "Week 11 - Upper Body", videoName: "e4ESlyTk" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 1') {
+        responseData = {
+          "Fundamentals Day 1": [
+            { name: "Day 1 - Workout", videoName: "2DguMbbN" },
+            { name: "Day 1 - Technique", videoName: "J6YVXB0m" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 2') {
+        responseData = {
+          "Fundamentals Day 2": [
+            { name: "Day 2 - Workout", videoName: "NaeI0WU9" },
+            { name: "Day 2 - Technique", videoName: "WA2YRETv" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 3') {
+        responseData = {
+          "Fundamentals Day 3": [
+            { name: "Day 3 - Workout", videoName: "aqoF3CEa" },
+            { name: "Day 3 - Technique", videoName: "ShsIhtjD" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 4') {
+        responseData = {
+          "Fundamentals Day 4": [
+            { name: "Day 4 - Workout", videoName: "RnHpBoPM" },
+            { name: "Day 4 - Technique", videoName: "5XTTWF9G" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 5') {
+        responseData = {
+          "Fundamentals Day 5": [
+            { name: "Day 5 - Workout", videoName: "SiwKGqYw" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 6') {
+        responseData = {
+          "Fundamentals Day 6": [
+            { name: "Day 6 - Workout", videoName: "J4ichn8V" },
+            { name: "Day 6 - Technique", videoName: "dGGAAB8K" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 7') {
+        responseData = {
+          "Fundamentals Day 7": [
+            { name: "Day 7 - Workout", videoName: "LBgmUfoi" },
+            { name: "Day 7 - Technique", videoName: "gnuko5m5" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 8') {
+        responseData = {
+          "Fundamentals Day 8": [
+            { name: "Day 8 - Workout", videoName: "ifmEehac" },
+            { name: "Day 8 - Technique", videoName: "Z1njjhxI" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 9') {
+        responseData = {
+          "Fundamentals Day 9": [
+            { name: "Day 9 - Workout", videoName: "9UADz6Qb" },
+            { name: "Day 9 - Technique", videoName: "a3VObsWz" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 10') {
+        responseData = {
+          "Fundamentals Day 10": [
+            { name: "Day 10 - Workout", videoName: "GpCO2xuz" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 11') {
+        responseData = {
+          "Fundamentals Day 11": [
+            { name: "Day 11 - Workout", videoName: "lRHa169A" },
+            { name: "Day 11 - Technique", videoName: "bhYOD2lh" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 12') {
+        responseData = {
+          "Fundamentals Day 12": [
+            { name: "Day 12 - Workout", videoName: "oNXIN6o7" },
+            { name: "Day 12 - Technique", videoName: "KsNGVhDC" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 13') {
+        responseData = {
+          "Fundamentals Day 13": [
+            { name: "Day 13 - Workout", videoName: "WVBxvuuB" },
+            { name: "Day 13 - Technique", videoName: "BvO0DGKx" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 14') {
+        responseData = {
+          "Fundamentals Day 14": [
+            { name: "Day 14 - Workout", videoName: "7ty2vdqv" },
+            { name: "Day 14 - Technique", videoName: "qQ7iQMnh" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 15') {
+        responseData = {
+          "Fundamentals Day 15": [
+            { name: "Day 15 - Workout", videoName: "YV7VLEaL" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 16') {
+        responseData = {
+          "Fundamentals Day 16": [
+            { name: "Day 16 - Workout", videoName: "FZkzwQrg" },
+            { name: "Day 16 - Technique", videoName: "tuxHnKuF" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 17') {
+        responseData = {
+          "Fundamentals Day 17": [
+            { name: "Day 17 - Workout", videoName: "JCfDUlyc" },
+            { name: "Day 17 - Technique", videoName: "Xp8yWBYZ" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 18') {
+        responseData = {
+          "Fundamentals Day 18": [
+            { name: "Day 18 - Workout", videoName: "46TnEjfh" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 19') {
+        responseData = {
+          "Fundamentals Day 19": [
+            { name: "Day 19 - Workout", videoName: "LvqIgGIp" },
+            { name: "Day 19 - Technique", videoName: "dLQcrjtK" },
+          ]
+        }
+      }
+      if (row.name === 'Fundamentals Day 20') {
+        responseData = {
+          "Fundamentals Day 20": [
+            { name: "Day 20 - Workout", videoName: "IKm6sdvP" },
+          ]
+        }
+      }
       const keys = Object.keys(responseData);
       if (responseData === "YOU AREN'T ENROLLED IN THIS COURSE.") {
         console.log('YOU AREN\'T ENROLLED IN THIS COURSE');
@@ -37730,6 +38061,15 @@ const CourseLibrary = (props) => {
           loading: false
         })
         setOhNoModal(true);
+      }
+      else if (keys.length === 1) {
+        setThirdRow({
+          show: false,
+          data: [],
+          loading: false
+        })
+        setHideReps(false);
+        setAllProgs(responseData[keys[0]]);
       }
       else {
         setThirdRow({
@@ -37856,7 +38196,11 @@ const CourseLibrary = (props) => {
             <div style={{ position: 'relative' }}>
               <div ref={allProgsRef} style={{ position: 'absolute', top: -54, left: 0 }}></div>
             </div>
-            {allProgs.map((prog, key) => <ProgressionRows hideReps={hideReps} key={key} openVideoModal={openVideoModal} {...prog} />)}
+            {allProgs.map((prog, key) =>
+              prog.videoName
+                ? <PlaylistRow key={key} name={prog.name} videoName={prog.videoName} openVideoModal={openVideoModal} />
+                : <ProgressionRows hideReps={hideReps} key={key} openVideoModal={openVideoModal} {...prog} />
+            )}
           </Box>
           : null
       }

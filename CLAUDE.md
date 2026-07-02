@@ -59,7 +59,7 @@ Login POSTs to `/api/authentication` (new) or `/auth` (legacy). Response contain
 
 **User migration types** (`migration_type` field on the server-side `user` table): `stripe`, `auth_net_subscriber`, `active_current`, `active_expired`, `inactive`.
 
-> **Pending:** `src/Store/Action/loginActions.js` has an in-progress change implementing the renewal redirect in `LoginNew` — blocked on a fresh pull from remote.
+The renewal redirect in `LoginNew` is live — `needsRenewal: true` redirects to `https://app.gymnasticbodies.com/renew?email=...` before dispatching login.
 
 ### API endpoints
 
@@ -74,9 +74,16 @@ New feature work should target `REACT_APP_API_NEW`. The legacy API remains for s
 
 ### Routing
 
-All authenticated routes are wrapped in an auth guard that redirects to `/` if `login.auth` is false.
+`App.js` has two authenticated route trees — **you must add new routes to both or they won't work for all users:**
 
-Notable routes: `/dashboard`, `/class-finder/:category`, `/history`, `/get-started` (onboarding), `/course-library`, `/thrive-lessons`, `/thrive-tasks`, `/thrive-profile`, `/admin`, `/paymentPortal`.
+| Condition | Route tree | Component |
+|---|---|---|
+| `showAllAccessSite && isAuth` | Route 2 | `<NewMemberSite>` — has its own inner `<Switch>` |
+| `isAuth` (regular) | Route 3 | Full flat route list with Header + Footer |
+
+`NewMemberSite` (`src/Containers/NewMemberSite/index.jsx`) renders its own `<Switch>` internally. Routes defined only in Route 3 will 404→redirect to `/` for all-access users. Add new routes to `NewMemberSite`'s inner Switch **and** to Route 3 in `App.js`.
+
+Notable routes (both trees): `/course-library`, `/class-finder`, `/class-finder/:category`, `/my-courses`, `/eqiupment-list`, `/information`, `/advocates`.
 
 ### Static workout data
 
@@ -162,3 +169,52 @@ Each microservice has its own database. DB names per service are in SSM under `/
 **Important:** `isFreeMember` / `isAllAccessUser` flags are **not stored in MySQL**. They come from **Infusionsoft/Keap** tag IDs returned by the `/welcome/v1/users` API endpoint. Infusionsoft credentials are in SSM: `/prod/gymfit-memsite/CLIENT_ID_INFUSION_SOFT_ENV` and `CLIENT_SECRET_INFUSION_SOFT_ENV`.
 
 **Neon gap:** Free members (`isFreeMember` path in `Login`) are never synced to Neon — the `POST /api/user/subscription` call is skipped for that branch. Approximately 14,933 users exist in AWS but not in Neon.
+
+## Media Architecture
+
+### Course Library video pipeline
+
+`/course-library` (`src/Containers/CourseLibrary/index.jsx`) plays video via **JW Platform**:
+
+1. User clicks a sub-course → `handleThirdRowClick` calls:
+   `GET https://api.gymnasticbodies.com/workout-service/course-library/users/{userId}/?workoutName={nameId}`
+2. AWS returns exercise progression data. If it fails (or the course doesn't exist in the legacy system), the `.catch()` block serves **inline hardcoded fallback data** — the entire course library content is embedded directly in `index.jsx` (that's why the file is ~38,000 lines).
+3. Exercises render via `ProgressionRows`. Clicking a video calls `openVideoModal(videoName)`.
+4. `CourseLibraryPlayer` renders: `content.jwplatform.com/feeds/{videoName}` authenticated via a **content-signed key** (`exp=1768594319099` — expires **January 2027**) appended to the JW player script URL.
+
+**New courses** (Restore, Fundamentals, Elements, Foundation Intro) always return 400 on the legacy AWS API — their `nameId` values don't exist in the AWS workout-service. The `.catch()` block always fires for them, serving inline fallback data added to the catch block in `index.jsx`.
+
+**Fallback data format:** Each new course sets `responseData` as `{ "Video Title": [{ name, videoName }], ... }` — one key per video. Each key becomes a third-row group card; clicking it shows a `PlaylistRow` item. Existing courses use `ProgressionRows` (complex nested format). `allProgs.map()` picks the component: `prog.videoName ? <PlaylistRow> : <ProgressionRows>`.
+
+**UserId note:** All-access users (Neon auth path) have a UUID as their Redux `UserId`, not the legacy integer AWS userId. The course-library API rejects the UUID with a 400, so the catch fires for ALL courses for these users — inline fallback data is always used. This is fine; the UX is identical.
+
+**Axios interceptor:** `src/Components/UtilComponents/Interceptor/index.jsx` intercepts axios responses. For 401 it refreshes the token; for 403 on specific URLs it checks session status. For all other errors it now calls `reject(err)` so the `.catch()` in calling code fires normally. Without this, any non-401/403 error silently hung (the Promise never settled).
+
+### Video data sources
+
+| Source | Location | Purpose |
+|---|---|---|
+| `eachPlaylistData.json` | `app.gymnasticbodies.com/data/playlist/` | Full playlist metadata: per-video titles, thumbnail URLs, multi-quality MP4 sources. Structure: `[{ "outerKey": { "feedid": "playlistId", "playlist": [{mediaid, title, image}] } }]` — search by `feedid` value, not outer key. |
+| `allPlaylist.json` | `app.gymnasticbodies.com/data/playlist/` | Playlist titles and ordering |
+| `map.json` | `app.gymnasticbodies.com/data/playlist/` | playlist-to-mediaId mapping used by `/api/mediaBlob` |
+| `*_mediaUrls.json` | `app.gymnasticbodies.com/data/` | Per-course cached `videoUrl` (CloudFront `videos-cloudfront.jwpsrv.com`) + `imageUrl` (`assets-jpcust.jwpsrv.com/thumbnails/...`). Note: `done: 'True'` fields are stale — actual blob status must be verified via API. |
+
+### Sub-course card images
+
+Sub-course card `imgUrl` in `data.js` uses **Vercel Blob JPEG thumbnails**: `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/{mediaId}.jpeg`. `CourseCard/index.jsx` has a guard: if `imgUrl.startsWith('http')`, use it directly; otherwise prepend the S3 base.
+
+Top-level course card images (`imgUrl` on the `mainCourses` entries) remain S3 PNGs (`https://gymfit-images.s3.amazonaws.com/CourseLibraryImages/`).
+
+### Blob storage readiness (future migration)
+
+All course videos are already in Vercel Blob at `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/`:
+
+| Pattern | Example |
+|---|---|
+| `{mediaId}.mp4` | `3bac3y3F.mp4` |
+| `{mediaId}.jpeg` | `3bac3y3F.jpeg` |
+| `{mediaId}.vtt` | captions (some) |
+
+**Coverage:** 746/747 old course videos (one missing: `KWnhXawG` — Stretch Thoracic Bridge). All new-course videos 100% present.
+
+**JW content key expires January 2027.** Before that date: upload `KWnhXawG.mp4`, wire `POST /api/mediaBlob` calls into the frontend, and swap `ReactJWPlayer` for native `<video>` using the blob MP4 URLs. The `/api/mediaBlob` endpoint already exists in `app.gymnasticbodies.com`.

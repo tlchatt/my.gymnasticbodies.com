@@ -60,6 +60,8 @@ const Interceptor = props => {
                 });
 
               resolve(res);
+            } else {
+              reject(err);
             }
           });
         });

@@ -5,11 +5,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles, Typography } from '@material-ui/core';
-import ReactJWPlayer from 'react-jw-player';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
-import { useSelector } from 'react-redux';
 
+const BLOB = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com';
 
 const useSytles = makeStyles(theme => ({
   padding: {
@@ -66,11 +65,10 @@ const useSytles = makeStyles(theme => ({
 const DemoPlayer = props => {
   const theme = useTheme();
   const phoneScreen = useMediaQuery(theme.breakpoints.down(415));
-  const playerSignedUrl = useSelector(state => state.login.signedUrl);
   const classes = useSytles(phoneScreen);
 
   const { open, videoName, CloseModal , title} = props;
-
+  const mediaId = videoName ? videoName.split(/[.?]/)[0] : videoName;
 
   return (
     <React.Fragment>
@@ -94,12 +92,13 @@ const DemoPlayer = props => {
         <DialogContent classes={{ root: classes.padding }}>
           {
             open && videoName
-              ? <ReactJWPlayer
-                  playerId='course-library-player-modal'
-                  playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
-                  playlist={`https://content.jwplatform.com/feeds/${videoName}`}
-                  onError={(err) => console.log("onError", err)}
-                  onSetupError={(err) => console.log("onSetupError", err)}
+              ? <video
+                  key={mediaId}
+                  controls
+                  autoPlay
+                  style={{ width: '100%', display: 'block' }}
+                  src={`${BLOB}/${mediaId}.mp4`}
+                  onError={(err) => console.log("video onError", err)}
                 />
               : null
           }

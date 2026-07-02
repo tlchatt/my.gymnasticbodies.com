@@ -23,6 +23,7 @@ const DayContainer = props => {
   const dayArrayText = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
 
   const column = props.data.columns[dayArray[props.day]];
+  if (!column) return null;
   const tasks = column.taskIds.map(taskId => {
     return { taskData: props.data.tasks[taskId], taskId }
   });
