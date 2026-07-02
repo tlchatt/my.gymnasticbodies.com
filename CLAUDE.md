@@ -174,19 +174,25 @@ Each microservice has its own database. DB names per service are in SSM under `/
 
 ### Course Library video pipeline
 
-`/course-library` (`src/Containers/CourseLibrary/index.jsx`) plays video via **JW Platform**:
+`/course-library` (`src/Containers/CourseLibrary/index.jsx`):
 
 1. User clicks a sub-course → `handleThirdRowClick` calls:
    `GET https://api.gymnasticbodies.com/workout-service/course-library/users/{userId}/?workoutName={nameId}`
-2. AWS returns exercise progression data. If it fails (or the course doesn't exist in the legacy system), the `.catch()` block serves **inline hardcoded fallback data** — the entire course library content is embedded directly in `index.jsx` (that's why the file is ~38,000 lines).
-3. Exercises render via `ProgressionRows`. Clicking a video calls `openVideoModal(videoName)`.
-4. `CourseLibraryPlayer` renders: `content.jwplatform.com/feeds/{videoName}` authenticated via a **content-signed key** (`exp=1768594319099` — expires **January 2027**) appended to the JW player script URL.
+2. AWS returns exercise progression data. If it fails (or the course doesn't exist in the legacy system), the `.catch()` block serves **inline hardcoded fallback data** — the entire course library content is embedded directly in `index.jsx` (that's why the file is ~38,000 lines). If the call unexpectedly *succeeds* with a `nameId` that collides with a real AWS-registered one belonging to a different course, the `.then()` branch renders that wrong course's live data instead — this is exactly what happened with Rings/Movement (see below); always give new/placeholder sub-courses a `nameId` guaranteed not to collide with a real one.
+3. Exercises render via `ProgressionRows` (complex nested, multi-key format) or `PlaylistRow` (flat, single-key format) — `allProgs.map()` picks via `prog.videoName ? <PlaylistRow> : <ProgressionRows>`. If a course's fallback resolves to exactly one third-row group, `handleThirdRowClick`'s success branch skips the redundant group card and populates the flat list directly.
+4. Clicking a video calls `openVideoModal(videoName)`. **As of 2026-07-02, `CourseLibraryPlayer` plays video via a native `<video>` element sourced directly from Vercel Blob — it no longer uses JW Platform/`ReactJWPlayer` at all.** `videoName` comes in one of two formats depending on when the fallback data was written: new courses use a plain media ID (`"3bac3y3F"`); older/legacy exercise data uses `"{mediaId}.json?exp=...&sig=..."` (a JW-specific signed-feed reference). `CourseLibraryPlayer` strips everything after the first `.`/`?` (`videoName.split(/[.?]/)[0]`) to get the real media ID, then builds `${BLOB}/${mediaId}.mp4`.
 
-**New courses** (Restore, Fundamentals, Elements, Foundation Intro) always return 400 on the legacy AWS API — their `nameId` values don't exist in the AWS workout-service. The `.catch()` block always fires for them, serving inline fallback data added to the catch block in `index.jsx`.
+**Why JW was dropped for this player:** the JW signed URL (`playerScript`) that gates `content.jwplatform.com/feeds/{id}` comes from Redux `state.login.signedUrl`, which is set once at login. Two compounding bugs made it unusable: (1) `LoginNew` in `loginActions.js` ships a hardcoded mock `playerScript` with a permanently-expired signature (as of this writing, expired since Dec 15 2025) instead of ever fetching a real one; (2) even the legitimate `/welcome/v1/users` endpoint, when it *is* called, issues a token with only a ~3.5 second TTL — nowhere near enough time for a user to log in, navigate, and click play. There's an existing self-heal pattern elsewhere (`VideoPlayer`'s `onSetupError` → `getNewSignedUrl()`), but it doesn't actually work either: `react-jw-player`'s `shouldComponentUpdate` only reacts to `file`/`playlist` prop changes, never `playerScript`, and `componentDidMount` skips reinstalling the JW script tag once `window.jwplayer` exists globally on the page — so no client-side retry/remount can recover from an expired signed URL without a full page reload. Given JW billing is lapsing, the decision was to bypass JW for course-library rather than fix the login flow (which is shared by every page, not just this one). **`VideoPlayer` (MyCourses/BuildYourOwn/Guided Plans) and `CoursePreivewData` still use JW/`ReactJWPlayer` as of this writing** — not yet migrated.
 
-**Fallback data format:** Each new course sets `responseData` as `{ "Video Title": [{ name, videoName }], ... }` — one key per video. Each key becomes a third-row group card; clicking it shows a `PlaylistRow` item. Existing courses use `ProgressionRows` (complex nested format). `allProgs.map()` picks the component: `prog.videoName ? <PlaylistRow> : <ProgressionRows>`.
+**New courses** (Restore, Fundamentals, Elements, Foundation Intro) always return 400 on the legacy AWS API — their `nameId` values don't exist in the AWS workout-service. The `.catch()` block always fires for them, serving inline fallback data added to the catch block in `index.jsx`. All 30 of their sub-courses' video IDs have been verified byte-for-byte against the real JW playlist export (`app.gymnasticbodies.com/data/playlist/eachPlaylistData.json`) — zero mismatches.
 
-**UserId note:** All-access users (Neon auth path) have a UUID as their Redux `UserId`, not the legacy integer AWS userId. The course-library API rejects the UUID with a 400, so the catch fires for ALL courses for these users — inline fallback data is always used. This is fine; the UX is identical.
+**Rings/Movement content gap (known, not fixed):** Rings' 5 sub-courses and Movement's 9 were added by a human developer in Jan 2026 (commits `9aef691`, `d05d6fd`) with Stretch's real exercise data (video IDs, descriptions, everything) copy-pasted in as placeholder content — not a routing bug, the `nameId`s now correctly avoid AWS collisions (see below) and correctly reach the fallback, but the fallback content itself is still Stretch's. No real Ring/Movement footage exists in the local JW playlist exports (`app.gymnasticbodies.com/data/playlist/`, searched all 214 playlists, zero matches). Needs either real footage sourced from JW's dashboard directly, or new content produced.
+
+**nameId collisions:** Rings' and Movement's `nameId` values used to be `SMS`/`SFS`/`STB` — the *real*, AWS-registered nameIds belonging to the Stretch course — so the AWS API call would unexpectedly succeed and render genuine Stretch data instead of falling to the catch block. Reassigned to `Movement-1..9`/`Rings-1..5` (2026-07-02) so the API reliably 400s and the (still placeholder) fallback data renders instead.
+
+**Fallback data format:** Each new course sets `responseData` as `{ "Course Name": [{ name, videoName }, ...] }` — one key per sub-course containing its full flat video list. Existing courses use `ProgressionRows` (complex nested, multi-key format, one key per exercise group).
+
+**UserId note:** All-access users (Neon auth path) have a UUID as their Redux `UserId`, not the legacy integer AWS userId. The course-library API rejects the UUID with a 400, so the catch fires for ALL courses for these users — inline fallback data is always used. This is fine; the UX is identical. (One test account, `yeldaour@gmail.com`, hit an unexplained "grid of 30 blank numbered cards" on a course-library third-row click during testing — account-specific, not reproducible with `lukesearra@icloud.com`, never root-caused.)
 
 **Axios interceptor:** `src/Components/UtilComponents/Interceptor/index.jsx` intercepts axios responses. For 401 it refreshes the token; for 403 on specific URLs it checks session status. For all other errors it now calls `reject(err)` so the `.catch()` in calling code fires normally. Without this, any non-401/403 error silently hung (the Promise never settled).
 
@@ -205,9 +211,9 @@ Sub-course card `imgUrl` in `data.js` uses **Vercel Blob JPEG thumbnails**: `htt
 
 Top-level course card images (`imgUrl` on the `mainCourses` entries) remain S3 PNGs (`https://gymfit-images.s3.amazonaws.com/CourseLibraryImages/`).
 
-### Blob storage readiness (future migration)
+### Blob storage — live for course-library, not yet migrated elsewhere
 
-All course videos are already in Vercel Blob at `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/`:
+All course videos are in Vercel Blob at `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/` (public, unauthenticated):
 
 | Pattern | Example |
 |---|---|
@@ -215,6 +221,6 @@ All course videos are already in Vercel Blob at `https://6z1gtynqfxcjjwix.public
 | `{mediaId}.jpeg` | `3bac3y3F.jpeg` |
 | `{mediaId}.vtt` | captions (some) |
 
-**Coverage:** 746/747 old course videos (one missing: `KWnhXawG` — Stretch Thoracic Bridge). All new-course videos 100% present.
+**Coverage confirmed 2026-07-02: 885/885** unique video IDs referenced anywhere in `CourseLibrary/index.jsx` resolve correctly in Blob. The one previously-documented "missing" video (`KWnhXawG`) was never actually missing — it's a JW *playlist container* ID that had been mistakenly used as if it were the video's own media ID. The real media ID (`2yO4CxF4`, "TBS.mp4") was already in Blob; fixed all 6 occurrences in `index.jsx`.
 
-**JW content key expires January 2027.** Before that date: upload `KWnhXawG.mp4`, wire `POST /api/mediaBlob` calls into the frontend, and swap `ReactJWPlayer` for native `<video>` using the blob MP4 URLs. The `/api/mediaBlob` endpoint already exists in `app.gymnasticbodies.com`.
+**Course-library (`CourseLibraryPlayer`) is fully migrated off JW** — see "Course Library video pipeline" above. **`VideoPlayer` (MyCourses/BuildYourOwn/Guided Plans) and `CoursePreivewData` are not** — they still use `ReactJWPlayer` and the same broken login-flow signed-URL mechanism. The `/api/mediaBlob` endpoint already exists in `app.gymnasticbodies.com` if a `POST`-based lookup is ever needed instead of constructing the Blob URL directly by mediaId.
