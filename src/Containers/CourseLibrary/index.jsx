@@ -20926,7 +20926,7 @@ const CourseLibrary = (props) => {
                     "exercisesVideoId": 1584,
                     "exerciseId": 287,
                     "tag": 1,
-                    "videoName": "aH1k32u9.json?exp=1768812721563&sig=95f9524def5cc6cdcc09d4fa0038f520",
+                    "videoName": "UwSbT4bF.json?exp=1768812721563&sig=95f9524def5cc6cdcc09d4fa0038f520",
                     "weekNum": 0,
                     "order": 1
                   }
