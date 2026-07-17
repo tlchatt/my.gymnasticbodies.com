@@ -6,10 +6,10 @@ import {
   Box,
   Paper
 } from '@material-ui/core';
-import { useSelector } from 'react-redux'
-import ReactJWPlayer from 'react-jw-player';
 
 import Wrapper from '../../Components/UtilComponents/Wrapper'
+import VideoElement from '../../Components/VideoElement';
+import { toPlaylistItem } from '../../lib/video';
 
 const useStyles = makeStyles(theme=>({
   background: { background: '#eeeeee', marginBottom: 12 },
@@ -62,7 +62,6 @@ const howTos = {
 const Advocates = (props) => {
   const classes = useStyles();
   const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
-  const signedUrl = useSelector(state => state.login.signedUrl);
   const params = props.match.params;
   const allowedParams = ['white-board', 'guided-plans', 'build-your-own'];
 
@@ -93,13 +92,7 @@ const Advocates = (props) => {
         <Grid container justifyContent='center'>
           <Grid item xs={11} sm={10} md={10} lg={10}>
             <Paper elevation={4}>
-              <ReactJWPlayer
-                playerId='my-jwplayer'
-                playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${signedUrl}`}
-                playlist={`https://content.jwplatform.com/feeds/${howTos[params.route].mediaId}.json`}
-                onError={(err) => console.log("onError", err)}
-                onSetupError={(err) => console.log("onSetupError", err)}
-              />
+              <VideoElement playlist={[toPlaylistItem(howTos[params.route].mediaId)]} />
             </Paper>
           </Grid>
         </Grid>

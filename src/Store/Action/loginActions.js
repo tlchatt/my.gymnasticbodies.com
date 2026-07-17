@@ -853,24 +853,6 @@ export const setDidTryAL = () => {
   return { type: actionTypes.SET_DID_TRY_AL };
 };
 
-export const getNewSignedUrl = () => (dispatch, getState) => {
-  const state = getState();
-  const { webToken, UserId } = state.login;
-
-  const config = AxiosConfig('get', `/welcome/v1/users/${UserId}/refresh/player/signed-url`, webToken)
-
-  axios(config).then(res => {
-    dispatch({
-      type: actionTypes.GET_NEW_SIGNED_URL,
-      payload: {
-        signedUrl: res.data.playerScript
-      }
-    })
-  }).catch(err => {
-    Sentry.captureException(err);
-  })
-}
-
 export const UpdateUserLevelId = (levelData) => {
   return {
     type: actionTypes.UPDATED_USER_LEVEL,

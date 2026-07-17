@@ -1,8 +1,9 @@
 import React from 'react';
 import { Typography, makeStyles, Grid, Card, Button } from '@material-ui/core';
-import ReactJWPlayer from 'react-jw-player';
-import { useSelector } from 'react-redux';
 import Interweave from 'interweave';
+
+import VideoElement from '../../../../VideoElement';
+import { toPlaylistItem } from '../../../../../lib/video';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -33,20 +34,12 @@ const useStyles = makeStyles(theme => ({
 
 const CoursePreivewData = (props) => {
   const classes = useStyles();
-  const playerSignedUrl = useSelector(state => state.login.signedUrl);
   return (
     <>
       {
         !props.isSubCoursePreview ? <Grid item xs={12} sm={10} md={10} lg={12} className={classes.videoGrid} >
           <Card elevation={6} style={{ margin: '12px auto', maxWidth: 710 }}>
-            <ReactJWPlayer
-              playerId='my-CoursePreivewData'
-              playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
-              playlist={`https://content.jwplatform.com/feeds/${props.mediaId}`}
-              customProps={{ nextUpDisplay: false }}
-              onError={(err) => console.log("onError", err)}
-              onSetupError={(err) => console.log("onSetupError", err)}
-            />
+            <VideoElement playlist={[toPlaylistItem(props.mediaId)]} />
           </Card>
         </Grid>
           : null

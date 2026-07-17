@@ -5,11 +5,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles, Typography, Grid } from '@material-ui/core';
-import ReactJWPlayer from 'react-jw-player';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
-import { useSelector } from 'react-redux';
+
+import VideoElement from '../../VideoElement';
+import { toPlaylistItem } from '../../../lib/video';
 
 // import DiscordChat from '../../NonLegacyModal/DiscordChat'
 
@@ -68,19 +69,29 @@ const useSytles = makeStyles(theme => ({
 const LegacyWorkoutPLayer = props => {
   const theme = useTheme();
   const phoneScreen = useMediaQuery(theme.breakpoints.down(415));
-  const playerSignedUrl = useSelector(state => state.login.signedUrl);
 
   const classes = useSytles(phoneScreen);
-  const [mediaUrl, setMediaUrl] = useState();
+  // playlist: [{ src, poster }] fed to VideoElement.
+  // activeId: raw media id of the current single video (null in follow-along mode)
+  //           — used to decide whether to show the "back to main video" link.
+  const [playlist, setPlaylist] = useState([]);
+  const [activeId, setActiveId] = useState(null);
 
   const { playerData, open, followAlong, isFollowAlong } = props;
 
+  const playSingle = (id) => {
+    setActiveId(id);
+    setPlaylist([toPlaylistItem(id)]);
+  };
+
   useEffect(() => {
     if (open && playerData && !isFollowAlong) {
-      setMediaUrl( `https://content.jwplatform.com/feeds/${playerData.videoUrl}` )
+      setActiveId(playerData.videoUrl);
+      setPlaylist([toPlaylistItem(playerData.videoUrl)]);
     }
     if (open && followAlong && isFollowAlong) {
-      setMediaUrl(followAlong)
+      setActiveId(null);
+      setPlaylist(followAlong);
     }
   }, [playerData, open, followAlong, isFollowAlong])
 
@@ -105,14 +116,8 @@ const LegacyWorkoutPLayer = props => {
         </MuiDialogTitle>
         <DialogContent classes={{ root: classes.padding }}>
           {
-            props.open && mediaUrl ?
-              <ReactJWPlayer
-                playerId='legacy-player-modal'
-                playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
-                playlist={mediaUrl}
-                onError={(err) => console.log("onError", err)}
-                onSetupError={(err) => console.log("onSetupError", err)}
-              />
+            props.open && playlist.length ?
+              <VideoElement playlist={playlist} />
               : null
           }
           <div className={isFollowAlong || props.playerData.hideSecondTitle ? null : classes.body}>
@@ -138,13 +143,13 @@ const LegacyWorkoutPLayer = props => {
                 playerData.technicalTips && playerData.technicalTips.length
                   ? <Grid item xs={12} sm={5} md={5} lg={5} className={classes.grid}>
                       <Typography variant='h6' align="center">Technical Videos</Typography>
-                      {playerData.technicalTips.map((techTip, index) => <Typography key={index} variant='body1' className={classes.techVideo} onClick={() => setMediaUrl(`https://content.jwplatform.com/feeds/${techTip.videoName}`)}> <PlayCircleOutlineIcon className={classes.playButton} />Technical Tip {index + 1}</Typography>)}
+                      {playerData.technicalTips.map((techTip, index) => <Typography key={index} variant='body1' className={classes.techVideo} onClick={() => playSingle(techTip.videoName)}> <PlayCircleOutlineIcon className={classes.playButton} />Technical Tip {index + 1}</Typography>)}
                     {
-                      mediaUrl !== `https://content.jwplatform.com/feeds/${playerData.videoUrl}`
+                      activeId !== playerData.videoUrl
                         ? <Typography
                             variant='body1'
                             className={classes.techVideo}
-                            onClick={() => setMediaUrl(`https://content.jwplatform.com/feeds/${playerData.videoUrl}`)}>
+                            onClick={() => playSingle(playerData.videoUrl)}>
                             <PlayCircleOutlineIcon className={classes.playButton} />{props.playerData.videoTitle}
                           </Typography>
                           : ''

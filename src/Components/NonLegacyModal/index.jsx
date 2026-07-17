@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactJWPlayer from 'react-jw-player';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -9,11 +8,12 @@ import { makeStyles, Typography, Grid, Paper } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import Interweave from 'interweave';
-import { connect } from 'react-redux';
 
 // import DiscortChat from './DiscordChat'
 import RelatedCards from './RelatedCoursesCards'
 import WorkoutCard from './WorkoutCards'
+import VideoElement from '../VideoElement';
+import { resolvePlaylist } from '../../lib/video';
 
 
 const useSytles = makeStyles(theme => ({
@@ -99,15 +99,7 @@ function NonLegacyModal(props) {
             <Paper elevation={2}>
               {
                 props.open && !props.mainCourses && (!props.hideForStretchMainVideo || props.mainId !== 59257 ) && props.mediaId
-                  ? <ReactJWPlayer
-                      playerId='non-legacy-player'
-                      playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${props.signedUrl}`}
-                      playlist={`https://content.jwplatform.com/feeds/${mediaId}`}
-                      customProps={{appearance :{displaytitle: false}}}
-                      // displaytitle={false}
-                      onError={(err) => console.log("onError", err)}
-                      onSetupError={(err) => console.log("onSetupError", err)}
-                    />
+                  ? <VideoElement playlist={resolvePlaylist(mediaId)} />
                   : null
               }
             </Paper>
@@ -192,11 +184,5 @@ function NonLegacyModal(props) {
   );
 }
 
-const mapStatetoProps = state => {
-  return {
-    signedUrl: state.login.signedUrl
-  }
-}
-
-export default connect(mapStatetoProps)(NonLegacyModal);
+export default NonLegacyModal;
 

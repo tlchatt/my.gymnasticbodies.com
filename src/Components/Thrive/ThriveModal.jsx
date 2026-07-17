@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactJWPlayer from 'react-jw-player';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -9,7 +8,9 @@ import { makeStyles, Typography, Grid, Paper } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import Interweave from 'interweave';
-import { useSelector } from 'react-redux';
+
+import VideoElement from '../VideoElement';
+import { toPlaylistItem } from '../../lib/video';
 
 
 const useSytles = makeStyles(theme => ({
@@ -73,7 +74,6 @@ const ThriveModal = props => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { mediaId, title } = props;
-  const signedUrl = useSelector(state => state.login.signedUrl)
 
   return (
     <Dialog
@@ -98,13 +98,7 @@ const ThriveModal = props => {
             <Paper elevation={2}>
               {
                 props.open && props.mediaId
-                  ? <ReactJWPlayer
-                      playerId='thrive-player'
-                      playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${signedUrl}`}
-                      playlist={`https://content.jwplatform.com/feeds/${mediaId}`}
-                      onError={(err) => console.log("onError", err)}
-                      onSetupError={(err) => console.log("onSetupError", err)}
-                    />
+                  ? <VideoElement playlist={[toPlaylistItem(mediaId)]} />
                   : null
               }
             </Paper>

@@ -1,5 +1,15 @@
+import { toPlaylistItem } from '../../../../lib/video';
+
+// Builds the follow-along playlists for the workout player.
+//
+// Previously each of these fetched every JW feed (content.jwplatform.com/feeds/{id})
+// at runtime to resolve a media ID into a multi-quality MP4 `sources` array. Now that
+// video is served from Vercel Blob, the id resolves directly to a single MP4 URL, so
+// these are synchronous: they just map each id through toPlaylistItem(id) -> { src, poster }.
+// The repeat/rounds/left-right SEQUENCING is unchanged — only the per-item value changed.
+// VideoElement plays the resulting array in order, auto-advancing on `ended`.
 const utilFunctions = {
-  createFollowAlongPlaylist: async (dayView, dateKey, arrayToProccess, singleProg, preVideo, leftRightArray, roundsVideos) => {
+  createFollowAlongPlaylist: (dayView, dateKey, arrayToProccess, singleProg, preVideo, leftRightArray, roundsVideos) => {
     const workout = arrayToProccess.map(workout => {
       let sets = 0;
       if (workout?.repsOrSecs?.charAt(workout?.repsOrSecs?.length - 1) === 's') {
@@ -23,96 +33,52 @@ const utilFunctions = {
           sets: sets,
         }
       }
-
-      return {
-        video: workout?.videos[0]?.mediaId,
-        sets: sets,
-      }
     })
 
-    let followAlongArrayPromise = [];
+    let ids = [];
 
     workout.forEach((prog, index) => {
 
       if (!singleProg && !prog.videoB) {
-        followAlongArrayPromise = [...followAlongArrayPromise, { file: `https://content.jwplatform.com/feeds/${preVideo[index]}.json` }];
+        ids = [...ids, preVideo[index]];
       }
 
       if (prog.videoB) {
-        followAlongArrayPromise = [...followAlongArrayPromise, { file: `https://content.jwplatform.com/feeds/${leftRightArray[index].a}.json` }];
+        ids = [...ids, leftRightArray[index].a];
       }
 
-      [...Array(prog.sets)].forEach((_, index) => {
-        followAlongArrayPromise = [...followAlongArrayPromise, { file: `https://content.jwplatform.com/feeds/${prog.video}` }]
+      [...Array(prog.sets)].forEach(() => {
+        ids = [...ids, prog.video]
       })
 
       if (prog.videoB) {
-        followAlongArrayPromise = [...followAlongArrayPromise, { file: `https://content.jwplatform.com/feeds/${leftRightArray[index].b}.json` }];
-        [...Array(prog.sets)].forEach((_, index) => {
-          followAlongArrayPromise = [...followAlongArrayPromise, { file: `https://content.jwplatform.com/feeds/${prog.videoB}` }]
+        ids = [...ids, leftRightArray[index].b];
+        [...Array(prog.sets)].forEach(() => {
+          ids = [...ids, prog.videoB]
         })
       }
     });
 
     if (!singleProg && dayView[dateKey]) {
       let rounds = dayView[dateKey].rounds;
-      let origingalArray = followAlongArrayPromise;
+      let origingalArray = ids;
 
       [...Array(rounds)].forEach((_, index) => {
-
-        followAlongArrayPromise = [
-          ...index === 0 ? [] : followAlongArrayPromise,
-          {
-            file: `https://content.jwplatform.com/feeds/${roundsVideos[index]}.json`
-          },
+        ids = [
+          ...index === 0 ? [] : ids,
+          roundsVideos[index],
           ...origingalArray
         ];
       })
     }
 
-    try {
-      var data = await Promise.all(
-        followAlongArrayPromise.map(({ file }) => fetch(file).then(async res => {
-          let data = await res.json();
-          let arrayOfSources = data.playlist[0].sources.filter(({ type }) => type === "video/mp4");
-          return {
-            sources: arrayOfSources.reverse(),
-            image: data.playlist[0].image,
-          }
-        }))
-      )
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
+    return ids.map(toPlaylistItem);
   },
-  generateBeginnerFollowAlong: async (arrayToProccess) => {
-    let followAlongArrayPromise = [];
-
-    followAlongArrayPromise = arrayToProccess.map(prog => {
-      return {
-        file: `https://content.jwplatform.com/feeds/${prog.mediaId}`
-      }
-    })
-
-    try {
-      var data = await Promise.all(
-        followAlongArrayPromise.map(({ file }) => fetch(file).then(async res => {
-          let data = await res.json();
-          let arrayOfSources = data.playlist[0].sources.filter(({ type }) => type === "video/mp4");
-          return {
-            sources: arrayOfSources.reverse(),
-            image: data.playlist[0].image,
-          }
-        }))
-      )
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
+  generateBeginnerFollowAlong: (arrayToProccess) => {
+    return arrayToProccess.map(prog => toPlaylistItem(prog.mediaId));
   },
-  generateLevelsFollowAlong: async (arrayToProccess) => {
-    let followAlongArrayPromise = [];
+  generateLevelsFollowAlong: (arrayToProccess) => {
+    let ids = [];
 
     arrayToProccess.forEach(prog => {
 
@@ -130,52 +96,24 @@ const utilFunctions = {
 
           workoutInfoKeys.forEach(type => {
             if (chosen.levelKey === 'LEVEL 1') {
-              followAlongArrayPromise = [
-                ...followAlongArrayPromise,
-                {
-                  file: `https://content.jwplatform.com/feeds/${workoutInfo[type].videos[0].videoName}`
-                }
-              ]
+              ids = [...ids, workoutInfo[type].videos[0].videoName]
             }
             else {
               [...Array(progSets)].forEach(() => {
-                followAlongArrayPromise = [
-                  ...followAlongArrayPromise,
-                  {
-                    file: `https://content.jwplatform.com/feeds/${workoutInfo[type].videos[0].videoName}`
-                  }
-                ]
+                ids = [...ids, workoutInfo[type].videos[0].videoName]
               })
             }
           })
         })
       }
       else {
-        followAlongArrayPromise = [
-          ...followAlongArrayPromise,
-          {
-            file: `https://content.jwplatform.com/feeds/${prog.mediaId}`
-          }
-        ]
+        ids = [...ids, prog.mediaId]
       }
     })
-    try {
-      let data = await Promise.all(
-        followAlongArrayPromise.map(({ file }) => fetch(file).then(async res => {
-          let data = await res.json();
-          let arrayOfSources = data.playlist[0].sources.filter(({ type }) => type === "video/mp4");
-          return {
-            sources: arrayOfSources.reverse(),
-            image: data.playlist[0].image,
-          }
-        }))
-      )
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
+
+    return ids.map(toPlaylistItem);
   },
-  generateIndividualWorkout: async (workout, roundsVideos, byoUserSchedule, dateKey) => {
+  generateIndividualWorkout: (workout, roundsVideos, byoUserSchedule, dateKey) => {
     const mediaId = workout.mediaId;
     const rounds = byoUserSchedule[dateKey].rounds;
     let sets = 0;
@@ -187,45 +125,18 @@ const utilFunctions = {
       sets = parseInt(workout.repsOrSecs)
     }
 
-    let followAlongArrayPromise = [];
-
-    followAlongArrayPromise = [...Array(sets)].map(() => {
-      return {
-        file: `https://content.jwplatform.com/feeds/${mediaId}`
-      }
-    })
-
-    let origingalArray = followAlongArrayPromise;
+    let ids = [...Array(sets)].map(() => mediaId);
+    let origingalArray = ids;
 
     [...Array(rounds)].forEach((_, index) => {
-      // if (index === 0) {
-      //   followAlongArrayPromise = [{ file: `https://content.jwplatform.com/feeds/${roundsVideos[index]}.json` }, ...origingalArray];
-      // }
-
-      followAlongArrayPromise = [
-        ...index === 0 ? [] : followAlongArrayPromise,
-        {
-          file: `https://content.jwplatform.com/feeds/${roundsVideos[index]}.json`
-        },
+      ids = [
+        ...index === 0 ? [] : ids,
+        roundsVideos[index],
         ...origingalArray
       ];
     })
 
-    try {
-      let data = await Promise.all(
-        followAlongArrayPromise.map(({ file }) => fetch(file).then(async res => {
-          let data = await res.json();
-          let arrayOfSources = data.playlist[0].sources.filter(({ type }) => type === "video/mp4");
-          return {
-            sources: arrayOfSources.reverse(),
-            image: data.playlist[0].image,
-          }
-        }))
-      )
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
+    return ids.map(toPlaylistItem);
   },
 }
 

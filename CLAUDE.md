@@ -198,12 +198,35 @@ Each microservice has its own database. DB names per service are in SSM under `/
 
 ### Video data sources
 
+All of these live in the **`app.gymnasticbodies.com`** repo (`../app.gymnasticbodies.com/data/`), not this one.
+
 | Source | Location | Purpose |
 |---|---|---|
+| `mediaData.json` / `mediaDataBackup.json` | `app.gymnasticbodies.com/data/` | **The authoritative flat catalog.** 60 pages `[{media[], page, total}]`; each media item `{ id, duration, metadata:{title, description, tags} }`. **2,923 unique IDs, 100% have a `metadata.title` and a `duration`.** Use this to reconstruct a title/duration for ANY mediaId. (The two files are byte-identical.) |
 | `eachPlaylistData.json` | `app.gymnasticbodies.com/data/playlist/` | Full playlist metadata: per-video titles, thumbnail URLs, multi-quality MP4 sources. Structure: `[{ "outerKey": { "feedid": "playlistId", "playlist": [{mediaid, title, image}] } }]` — search by `feedid` value, not outer key. |
 | `allPlaylist.json` | `app.gymnasticbodies.com/data/playlist/` | Playlist titles and ordering |
-| `map.json` | `app.gymnasticbodies.com/data/playlist/` | playlist-to-mediaId mapping used by `/api/mediaBlob` |
+| `map.json` | `app.gymnasticbodies.com/data/playlist/` | Nested `[{ libraryId: { playlistContainerId: [orderedMediaIds] } }]` — first mediaId in each list is the primary "Follow Along" video. The one-lookup fix for the playlist-ID-as-video-ID bug class. |
+| `howTosJwPlayer.json` | `app.gymnasticbodies.com/data/` | How-To video catalog: `{ title, mediaid, image }` per item (e.g. "Build Your Own" → `3o98KK3H`). Source of How-To titles. |
+| `whiteboardCategoryJwPlayer.json` | `app.gymnasticbodies.com/data/` | White Board / AutoPilot exercise catalog: `{ category, exerciseName, autoPilotExerciseId, repsOrSecs, rounds, exerciseFocusPoints:[{description,descOrder}], videos:[{mediaId, version}] }`. Source of White Board exercise names + focus-point **descriptions**. (Reference snapshot — the app fetches this live from AWS `autopilot_service` at runtime; not imported in `my.` src.) |
+| `mediaData_Thrive.json` (+ other `mediaData_*.json`) | `app.gymnasticbodies.com/data/` | Segment-scoped flat catalogs (Thrive, Lessons, Marketing, OnlineClasses, GB_Pro+, etc.) — same shape as `mediaData.json`. |
 | `*_mediaUrls.json` | `app.gymnasticbodies.com/data/` | Per-course cached `videoUrl` (CloudFront `videos-cloudfront.jwpsrv.com`) + `imageUrl` (`assets-jpcust.jwpsrv.com/thumbnails/...`). Note: `done: 'True'` fields are stale — actual blob status must be verified via API. |
+
+### Text content (titles / descriptions) — fully local, ZERO JW runtime dependency
+
+Dropping JW loses **no** text. JW feeds were only ever used at runtime for the video **sources (mp4)** and the **thumbnail image** — both now in Blob (`{id}.mp4`, `{id}.jpeg`). Titles/descriptions/focus-points/instructions all come from local data or the (separate) AWS API, never from a JW runtime call. Confirmed: JW's own `metadata.description` is populated for only **9 of 2,923** media items — descriptions never lived in JW.
+
+Reconstruction map (mediaId → text), all sourced locally + Blob:
+
+| Feature / player | Title source | Description / focus-points / instructions source |
+|---|---|---|
+| **Course Library** (`CourseLibraryPlayer`) | inline `{ name, videoName }` literals in `src/Containers/CourseLibrary/index.jsx` + `data.js` | inline literals in the same files (hardcoded) |
+| **AutoPilot / Levels / Beginner / BYO** (`VideoPlayer`) | player shows no title overlay; exercise `name` is inline in `src/data/AllDataForWorkout.js` / `programCoreData.js` / `Foundation*.js` | `description`, `focusPoints`, `instructions`, `equipment` are **inline** in those same data files (`AllDataForWorkout.js`: 486 `name`, 528 `description`, 648 `instructions`, 324 `focusPoints`, 324 `equipment`) |
+| **Legacy / Foundation / My Courses** (`LegacyWorkoutModal`) | `playerData.videoTitle` from AWS progression API (`GetUserPorgressions`) at runtime — also snapshotted in the local data files above | `focusPoints`, `instructions`, `technicalTips`, `equipment` from the same AWS API / local snapshot |
+| **White Board** | `whiteboardCategoryJwPlayer.json` `exerciseName` (+ live AWS `autopilot_service`) | `whiteboardCategoryJwPlayer.json` `exerciseFocusPoints[].description` |
+| **How-To** | `howTosJwPlayer.json` `title` | n/a (short clips) |
+| **Any mediaId, flat fallback** | `mediaData.json` `metadata.title` (2,923 IDs, 100% titled) + `duration` | `mediaData.json` `metadata.description` — present for only 9 IDs, effectively n/a |
+
+**Practical rule:** to rebuild a video's card/modal from scratch given only a mediaId: video = `{BLOB}/{id}.mp4`, thumbnail = `{BLOB}/{id}.jpeg`, title+duration = `mediaData.json`, and any rich exercise text (name/description/focus-points/instructions) = the inline `src/data/*.js` workout files or `whiteboardCategoryJwPlayer.json`. `CategoryCard`'s runtime JW duration fetch is the only place that still pulls text-ish data from JW live — the Blob migration replaces it by reading `duration` from `mediaData.json`.
 
 ### Sub-course card images
 

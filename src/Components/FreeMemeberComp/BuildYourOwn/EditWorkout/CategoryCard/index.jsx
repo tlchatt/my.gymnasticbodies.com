@@ -8,12 +8,13 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import clsx from 'clsx';
-import axios from 'axios'
 import { useDispatch } from 'react-redux';
 
 import MobileContent from './MobileConent'
 import EditWorkout from '../CoursePreview/MobileCoursePreview';
 import { removeCategory, addNewCategory } from '../../../../../Store/Action/WorkoutBuilderActions'
+import videoDurations from '../../../../../data/videoDurations.json'
+import { cleanMediaId } from '../../../../../lib/video'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -98,13 +99,13 @@ export default function CategoryCard(props) {
   const { mediaId } = courseData;
 
   useEffect(() => {
-    const fetchDurration = () => {
-      axios.get(`https://content.jwplatform.com/feeds/${mediaId}`).then(res => {
-        setTimeStamp(display(res.data.playlist[0].duration))
-      })
-    }
-    if (hasData && !isLegacy && mediaId ) {
-      fetchDurration();
+    // Duration is read from the local mediaData.json export (videoDurations.json)
+    // instead of a JW feed fetch — JW is being decommissioned.
+    if (hasData && !isLegacy && mediaId) {
+      const duration = videoDurations[cleanMediaId(mediaId)];
+      if (duration !== undefined) {
+        setTimeStamp(display(duration));
+      }
     }
   }, [hasData, isLegacy, mediaId])
 

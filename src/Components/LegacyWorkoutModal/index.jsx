@@ -15,6 +15,7 @@ import ExceriseCard from './ExceriseCard'
 import EditModal from '../LegacyEditModal';
 import LegacyWorkoutPLayer from './LegacyVideoPlayer'
 import NoProgNotice from './NoProgNotice'
+import { toPlaylistItem } from '../../lib/video';
 
 import { GetUserPorgressions, Reset, CloseModal as CloseEditModal } from '../../Store/Action/LegacyAction';
 import { getLegacyDataBYO, openEditLegacyModalBYO } from '../../Store/Action/WorkoutBuilderActions';
@@ -115,42 +116,25 @@ const LegacyWorkoutModal = props => {
 
   useEffect(() => {
     // This makes sure that the follow along is only for level one and foundation.
-    async function createFollowAlongPlaylist() {
+    // Video now comes from Vercel Blob, so this resolves media IDs directly to
+    // { src, poster } items (no JW feed fetch). VideoElement auto-advances the list.
+    function createFollowAlongPlaylist() {
       if (FOUNDATION.includes(courseName.replace('Foundation ', ''))) {
         let filteredVideos = legacyCourseData.filter(item => item.levelKey === 'LEVEL 1');
 
-        let followAlongArrayPromise = [];
+        let ids = [];
         filteredVideos.forEach(prog => {
           if (prog.workoutInfo.Strength) {
-            followAlongArrayPromise = [...followAlongArrayPromise, { file: `https://content.jwplatform.com/feeds/${prog.workoutInfo.Strength.videos[0].videoName}` }]
+            ids = [...ids, prog.workoutInfo.Strength.videos[0].videoName]
           }
         });
 
-        try {
-          var data = await Promise.all(
-            followAlongArrayPromise.map(({ file }) => fetch(file).then(async res => {
-              let data = await res.json();
-              let arrayOfSources = data.playlist[0].sources.filter(({ type }) => type === "video/mp4");
-              return {
-                sources: arrayOfSources.reverse(),
-                image: data.playlist[0].image
-              }
-            }))
-          )
-          return data;
-        } catch (err) {
-          console.log(err);
-        }
-      } else {
-        return [];
+        return ids.map(toPlaylistItem);
       }
+      return [];
     }
     if (open) {
-      async function getData() {
-        let data = await createFollowAlongPlaylist();
-        setFollowAlongArray(data ? data : []);
-      }
-      getData()
+      setFollowAlongArray(createFollowAlongPlaylist());
     }
   }, [legacyCourseData, courseName, open])
 

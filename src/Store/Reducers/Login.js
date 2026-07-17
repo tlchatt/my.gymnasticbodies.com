@@ -21,7 +21,6 @@ const LoginSuccess = (state, action) => {
     integratedPlans: action.userState.integratedPlans,
     isAllAccessUser: action.userState.isAllAccessUser,
     isThriveUser: action.userState.isThriveUser,
-    signedUrl: action.userState.playerScript,
     UserId: action.userData.cid,
     timezone: action.timezone,
     isAdmin: action.userState.isAdmin ? action.userState.isAdmin : null,
@@ -40,7 +39,6 @@ const WelcomeSuccess = (state, action) => {
   return updateObject(state, {
     isAllAccessUser: action.paylod.isAllAccessUser,
     isThriveUser: action.paylod.isThriveUser,
-    signedUrl: action.paylod.playerScript,
     isAdmin: action.paylod.isAdmin ? action.paylod.isAdmin : null,
     userLevel: action.paylod.isFreeMember ? 'Free Member' : action.paylod.userLevel,
     levelId: action.paylod.isFreeMember ? 9 : action.paylod.levelId,
@@ -106,7 +104,6 @@ export const LoginReducer = (state = initailState, action) => {
     case actionTypes.SET_NEW_AUTH: return UpdateToken(state, action);
     case actionTypes.SET_USER_LEVEL: return SetUserLevel(state, action)
     case actionTypes.CONTINUE_USER_LEVEL: return SetUserLevel(state, action)
-    case actionTypes.GET_NEW_SIGNED_URL: return updateObject(state, action.payload);
     case actionTypes.CHECK_WELCOME_SERVICE: return WelcomeSuccess(state, action);
     case actionTypes.UPDATED_USER_LEVEL: return UpdateUserLevelId(state, action);
     default: return state;

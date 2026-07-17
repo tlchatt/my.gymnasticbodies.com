@@ -11,8 +11,9 @@ import SmileyFaces from './SmileyFaces';
 import { connect } from 'react-redux';
 import { useHistory } from "react-router-dom";
 // eslint-disable-next-line
-import ReactJWPlayer from 'react-jw-player';
 import Recommendations from './recommendations.json'
+import VideoElement from '../../../VideoElement';
+import { toPlaylistItem } from '../../../../lib/video';
 import { NavLink } from "react-router-dom";
 
 // Custom components
@@ -151,13 +152,7 @@ const Recommendation = (props) => {
         <Paper elevation={2} style={{minHeight: 215}}>
           {
             myReco.current ?
-              <ReactJWPlayer
-                playerId='quiz-player'
-                playerScript='https://cdn.jwplayer.com/libraries/j8x5Xcgh.js'
-                playlist={`https://cdn.jwplayer.com/feeds/${Recommendations[myReco.current].mediaId}.json`}
-                onError={(err) => console.log("onError", err)}
-                onSetupError={(err) => console.log("onSetupError", err)}
-              />
+              <VideoElement playlist={[toPlaylistItem(Recommendations[myReco.current].mediaId)]} />
               : ''
           }
 

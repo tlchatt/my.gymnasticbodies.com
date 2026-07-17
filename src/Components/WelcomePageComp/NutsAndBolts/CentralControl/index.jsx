@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactJWPlayer from 'react-jw-player';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -9,7 +8,9 @@ import { makeStyles, Typography, Grid, Paper } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 // import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import { useTheme } from '@material-ui/core/styles';
-import { useSelector } from 'react-redux'
+
+import VideoElement from '../../../VideoElement';
+import { toPlaylistItem } from '../../../../lib/video';
 
 
 const useSytles = makeStyles(theme => ({
@@ -72,7 +73,6 @@ function CentralControl(props) {
   const classes = useSytles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const signedUrl = useSelector(state => state.login.signedUrl)
 
   return (
     <Dialog
@@ -95,13 +95,7 @@ function CentralControl(props) {
             <Paper elevation={2}>
               {
                 props.open ?
-                  <ReactJWPlayer
-                    playerId='my-jwplayer'
-                    playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${signedUrl}`}
-                    playlist={`https://content.jwplatform.com/feeds/w3ModWzX.json`}
-                    onError={(err) => console.log("onError", err)}
-                    onSetupError={(err) => console.log("onSetupError", err)}
-                  />
+                  <VideoElement playlist={[toPlaylistItem('w3ModWzX')]} />
                 : null
               }
             </Paper>

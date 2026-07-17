@@ -5,13 +5,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles, Typography, Grid } from '@material-ui/core';
-import ReactJWPlayer from 'react-jw-player';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { CloseModal } from '../../Store/Action/DemoModalActions';
 import PlayerPreview from './PlayerPreview';
+import VideoElement from '../VideoElement';
+import { toPlaylistItem } from '../../lib/video';
 
 
 const useSytles = makeStyles(theme => ({
@@ -69,11 +70,10 @@ const useSytles = makeStyles(theme => ({
 const DemoPlayer = props => {
   const theme = useTheme();
   const phoneScreen = useMediaQuery(theme.breakpoints.down(415));
-  const playerSignedUrl = useSelector(state => state.login.signedUrl);
   const dispatch = useDispatch();
 
   const classes = useSytles(phoneScreen);
-  const [mediaUrl, setMediaUrl] = useState();
+  const [mediaId, setMediaId] = useState();
   const [title, setTitle] = useState('');
 
   const open = useSelector(state => state.demoModal.open);
@@ -83,16 +83,16 @@ const DemoPlayer = props => {
 
   useEffect(() => {
     if (playerData.Strength) {
-      setMediaUrl(`https://content.jwplatform.com/feeds/${playerData.Strength.videos[0].videoName}`)
+      setMediaId(playerData.Strength.videos[0].videoName)
       setTitle(playerData.Strength.demoVideoName)
     }
     if (playerData.Mobility && !playerData.Strength) {
-      setMediaUrl(`https://content.jwplatform.com/feeds/${playerData.Mobility.videos[0].videoName}`)
+      setMediaId(playerData.Mobility.videos[0].videoName)
     }
   }, [playerData])
 
   const handleVideo = (videoName, videoUrl) => {
-    setMediaUrl(`https://content.jwplatform.com/feeds/${videoUrl}`)
+    setMediaId(videoUrl)
     setTitle(videoName)
   }
 
@@ -117,14 +117,8 @@ const DemoPlayer = props => {
         </MuiDialogTitle>
         <DialogContent classes={{ root: classes.padding }}>
           {
-            open && mediaUrl
-              ? <ReactJWPlayer
-                  playerId='demo-player-modal'
-                  playerScript={`https://content.jwplatform.com/libraries/iOa0nJDF.js${playerSignedUrl}`}
-                  playlist={mediaUrl}
-                  onError={(err) => console.log("onError", err)}
-                  onSetupError={(err) => console.log("onSetupError", err)}
-                />
+            open && mediaId
+              ? <VideoElement playlist={[toPlaylistItem(mediaId)]} />
               : null
           }
           <div className={classes.body}>
