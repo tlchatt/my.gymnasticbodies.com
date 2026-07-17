@@ -78,6 +78,12 @@ const PlayerModal = props => {
     ? `${props.trainingType} - ${props.className} `
     : `${isIndividualVideo ? props.trainingType + ' - ' : ''}${props.exerciseName} - ${props.repsOrSecs}`;
 
+  // Whiteboard/AutoPilot exercises have no trainingType/className — fall back to
+  // the exercise name instead of rendering "undefined - undefined".
+  if (title.includes('undefined') && props.exerciseName) {
+    title = props.repsOrSecs ? `${props.exerciseName} - ${props.repsOrSecs}` : props.exerciseName;
+  }
+
   return (
     <React.Fragment>
       <Dialog

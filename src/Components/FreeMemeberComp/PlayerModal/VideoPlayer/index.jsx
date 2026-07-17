@@ -94,7 +94,11 @@ const VideoPlayer = props => {
           buildIndividualWorkout(singleProg[0]);
         }
         else {
-          setFollowAlongArray([toPlaylistItem(singleProg[0].mediaId)])
+          // Whiteboard/AutoPilot single exercises carry their video at
+          // videos[0].mediaId (JW signed-feed format), not a top-level mediaId.
+          const prog = singleProg[0];
+          const id = prog.mediaId || (prog.videos && prog.videos[0] && prog.videos[0].mediaId);
+          setFollowAlongArray([toPlaylistItem(id)])
         }
       }
       else if (levelsPlayer && !singleProg && isBeginnerPlan) {
