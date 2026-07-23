@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { Grid, makeStyles, Box, Typography} from '@material-ui/core'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import * as Sentry from "@sentry/react";
+
+import { ensureNeonUserId } from '../../../Store/Action/loginActions';
 
 
 // Custom Components
@@ -41,7 +43,7 @@ function changeTimezone(date, ianatz) {
   return new Date(date.getTime() - diff); // needs to substract
 }
 
-const API = process.env.REACT_APP_API;
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const History = () => {
   const classes = useStyles();
@@ -49,12 +51,17 @@ const History = () => {
   const [date, setDate] = useState(changeTimezone(new Date(), userTimeZone));
   const [history, setHistory] = useState();
   const userData = useSelector(state => state.login);
+  const dispatch = useDispatch();
   const handleDetaileHistory = day => setDate(day);
 
-  const getUserHistory = (date) => {
+  // Neon-backed history (AWS /workout-history replaced 2026-07). Keyed on the Neon
+  // UUID for every user type; ensureNeonUserId covers legacy sessions without one.
+  const getUserHistory = async (date) => {
+    const neonUserId = userData.neonUserId || await dispatch(ensureNeonUserId());
+    if (!neonUserId) return;
     let config = {
       method: 'get',
-      url: `${API}/workout-history/all-access/users/${userData.UserId}?year=${date.getFullYear()}&month=${date.getMonth() + 1}`,
+      url: `${NEWAPI}/api/user/workout/history?userId=${encodeURIComponent(neonUserId)}&year=${date.getFullYear()}&month=${date.getMonth() + 1}`,
       headers: {
         'Authorization': `Bearer ${userData.webToken}`
       }

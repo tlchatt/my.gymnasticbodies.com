@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 
 import { deleteCategory, addNewCategory, fetchFreeMember } from '../../../Store/Action/FreeMemberActions'
-import { AxiosConfig } from '../../../Store/util';
+import { AxiosConfigNeon } from '../../../Store/util';
 
 import GymfitSlider from './GymfitSlider';
 
@@ -84,7 +84,8 @@ export default function ResponsiveDialog(props) {
   const dispatch = useDispatch();
   const dayView = useSelector(state => state.freeMember.dayView);
   const webToken = useSelector(state => state.login.webToken);
-  const UserId = useSelector(state => state.login.UserId)
+  const UserId = useSelector(state => state.login.neonUserId)
+  const isFreeMemberRedux = useSelector(state => !!state.login.isFreeMember)
 
   // State
   const [addMode, setAddMode] = useState(false);
@@ -98,16 +99,17 @@ export default function ResponsiveDialog(props) {
     return { category: item.category, samplerId: item.autoPilotId }
   }) : [];
 
-  // useEffect
+  // useEffect — AP level from the Neon standing route; free-member flag from Redux
+  // (AWS /auto-pilot/level replaced 2026-07).
   useEffect(() => {
-    if (open) {
-      Axios(AxiosConfig('get', `/auto-pilot/level/users/${UserId}`, webToken)).then(res => {
-        setIsFreeMember((res.data.isFreeMember === 'true'));
-        setCurrentLevel(res.data.apUserLevel);
+    if (open && UserId) {
+      Axios(AxiosConfigNeon('get', `/api/user/workout/standing?userId=${encodeURIComponent(UserId)}`, webToken)).then(res => {
+        setIsFreeMember(isFreeMemberRedux);
+        setCurrentLevel(res.data.apLevel || 1);
       }).then(() => setIsLoading(false))
         .catch(err => console.log(err));
     }
-  }, [open, UserId, webToken])
+  }, [open, UserId, webToken, isFreeMemberRedux])
 
   // Handlers
   const handleDelete = (samplerId) => {
@@ -135,7 +137,7 @@ export default function ResponsiveDialog(props) {
       if (showFreeMemberMessage) {
         setShowFreeMemberMessage(false);
       }
-      Axios(AxiosConfig('post', `/auto-pilot/level/${value}/users/${UserId}`, webToken)).then(res => {
+      Axios(AxiosConfigNeon('post', `/api/user/workout/autopilot`, webToken, { data: { userId: UserId, op: 'set-level', level: value } })).then(res => {
         dispatch(fetchFreeMember());
         setCurrentLevel(value);
       }).catch(err => console.log(err));

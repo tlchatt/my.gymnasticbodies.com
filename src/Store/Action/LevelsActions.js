@@ -7,10 +7,11 @@ import * as Sentry from "@sentry/react";
 
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek'
 import * as actionTypes from '../Action/actionTypes';
-import { AxiosConfig } from '../util'
+import { AxiosConfig, legacyNameToId } from '../util'
 import { showToast } from './calendarActions';
 import { SET_PROGRESSION } from './LegacyAction';
 import { getData, updateData } from './dataManipulation';
+import { ensureNeonUserId } from './loginActions';
 import { defaultUpperBodyProgressions } from '../../data/FoundationUpperBody';
 import { defaultLowerBodyProgressions } from '../../data/FoundationLowerBody';
 import { defaultCoreProgressions } from '../../data/FoundationCore';
@@ -504,9 +505,19 @@ function between(x, min, max) {
 }
 export const continutePreviosLevel = (levelId) => (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken, awsUserId } = state.login;
 
-  Axios(AxiosConfig('put', `/myschedule/choose/continue/level/${levelId}/users/${UserId}`, webToken))
+  // The myschedule level service is still AWS (B4 scope) and only accepts the legacy
+  // integer id. Sessions without one (Neon-authed) use the Neon levelPath fallback.
+  if (!awsUserId) {
+    dispatch(setLevelPathNew(levelId, 0));
+    if (between(levelId, 1, 4)) {
+      dispatch(getLevelPlanNew());
+    }
+    return;
+  }
+
+  Axios(AxiosConfig('put', `/myschedule/choose/continue/level/${levelId}/users/${awsUserId}`, webToken))
     .then(res => {
       dispatch({
         type: actionTypes.CONTINUE_USER_LEVEL,
@@ -527,13 +538,27 @@ export const continutePreviosLevel = (levelId) => (dispatch, getState) => {
 }
 export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) => (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone, userLevel } = state.login;
+  const { webToken, awsUserId, timezone, userLevel } = state.login;
   const currentDate = moment().tz(timezone).format('YYYY-MM-DD');
 
   if (userLevel === "New User" && leveld === 0) {
     workoutOrPlanId = 1;
   }
-  const config = AxiosConfig('post', `/myschedule/choose/level/${leveld}/users/${UserId}?workoutOrPlanId=${workoutOrPlanId}&date=${currentDate}`, webToken)
+
+  // AWS myschedule only accepts the legacy integer id — Neon-authed sessions go
+  // straight to the Neon levelPath fallback (which also dispatches SET_USER_LEVEL).
+  if (!awsUserId) {
+    dispatch(setLevelPathNew(leveld, workoutOrPlanId));
+    if (isCallback) {
+      isCallback();
+    }
+    if (between(leveld, 1, 4)) {
+      dispatch(getLevelPlanNew());
+    }
+    return;
+  }
+
+  const config = AxiosConfig('post', `/myschedule/choose/level/${leveld}/users/${awsUserId}?workoutOrPlanId=${workoutOrPlanId}&date=${currentDate}`, webToken)
   axios(config)
     .then(res => {
       if (res.status != 200) {
@@ -702,10 +727,26 @@ const checkGroup = workouts => {
   return workouts.every(item => item.group === first) ? first : '';
 }
 const showRefreshArray = ['Warm-Up', 'Mobility', 'Stretch'];
-export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover directly to getLevelPLanNew */
+export const getLevelPLan = (type) => async (dispatch, getState) => {/* Guided Plans weekly schedule */
   const state = getState();
-  const { webToken, UserId, levelId } = state.login;
-  console.log('getLevelPLan = () =>  `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}` ',)
+  const { webToken, levelId, timezone, awsUserId } = state.login;
+
+  // Legacy (AWS) users keep their existing AWS schedule + in-progress progression state
+  // untouched — it isn't seeded into Neon yet, so flipping them would reset their plans.
+  // Non-legacy (Neon-only) users — 401-broken on AWS — use the new Neon levels route.
+  if (awsUserId) {
+    Axios(AxiosConfig('GET', `/myschedule/levels/view/weekly/users/${awsUserId}/levels/${levelId}`, webToken))
+      .then(res => {
+        let ws = res.data ? _.cloneDeep(res.data) : {};
+        Object.keys(ws).forEach(k => { ws[k] = (ws[k] || []).map(processUserWorkout); });
+        dispatch({ type: actionTypes.SET_LEVELS, payload: { userSchedule: ws } });
+      }).catch(() => dispatch(getLevelPlanNew(type)));
+    return;
+  }
+
+  const neonUserId = state.login.neonUserId || await dispatch(ensureNeonUserId());
+  if (!neonUserId) return;
+  const weekStart = getCalanderDate(timezone)[0];
   /*old data*/
   let intermediate1 = {
     "MONDAY,DECEMBER 15": [
@@ -3180,28 +3221,23 @@ export const getLevelPLan = (type) => (dispatch, getState) => {/*  has failover 
     ],
     "SUNDAY,DECEMBER 21": null
   }
-  console.log("UserId:", UserId)
-  console.log("levelId:", levelId)
-  console.log("webToken:", webToken)
-  Axios(AxiosConfig('GET', `/myschedule/levels/view/weekly/users/${UserId}/levels/${levelId}`, webToken))
+  Axios.get(`${NEWAPI}/api/user/workout/levels?userId=${encodeURIComponent(neonUserId)}&level=${levelId}&weekStart=${weekStart}`, {
+    headers: { 'Authorization': `Bearer ${webToken}` }
+  })
     .then(res => {
       let workoutSchedule = res.data ? _.cloneDeep(res.data) : {};
       let keys = Object.keys(workoutSchedule);
-      console.log("workoutSchedule before:", workoutSchedule)
       keys.forEach(k => {
         let workouts = workoutSchedule[k] ? workoutSchedule[k] : [];
         workoutSchedule[k] = workouts.map(processUserWorkout);
       })
-
-      console.log("workoutSchedule after:", workoutSchedule)
 
       dispatch({
         type: actionTypes.SET_LEVELS,
         payload: { userSchedule: workoutSchedule }
       })
     }).catch(error => {
-      // Sentry.captureException(error);
-      console.log('getLevelPLan dispatch(getLevelPlanNew());')
+      console.log('getLevelPLan failed, falling back to getLevelPlanNew', error)
       dispatch(getLevelPlanNew(type));
     });
 }
@@ -3398,7 +3434,7 @@ export const ManageDificulty = (workoutIndex, dateKey, dateKeyIndex, exerciseId,
   const legacyWorkout = userSchedule[dateKey][workoutIndex];
 
   const courseName = legacyWorkout.category.replace('Foundation ', '');
-  Axios(AxiosConfig('put', `/workout-service/users/${UserId}/difficulty/${type}/?workoutType=${courseName}&exerciseId=${exerciseId}&date=${date}`, webToken))
+  Axios(state.login.awsUserId?AxiosConfig('put',`/workout-service/users/${state.login.awsUserId}/difficulty/${type}/?workoutType=${courseName}&exerciseId=${exerciseId}&date=${date}`,webToken):{method:'put',url:`${NEWAPI}/api/user/workout/byo/program`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:(state.login.neonUserId||localStorage.getItem('neonUserId')),courseId:legacyNameToId[courseName],op:'difficulty',exerciseId,type,date}})
     .then(res => {
       console.log("res in ManageDificulty is:", res)
       dispatch(getLevelPLan())
@@ -3581,7 +3617,7 @@ export const LogLegacy = (exerciseId, mobilityStatus, autoProg, steps, logList, 
     }
   }
 
-  Axios(AxiosConfig('post', `/workout-service/programs/users/${UserId}/logging?workoutType=${courseName}`, webToken, body))
+  Axios(state.login.awsUserId?AxiosConfig('post',`/workout-service/programs/users/${state.login.awsUserId}/logging?workoutType=${courseName}`,webToken,body):{method:'post',url:`${NEWAPI}/api/user/workout/byo`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:(state.login.neonUserId||localStorage.getItem('neonUserId')),op:'program-log',section:'levels',date,courseId:legacyNameToId[courseName],exerciseId,imStatus:mobilityStatus,autoProgress:autoProg,masterySets:steps,setsAndRepsDTOList:logList}})
     .then(res => {
       console.log("res is:", res)
       dispatch(getLevelPLan())
@@ -3684,7 +3720,8 @@ export const SaveNotesLevels = (notes, exerciseId, masterySteps, dateKeyIndex, d
     }
   }
 
-  Axios(AxiosConfig('post', `/program-log/notes/users/${UserId}`, webToken, body))
+  const courseName = (state.levels.userSchedule[dateKey]?.[workoutIndex]?.category || '').replace('Foundation ', '');
+  Axios(state.login.awsUserId?AxiosConfig('post',`/program-log/notes/users/${state.login.awsUserId}`,webToken,body):{method:'post',url:`${NEWAPI}/api/user/workout/byo`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:(state.login.neonUserId||localStorage.getItem('neonUserId')),op:'program-notes',section:'levels',date,courseId:legacyNameToId[courseName],exerciseId,notes,masterySets:{masterySetId:masterySteps.masterySetId,sets:masterySteps.sets,repsOrSecs:masterySteps.repsOrSecs}}})
     .then(res => {
       console.log("res in notes:", res)
       dispatch(showToast('Your notes have been saved.', 'success'))
@@ -3760,7 +3797,7 @@ export const GetAllWorkoutInfo = (dateKey, workoutIndex, dateKeyIndex) => (dispa
   console.log("dateKey:", dateKey)
   console.log("::state.progressions:", state)
 
-  Axios(AxiosConfig('get', `/workout-service/edit-workout/users/${UserId}?workoutType=${courseName}`, webToken))
+  Axios(state.login.awsUserId?AxiosConfig('get',`/workout-service/edit-workout/users/${state.login.awsUserId}?workoutType=${courseName}`,webToken):{method:'get',url:`${NEWAPI}/api/user/workout/byo/program?userId=${encodeURIComponent((state.login.neonUserId||localStorage.getItem('neonUserId')))}&courseId=${legacyNameToId[courseName]}&view=edit`,headers:{'Authorization':`Bearer ${webToken}`}})
     .then(res => {
       dispatch({
         type: SET_PROGRESSION,

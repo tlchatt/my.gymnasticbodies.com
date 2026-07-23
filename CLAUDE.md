@@ -2,10 +2,33 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Local Dev Environment (use this — do NOT start a separate dev server)
+
+The dev server is **already running** as a **systemd `--user`** service on port **3014**,
+nginx-proxied over HTTPS. Use the `.dev` URL — do **not** run `npm start` yourself: a second process
+shares the same build/watch and fights over the port.
+
+- **URL:** https://my.gymnasticbodies.dev
+- **Service:** `my-gymnasticbodies-dev.service`  (port 3014)
+
+> **Old CRA (`react-scripts@4.0.3`).** The service is **pinned to Node v16.20.2** because the app
+> crashes on Node 22, and it runs `npm start` (not `next dev`) — there is no `.next` dir or
+> `next.config`. Restart the service after editing `.env` for changes to take effect.
+
+```bash
+systemctl --user is-active my-gymnasticbodies-dev.service   # already up? then just use the URL
+systemctl --user status   my-gymnasticbodies-dev.service    # status + recent logs
+systemctl --user restart  my-gymnasticbodies-dev.service    # after editing .env
+journalctl --user -u my-gymnasticbodies-dev.service -f       # live logs
+```
+
+Before starting a dev server, check `systemctl --user is-active my-gymnasticbodies-dev.service`. If
+it's up, use the `.dev` URL and only **restart** the service — never start a second copy.
+
 ## Commands
 
 ```bash
-npm run start    # Dev server — proxies to https://api.gymnasticbodies.com by default
+npm run start    # ONLY if my-gymnasticbodies-dev.service is stopped — normally use https://my.gymnasticbodies.dev (see Local Dev Environment above). Proxies to https://api.gymnasticbodies.com
 npm run build    # Production build (CRA)
 npm run test     # Jest (CRA defaults, no custom config)
 ```

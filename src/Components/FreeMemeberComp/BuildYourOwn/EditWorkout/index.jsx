@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import axios from 'axios';
 
-import { AxiosConfig } from '../../../../Store/util';
+import { AxiosConfigNeon } from '../../../../Store/util';
 
 import CategoryCard from './CategoryCard';
 import VerticalText from './EditRounds/VerticalText'
@@ -58,7 +58,7 @@ const EditWorkout = (props) => {
       })
     }
     else {
-      axios(AxiosConfig('get', `/byo/schedule/builder/category/${categoryId}`, webToken)).then(res => {
+      axios(AxiosConfigNeon('get', `/api/user/workout/byo?op=builder-category&categoryId=${categoryId}`, webToken)).then(res => {
         let courseData = courseType[cat];
 
         if (cat === 'Follow Along') {

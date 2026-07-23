@@ -95,12 +95,13 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const API = process.env.REACT_APP_API;
+const NEWAPI = process.env.REACT_APP_API_NEW;
+const THRIVE_URL = `${NEWAPI}/api/user/workout/thrive`;
 
 const ThriveTasks = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  const userId = useSelector(state => state.login.neonUserId);
   // const dispatch = useDispatch();
   // const [missedDays, setMissedDays] = useState(false);
 
@@ -196,9 +197,10 @@ const ThriveTasks = props => {
 
   useEffect(() => {
     const getUserData = () => {
+      if (!userId) return;
       var config = {
         method: 'get',
-        url: `${API}/thrive/profile/users/${userId}`,
+        url: `${THRIVE_URL}?userId=${encodeURIComponent(userId)}&view=profile`,
         headers: {
           'Authorization': `Bearer ${webToken}`
         }
@@ -235,10 +237,11 @@ const ThriveTasks = props => {
     }
 
     formData.append('myProfileRequest', JSON.stringify({ units: heightType, height1: height, height2: inches, weight: ~~weight }));
+    formData.append('userId', userId);
 
     var config = {
       method: 'post',
-      url: `${API}/thrive/profile/users/${userId}`,
+      url: THRIVE_URL,
       headers: {
         'Authorization': `Bearer ${webToken}`,
         'Content-Type': 'multipart/form-data',

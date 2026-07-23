@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Grid } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Route, Redirect, Switch, useLocation } from 'react-router-dom';
+
+import { ensureNeonUserId } from '../../Store/Action/loginActions';
 
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek';
 import Drawer from '../../Components/FreeMemeberComp/Drawer';
@@ -161,8 +163,15 @@ export default function FreeMembers() {
   const handleOhNoModal = () => {
     setOhNoModal(true);
   }
-  
-  
+
+  // Warm the Neon UUID before any drawer feature opens — the ${NEWAPI} workout
+  // routes are keyed on it (resolves via localStorage or /api/user/id if the
+  // login-time registerWPass call failed).
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(ensureNeonUserId());
+  }, [dispatch]);
+
   const postAWS = localStorage.getItem('postAWS');
   console.log("postAWS in freemembers:",postAWS)
   return (

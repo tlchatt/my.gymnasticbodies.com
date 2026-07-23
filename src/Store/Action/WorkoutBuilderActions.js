@@ -1,11 +1,20 @@
 import * as actionTypes from './actionTypes';
 import { showToast } from './calendarActions';
+import { ensureNeonUserId } from './loginActions';
 import axios from 'axios';
 import * as Sentry from "@sentry/react";
 import _ from 'lodash';
 
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek';
-import { AxiosConfig, areAllSame, idToClass, legacyNameToId } from '../util'
+import { AxiosConfig, AxiosConfigNeon, areAllSame, idToClass, legacyNameToId } from '../util'
+
+// All BYO surfaces run on the Neon workout API (AWS /byo/* replaced 2026-07), including
+// the program-detail cluster served from static curriculum catalogs captured off live
+// AWS (see app.gymnasticbodies.com/data/workout/programCurricula.json).
+const BYO_URL = '/api/user/workout/byo';
+
+const resolveNeonUserId = async (dispatch, state) =>
+  state.login.neonUserId || await dispatch(ensureNeonUserId());
 
 
 export const addNewCategory = (categoryType, sectionIndex, sectionType, count) => (dispatch, getState) => {
@@ -126,15 +135,19 @@ export const clearAll = () => {
   }
 }
 
-export const saveWorkout = (dateIndex, dateKey, hasCallBack, cb) => (dispatch, getState) => {
+export const saveWorkout = (dateIndex, dateKey, hasCallBack, cb) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const date = getCalanderDate(timezone)[dateIndex];
   const buildYourOwn = state.buildYourOwn;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   let data = {
-    userId: UserId,
+    userId: neonUserId,
+    op: 'builder-save',
     date: date,
+    dayIndex: dateIndex,
     classOrExerciseInfoList: []
   }
 
@@ -156,13 +169,7 @@ export const saveWorkout = (dateIndex, dateKey, hasCallBack, cb) => (dispatch, g
     }
   })
 
-  // checks if there are wokrouts in the schedule for that day
-  // is so then edit mode wokrouts (put request) else post request for new schedule
-  const method = buildYourOwn.userSchedule[dateKey].mainWorkouts.length || buildYourOwn.userSchedule[dateKey].individualWorkouts.length
-    ? 'put'
-    : 'post';
-
-  axios(AxiosConfig(method, `/byo/schedule/builder/users/${UserId}`, webToken, { data: data })).then(res => {
+  axios(AxiosConfigNeon('post', BYO_URL, webToken, { data: data })).then(res => {
     let newWorkoutArray = [...res.data.workoutsInADayList];
     newWorkoutArray = newWorkoutArray.map(proccessWorkoutObj).filter(x => !!x);
 
@@ -283,11 +290,14 @@ const proccessScheduleData = (userSchedule) => {
   return newUserSchedule;
 }
 
-export const getBYODashoard = () => (dispatch, getState) => {
+export const getBYODashoard = () => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken, timezone } = state.login;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
+  const weekStart = getCalanderDate(timezone)[0];
 
-  axios(AxiosConfig('get', `/byo/schedule/view/weekly/users/${UserId}`, webToken)).then(res => {
+  axios(AxiosConfigNeon('get', `${BYO_URL}?userId=${encodeURIComponent(neonUserId)}&weekStart=${weekStart}`, webToken)).then(res => {
     dispatch({
       type: actionTypes.BYO_SET_USER_SCHEDULE,
       payload: {
@@ -480,14 +490,15 @@ export const loadScheduleToEdit = (dateKey) => (dispatch, getState) => {
 }
 
 
-export const logMainCourses = (dateIndex, dateKey, classId) => (dispatch, getState) => {
+export const logMainCourses = (dateIndex, dateKey, classId) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const date = getCalanderDate(timezone)[dateIndex];
   const userSchedule = _.cloneDeep(state.buildYourOwn.userSchedule);
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-
-  axios(AxiosConfig('post', `/byo/log/class/${classId}/users/${UserId}?loggedDate=${date}`, webToken)).then(res => {
+  axios(AxiosConfigNeon('post', BYO_URL, webToken, { data: { userId: neonUserId, op: 'log-class', date, classId } })).then(res => {
     const index = userSchedule[dateKey].mainWorkouts.findIndex(item => item.classOrProgOrExId === classId);
     userSchedule[dateKey].mainWorkouts[index].isLogged = true;
 
@@ -508,14 +519,15 @@ export const logMainCourses = (dateIndex, dateKey, classId) => (dispatch, getSta
   })
 }
 
-export const removeMainCourseLog = (dateIndex, dateKey, classId) => (dispatch, getState) => {
+export const removeMainCourseLog = (dateIndex, dateKey, classId) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const date = getCalanderDate(timezone)[dateIndex];
   const userSchedule = _.cloneDeep(state.buildYourOwn.userSchedule);
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-
-  axios(AxiosConfig('delete', `/byo/log/class/${classId}/users/${UserId}?loggedDate=${date}`, webToken)).then(res => {
+  axios(AxiosConfigNeon('post', BYO_URL, webToken, { data: { userId: neonUserId, op: 'unlog-class', date, classId } })).then(res => {
     const index = userSchedule[dateKey].mainWorkouts.findIndex(item => item.classOrProgOrExId === classId);
     userSchedule[dateKey].mainWorkouts[index].isLogged = false;
 
@@ -576,22 +588,25 @@ export const updateRounds_BYO = (dateKey, value) => (dispatch, getState) => {
   })
 }
 
-export const logIndividualWorkouts = (dateKeyIndex, dateKey, exerciseId, numOfSecsOrReps) => (dispatch, getState) => {
+export const logIndividualWorkouts = (dateKeyIndex, dateKey, exerciseId, numOfSecsOrReps) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const rounds = state.buildYourOwn.userSchedule[dateKey].rounds;
   const userSchedule = _.cloneDeep(state.buildYourOwn.userSchedule);
   const date = getCalanderDate(timezone)[dateKeyIndex];
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   let body = {
-    "userId": UserId,
+    "userId": neonUserId,
+    "op": "log-exercises",
+    "date": date,
     "exerciseId": exerciseId,
     "rounds": rounds,
-    "numOfSecsOrReps": numOfSecsOrReps,
-    "createdDate": date
+    "numOfSecsOrReps": numOfSecsOrReps
   }
 
-  axios(AxiosConfig('post', `/byo/log/exercises/users/${UserId}`, webToken, { data: body })).then(res => {
+  axios(AxiosConfigNeon('post', BYO_URL, webToken, { data: body })).then(res => {
     const index = userSchedule[dateKey].individualWorkouts.findIndex(item => item.classOrProgOrExId === exerciseId);
 
     userSchedule[dateKey].individualWorkouts[index].isLogged = true;
@@ -612,13 +627,15 @@ export const logIndividualWorkouts = (dateKeyIndex, dateKey, exerciseId, numOfSe
   })
 }
 
-export const unlogIndividualWorkouts = (dateKeyIndex, dateKey, exerciseId) => (dispatch, getState) => {
+export const unlogIndividualWorkouts = (dateKeyIndex, dateKey, exerciseId) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const userSchedule = _.cloneDeep(state.buildYourOwn.userSchedule);
   const date = getCalanderDate(timezone)[dateKeyIndex];
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-  axios(AxiosConfig('delete', `/byo/log/exercises/${exerciseId}/users/${UserId}?loggedDate=${date}`, webToken)).then(res => {
+  axios(AxiosConfigNeon('post', BYO_URL, webToken, { data: { userId: neonUserId, op: 'unlog-exercise', date, exerciseId } })).then(res => {
     const index = userSchedule[dateKey].individualWorkouts.findIndex(item => item.classOrProgOrExId === exerciseId);
 
     userSchedule[dateKey].individualWorkouts[index].isLogged = false;
@@ -653,12 +670,14 @@ export const openLegacyWorkoutModal = (courseName, dateIndex, isInDrawer = false
 
 export const getLegacyDataBYO = (courseName, dateIndex) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const date = getCalanderDate(timezone)[dateIndex];
 
   const courseId = legacyNameToId[courseName];
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-  axios(AxiosConfig('get', `/byo/workout/${courseId}/users/${UserId}?date=${date}`, webToken))
+  axios(AxiosConfigNeon('get', `${BYO_URL}/program?userId=${encodeURIComponent(neonUserId)}&courseId=${courseId}&date=${date}`, webToken))
     .then(function (response) {
       let orderedData = response.data.body;
       let userChosenProgressions = _.cloneDeep(orderedData);
@@ -699,12 +718,14 @@ export const getLegacyDataBYO = (courseName, dateIndex) => async (dispatch, getS
     });
 }
 
-export const openEditLegacyModalBYO = () => (dispatch, getState) => {
+export const openEditLegacyModalBYO = () => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken } = state.login;
   const { courseId } = state.legacyCourse;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-  axios(AxiosConfig('get', `/byo/settings/edit-workout/users/${UserId}?workoutType=${courseId}`, webToken))
+  axios(AxiosConfigNeon('get', `${BYO_URL}/program?userId=${encodeURIComponent(neonUserId)}&courseId=${courseId}&view=edit`, webToken))
     .then(res => {
       dispatch({
         type: actionTypes.BYO_GET_ALL_LEGACY_PROGS,
@@ -718,13 +739,15 @@ export const openEditLegacyModalBYO = () => (dispatch, getState) => {
     });
 }
 
-export const clearDay = (dateIndex, dateKey) => (dispatch, getState) => {
+export const clearDay = (dateIndex, dateKey) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const date = getCalanderDate(timezone)[dateIndex];
   const buildYourOwn = state.buildYourOwn;
 
-  axios(AxiosConfig('delete', `/byo/schedule/builder/users/${UserId}?currentDate=${date}`, webToken)).then(res => {
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
+  axios(AxiosConfigNeon('post', BYO_URL, webToken, { data: { userId: neonUserId, op: 'builder-delete', date } })).then(res => {
     dispatch({
       type: actionTypes.BYO_CLEAR_DAY,
       payload: {
@@ -744,13 +767,15 @@ export const clearDay = (dateIndex, dateKey) => (dispatch, getState) => {
   })
 }
 
-export const copyLastWorkoutBYO = (dateIndex, dateKey) => (dispatch, getState) => {
+export const copyLastWorkoutBYO = (dateIndex, dateKey) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const date = getCalanderDate(timezone)[dateIndex];
   const buildYourOwn = state.buildYourOwn;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-  axios(AxiosConfig('post', `/byo/schedule/copy-previous/users/${UserId}?date=${date}`, webToken))
+  axios(AxiosConfigNeon('post', BYO_URL, webToken, { data: { userId: neonUserId, op: 'copy-previous', date, dayIndex: dateIndex } }))
     .then(res => {
       if (res.data === "There is no previous day's workout") {
         dispatch(showToast('There is no previous day\'s workout', 'error'));
@@ -791,27 +816,31 @@ export const copyLastWorkoutBYO = (dateIndex, dateKey) => (dispatch, getState) =
     });
 }
 
-export const saveWorkoutTofavoriteBYO = (dateIndex, title, description) => (dispatch, getState) => {
+export const saveWorkoutTofavoriteBYO = (dateIndex, title, description) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const date = getCalanderDate(timezone)[dateIndex];
   const buildYourOwn = state.buildYourOwn;
   const dateKey = Object.keys(buildYourOwn.userSchedule)[dateIndex]
   const mainWorkouts = buildYourOwn.userSchedule[dateKey].mainWorkouts.map(item => `${item.classOrProgOrExId}-${item.orderingType}`).join(',');
   const individualWorkouts = buildYourOwn.userSchedule[dateKey].individualWorkouts.map(item => `${item.classOrProgOrExId}-${item.orderingType}`).join(',');
-  const workoutIdList = [ mainWorkouts, individualWorkouts].join(',');
+  const workoutIdList = [ mainWorkouts, individualWorkouts].filter(Boolean).join(',');
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
 
   const data = {
-    "userId": UserId,
+    "userId": neonUserId,
+    "op": "create",
     "title": title,
     "description": description,
     "workoutIdList":  workoutIdList,
-    "dateCreated": date
+    "dateCreated": date,
+    "date": date
   }
 
 
-  axios(AxiosConfig('post', `/byo/favorites/users/${UserId}`, webToken, { data: data }))
+  axios(AxiosConfigNeon('post', `${BYO_URL}/favorites`, webToken, { data: data }))
     .then(res => {
       dispatch({
         type: actionTypes.BYO_SAVE_WORKOUT,
@@ -835,14 +864,14 @@ export const saveWorkoutTofavoriteBYO = (dateIndex, title, description) => (disp
     });
 }
 
-export const getSavedWorkoutsBYO = () => (dispatch, getState) => {
+export const getSavedWorkoutsBYO = () => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken } = state.login;
   const buildYourOwn = state.buildYourOwn;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-  AxiosConfig('get', `/byo/favorites/all/users/${UserId}`, webToken);
-
-  axios(AxiosConfig('get', `/byo/favorites/all/users/${UserId}`, webToken)).then(res => {
+  axios(AxiosConfigNeon('get', `${BYO_URL}/favorites?userId=${encodeURIComponent(neonUserId)}`, webToken)).then(res => {
     dispatch({
       type: actionTypes.BYO_GET_SAVED_WORKOUTS,
       payload: {
@@ -855,14 +884,16 @@ export const getSavedWorkoutsBYO = () => (dispatch, getState) => {
   });
 }
 
-export const loadSavedWorkoutToScheduleBYO = (favoriteId, dateIndex) => (dispatch, getState) => {
+export const loadSavedWorkoutToScheduleBYO = (favoriteId, dateIndex) => async (dispatch, getState) => {
   const state = getState();
-  const { timezone, webToken, UserId } = state.login;
+  const { timezone, webToken } = state.login;
   const date = getCalanderDate(timezone)[dateIndex];
   const buildYourOwn = state.buildYourOwn;
   const dateKey = Object.keys(buildYourOwn.userSchedule)[dateIndex];
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-  axios(AxiosConfig('post', `/byo/favorites/${favoriteId}/users/${UserId}?date=${date}`, webToken))
+  axios(AxiosConfigNeon('post', `${BYO_URL}/favorites`, webToken, { data: { userId: neonUserId, op: 'apply', favoriteId, date, dayIndex: dateIndex } }))
     .then(res => {
       let weekDay = res.data.workoutsInADayList;
 
@@ -897,12 +928,14 @@ export const loadSavedWorkoutToScheduleBYO = (favoriteId, dateIndex) => (dispatc
     });
 }
 
-export const deleteFavoriteWorkoutBYO = (favoriteId) => (dispatch, getState) => {
+export const deleteFavoriteWorkoutBYO = (favoriteId) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken } = state.login;
   const buildYourOwn = state.buildYourOwn;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
-  axios(AxiosConfig('delete', `/byo/favorites/${favoriteId}/users/${UserId}`, webToken))
+  axios(AxiosConfigNeon('delete', `${BYO_URL}/favorites`, webToken, { data: { userId: neonUserId, favoriteId } }))
     .then(res => {
       const userSchedule = _.cloneDeep(buildYourOwn.userSchedule);
       const userScheduleKeys = Object.keys(userSchedule);
@@ -928,14 +961,17 @@ export const deleteFavoriteWorkoutBYO = (favoriteId) => (dispatch, getState) => 
     });
 }
 
-export const handleLegacyLogCheck = () => (dispatch, getState) => {
+export const handleLegacyLogCheck = () => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken, timezone } = state.login;
   const legacyCourse = state.legacyCourse;
   const buildYourOwn =  state.buildYourOwn;
   const courseId = legacyCourse.courseId;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
+  const weekStart = getCalanderDate(timezone)[0];
 
-  axios(AxiosConfig('get', `/byo/log/program/status/users/${UserId}/workout/${courseId}`, webToken))
+  axios(AxiosConfigNeon('get', `${BYO_URL}?userId=${encodeURIComponent(neonUserId)}&weekStart=${weekStart}&op=program-status&courseId=${courseId}`, webToken))
     .then(res => {
       const dateKeys = Object.keys(res.data);
       const userSchedule = _.cloneDeep(buildYourOwn.userSchedule);
@@ -959,11 +995,14 @@ export const handleLegacyLogCheck = () => (dispatch, getState) => {
     });
 }
 
-export const copyLastWeeksWorkout = () => (dispatch, getState) => {
+export const copyLastWeeksWorkout = () => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken, timezone } = state.login;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
+  const weekStart = getCalanderDate(timezone)[0];
 
-  axios(AxiosConfig('post', `/byo/schedule/view/weekly/copy-last/users/${UserId}`, webToken)).then(res => {
+  axios(AxiosConfigNeon('post', BYO_URL, webToken, { data: { userId: neonUserId, op: 'copy-last-week', weekStart } })).then(res => {
     dispatch({
       type: actionTypes.BYO_SET_USER_SCHEDULE,
       payload: {

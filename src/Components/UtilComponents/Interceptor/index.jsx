@@ -20,7 +20,13 @@ const Interceptor = props => {
         }, err => {
           return new Promise((resolve, reject) => {
             const originalReq = err.config;
-            if (err.response.status === 403 && err.config && !err.config.__isRetryRequest && (err.config.url.includes("/myschedule/") || err.config.url.includes("/auto-pilot/")  || err.config.url.includes("/byo/") )) {
+            // Both special-cases below are AWS-only recovery flows (welcome re-check /
+            // AWS token refresh). Scope them to the AWS host so Neon (REACT_APP_API_NEW)
+            // errors reject normally instead of triggering a doomed AWS refresh that
+            // resolves the original request with undefined.
+            const isAwsUrl = err.config && typeof err.config.url === 'string' && err.config.url.startsWith(API);
+            // err.response is undefined on network/CORS failures — optional-chain it.
+            if (isAwsUrl && err.response?.status === 403 && err.config && !err.config.__isRetryRequest && (err.config.url.includes("/myschedule/") || err.config.url.includes("/auto-pilot/")  || err.config.url.includes("/byo/") )) {
               let config = {
                 method: 'GET',
                 headers: {
@@ -33,7 +39,7 @@ const Interceptor = props => {
                 dispatch(fourceLogoutFail());
               })
             }
-            if (err.response.status === 401 && err.config && !err.config.__isRetryRequest && err.config.url !== `'"${API}/auth"'`) {
+            if (isAwsUrl && err.response?.status === 401 && err.config && !err.config.__isRetryRequest && err.config.url !== `'"${API}/auth"'`) {
               let config = {
                 method: 'GET',
                 headers: {

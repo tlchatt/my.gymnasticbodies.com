@@ -32,6 +32,11 @@ const LoginSuccess = (state, action) => {
     isFreeMember: action.userState.isFreeMember,
     guidedPlanAccessLevels: action.userState.guidedPlanAccessLevels,
     postAWS: action.userData.postAWS,
+    // Neon UUID for ${REACT_APP_API_NEW} requests. For postAWS users this equals UserId;
+    // for legacy users it comes from registerWPass (or the /api/user/id resolver later).
+    neonUserId: action.userData.neonUserId || null,
+    // Legacy AWS integer id — the only id AWS ${REACT_APP_API} endpoints accept.
+    awsUserId: action.userData.awsUserId || null,
   });
 }
 
@@ -102,6 +107,13 @@ export const LoginReducer = (state = initailState, action) => {
     case actionTypes.UPDATE_USER_PLAN: return UpdateUserPlan(state, action.planData);
     case actionTypes.SET_DID_TRY_AL: return updateObject(state, { didTryAutoLogin: true })
     case actionTypes.SET_NEW_AUTH: return UpdateToken(state, action);
+    case actionTypes.SET_NEON_USER_ID: return updateObject(state, { neonUserId: action.neonUserId });
+    case actionTypes.SET_USER_STANDING: return updateObject(state, {
+      ...action.payload,
+      // Free members are always pinned to White Board regardless of seeded standing.
+      userLevel: state.isFreeMember ? 'Free Member' : (action.payload.userLevel ?? state.userLevel),
+      levelId: state.isFreeMember ? 9 : (action.payload.levelId ?? state.levelId),
+    });
     case actionTypes.SET_USER_LEVEL: return SetUserLevel(state, action)
     case actionTypes.CONTINUE_USER_LEVEL: return SetUserLevel(state, action)
     case actionTypes.CHECK_WELCOME_SERVICE: return WelcomeSuccess(state, action);

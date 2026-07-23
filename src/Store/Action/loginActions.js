@@ -64,6 +64,62 @@ export const setNewAuthToken = (token) => {
   }
 }
 
+export const setNeonUserId = (neonUserId) => {
+  return {
+    type: actionTypes.SET_NEON_USER_ID,
+    neonUserId
+  }
+}
+
+// Real workout standing from Neon (seeded from AWS): replaces the hardcoded
+// 'Advanced One'/levelId 3 and isThriveUser:true defaults in the LoginNew/authCheckState
+// paths. Precedence: server value -> existing state; free members stay pinned in the reducer.
+export const fetchUserStanding = () => async (dispatch, getState) => {
+  const neonUserId = await dispatch(ensureNeonUserId());
+  if (!neonUserId) return;
+  try {
+    const res = await fetch(`${NEWAPI}/api/user/workout/standing?userId=${encodeURIComponent(neonUserId)}`);
+    if (!res.ok) return;
+    const s = await res.json();
+    const payload = { isThriveUser: !!s.isThriveUser };
+    if (s.levelId !== null && s.levelId !== undefined) {
+      payload.levelId = parseInt(s.levelId, 10);
+      payload.userLevel = s.userLevel || levelObj[payload.levelId]?.userLevel;
+      localStorage.setItem('userLevelID', String(payload.levelId));
+    }
+    dispatch({ type: actionTypes.SET_USER_STANDING, payload });
+  } catch (_) {}
+}
+
+// Ensures Redux holds the Neon UUID needed by the ${NEWAPI} workout routes.
+// Chain: Redux -> localStorage -> /api/user/id email resolver (covers legacy users
+// whose registerWPass call failed silently at login).
+export const ensureNeonUserId = () => async (dispatch, getState) => {
+  const current = getState().login.neonUserId;
+  if (current) return current;
+
+  const stored = localStorage.getItem('neonUserId');
+  if (stored && stored !== 'null' && stored !== 'undefined') {
+    dispatch(setNeonUserId(stored));
+    return stored;
+  }
+
+  const email = localStorage.getItem('username');
+  if (!email) return null;
+  try {
+    const res = await fetch(`${NEWAPI}/api/user/id?email=${encodeURIComponent(email)}`);
+    if (res.ok) {
+      const { id } = await res.json();
+      if (id) {
+        localStorage.setItem('neonUserId', id);
+        dispatch(setNeonUserId(id));
+        return id;
+      }
+    }
+  } catch (_) {}
+  return null;
+}
+
 export const checkWelcomeService = (userData) => {
   return {
     type: actionTypes.CHECK_WELCOME_SERVICE,
@@ -157,16 +213,25 @@ export const Login = (username, password) => dispatch => {
             localStorage.setItem('name', res.data.fname);
             localStorage.setItem('username', username);
             localStorage.setItem('userId', res.data.contactId);
-            axios.post(`${NEWAPI}/api/user/subscription`, {
-              password,
-              email: username,
-              name: res.data.fname,
-              postAWS: false,
-              reason: "registerWPass",
-              awsCustomerId: res?.data?.contactId
-            }, { headers: { "Content-Type": "application/json" } })
-              .then(r => { localStorage.setItem('userId', r.data.data.id); })
-              .catch(() => {})
+            // Awaited so the Neon UUID is in Redux before the app renders — the
+            // ${NEWAPI} workout routes are keyed on it. Failure is non-fatal:
+            // ensureNeonUserId() resolves it later via /api/user/id.
+            let neonUserId = null;
+            try {
+              const subRes = await axios.post(`${NEWAPI}/api/user/subscription`, {
+                password,
+                email: username,
+                name: res.data.fname,
+                postAWS: false,
+                reason: "registerWPass",
+                awsCustomerId: res?.data?.contactId
+              }, { headers: { "Content-Type": "application/json" } });
+              neonUserId = subRes?.data?.data?.id || null;
+              if (neonUserId) {
+                localStorage.setItem('userId', neonUserId);
+                localStorage.setItem('neonUserId', neonUserId);
+              }
+            } catch (_) {}
 
             try {
               const renewalRes = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(username)}`);
@@ -181,6 +246,8 @@ export const Login = (username, password) => dispatch => {
             } catch (_) {}
 
             logEvent('my.login.success', { email: username });
+            decoded.neonUserId = neonUserId
+            decoded.awsUserId = decoded.cid
             dispatch(LoginAsync(
               authToken,
               decoded,
@@ -235,36 +302,34 @@ export const Login = (username, password) => dispatch => {
 
             console.log("c", res.data)
             res.data.postAWS = false
-            
-            if (!res.data.postAWS) {//true for new users and false for old
-              
-              //call subscription route, with reason registerWPass
-              //info to pass: password, name, username (as email), postAWS 
-              const config = {
-                headers: {
-                  "Content-Type": "application/json"
-                }
-              }
-              let data = {
-                password: password,
-                email: username,
-                name: res.data.fname,
-                postAWS: false,
-                reason: "registerWPass",
-                awsCustomerId:res?.data?.contactId
-              }
-              axios.post(`https://app.gymnasticbodies.com/api/user/subscription`, data, config)
-                .then(res => {
-                  
-                  let neonUserId = res.data.data.id
-                  console.log("neonUserId from res is:", neonUserId)
-                  localStorage.setItem('userId', neonUserId);
-                  // dispatch(action);
-                })
-                .catch(error => {
-                  // Sentry.captureException(error);
-                })
 
+            // registerWPass — awaited so the Neon UUID lands in Redux before render
+            // (the ${NEWAPI} workout routes key on it). Non-fatal on failure:
+            // ensureNeonUserId() resolves it later via /api/user/id.
+            let neonUserId = null
+            const config = {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            }
+            let data = {
+              password: password,
+              email: username,
+              name: res.data.fname,
+              postAWS: false,
+              reason: "registerWPass",
+              awsCustomerId:res?.data?.contactId
+            }
+            try {
+              const subRes = await axios.post(`${NEWAPI}/api/user/subscription`, data, config)
+              neonUserId = subRes?.data?.data?.id || null
+              console.log("neonUserId from res is:", neonUserId)
+              if (neonUserId) {
+                localStorage.setItem('userId', neonUserId);
+                localStorage.setItem('neonUserId', neonUserId);
+              }
+            } catch (error) {
+              // Sentry.captureException(error);
             }
 
 
@@ -281,6 +346,8 @@ export const Login = (username, password) => dispatch => {
             } catch (_) {}
 
             logEvent('my.login.success', { email: username });
+            decoded.neonUserId = neonUserId
+            decoded.awsUserId = decoded.cid
             dispatch(
               LoginAsync(
                 authToken,
@@ -360,6 +427,9 @@ export const LoginNew = (username, password) => dispatch => {
       }
       decodedGoal.cid = res.data.user.id
       decodedGoal.postAWS = true
+      // Neon-authed: the UUID IS the Neon user id (no legacy AWS id exists).
+      decodedGoal.neonUserId = res.data.user.id
+      localStorage.setItem('neonUserId', res.data.user.id);
 
       const today = new Date();
       const expirationDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -431,6 +501,8 @@ export const LoginNew = (username, password) => dispatch => {
           },
           timezone)
       )
+      // Replace the hardcoded resGoal2 defaults with real seeded standing.
+      dispatch(fetchUserStanding())
 
     })
     .catch(err => {
@@ -657,6 +729,20 @@ export const authCheckState = (props) => (dispatch, getState) => {
       decodedGoal.cid = userId
       if (postAWS == "true") {
         decodedGoal.postAWS = true
+        // Neon-authed: whatever id we stored IS the Neon UUID.
+        decodedGoal.neonUserId = localStorage.getItem('neonUserId') || userId
+      } else {
+        // Legacy reload: localStorage.userId may hold the Neon UUID (registerWPass
+        // overwrote it), which AWS endpoints reject. Recover the AWS integer id from
+        // the stored AWS JWT itself — fixes the broken-after-reload legacy sessions.
+        const decodedTok = jwt.decode(authToken)
+        if (decodedTok?.cid) {
+          decodedGoal.cid = decodedTok.cid
+          decodedGoal.awsUserId = decodedTok.cid
+        }
+        const storedNeon = localStorage.getItem('neonUserId')
+        // A non-numeric stored userId is a Neon UUID — usable as neonUserId fallback.
+        decodedGoal.neonUserId = storedNeon || (/\D/.test(String(userId)) ? userId : null)
       }
 
       let resGoal2 = { ///welcome/v1/users luke
@@ -692,6 +778,9 @@ export const authCheckState = (props) => (dispatch, getState) => {
           },
           timezone)
       )
+      // Replace the hardcoded resGoal2 defaults with real seeded standing (both auth
+      // paths benefit on reload — legacy users get their seeded level back too).
+      dispatch(fetchUserStanding())
       if (source === 'renewal') {
         logEvent('my.renewal.auth_success', { email: userName, userId });
       }

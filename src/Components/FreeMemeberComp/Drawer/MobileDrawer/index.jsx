@@ -200,7 +200,6 @@ export default function MobileDrawer(props) {
   const levelId = useSelector(state => state.login.levelId)
   const isSinnglePoint = useSelector(state => !state.login.isAllAccessUser);
   const isThriveUser = useSelector(state => state.login.isThriveUser);
-  const postAWS = useSelector(state => state.login.postAWS)
   const { isFreeMember } = props
 
   const [openDrawer, setOpenDrawer] = useState({ open: false, componentId: '' });
@@ -276,89 +275,10 @@ export default function MobileDrawer(props) {
   }
 
 
-  let firstSection
-  if (postAWS) { 
-    firstSection = [
-    {
-      text: 'Guided Plans',
-      cb: () => handleCallBackFunction('GuidedPlans'),
-      imageName: 'GuidedPlans.png',
-      ids: [0, 1, 2, 3, 4],
-      isActive: () => {
-        if (location.pathname === '/') {
-          if (openDrawer.open && openDrawer.componentId !== 'GuidedPlans') {
-            return false
-          }
-          if ([0, 1, 2, 3, 4].indexOf(levelId) > -1) {
-            return true
-          }
-          if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
-            return true
-          }
-        }
-        else {
-          if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
-            return true
-          }
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Fitness Placement Quiz',
-      cb: () => handleCallBackFunction('FitnessQuiz'),
-      imageName: 'Quiz.png',
-      ids: [],
-      isActive: () => {
-        if (openDrawer.componentId === 'FitnessQuiz') {
-          return true;
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Information',
-      imageName: 'info.png',
-      cb: () => {
-        handleCloseDrawer();
-        history.push('/information')
-      },
-      ids: [],
-      isActive: () => {
-        if (location.pathname === '/information' && !openDrawer.componentId) {
-          return true;
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Contact Us',
-      cb: () => handleCallBackFunction('ContactUs'),
-      imageName: 'FocusGroups.png',
-      ids: [],
-      isActive: () => {
-        if (openDrawer.componentId === 'ContactUs') {
-          return true;
-        }
-        return false;
-      }
-    },
-    {
-      text: 'Courses',
-      cb: () => handleCallBackFunction('Courses'),
-      imageName: 'nutrition.png',
-      ids: [],
-      isActive: () => {
-        if (openDrawer.componentId === 'Courses') {
-          return true;
-        }
-        return false;
-      }
-    },
-  ]
-}
-else{
-   firstSection = [
+  // Unified drawer (2026-07): every user type sees the same feature set — the
+  // postAWS reduced list is gone now that all sections run on the Neon workout API.
+  // Free-member gating (openOhNo) and the isThriveUser gate are unchanged.
+  const firstSection = [
     {
       text: 'White Board',
       cb: () => isSinnglePoint && !isFreeMember ? dispatch(openOhNo()) : handleOpenDrawer('SwitchToAuto'),
@@ -485,9 +405,32 @@ else{
         }
         return false;
       }
-    }
+    },
+    {
+      text: 'Contact Us',
+      cb: () => handleCallBackFunction('ContactUs'),
+      imageName: 'FocusGroups.png',
+      ids: [],
+      isActive: () => {
+        if (openDrawer.componentId === 'ContactUs') {
+          return true;
+        }
+        return false;
+      }
+    },
+    {
+      text: 'Courses',
+      cb: () => handleCallBackFunction('Courses'),
+      imageName: 'nutrition.png',
+      ids: [],
+      isActive: () => {
+        if (openDrawer.componentId === 'Courses') {
+          return true;
+        }
+        return false;
+      }
+    },
   ]
-}
 
 
 

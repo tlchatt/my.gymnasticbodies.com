@@ -9,7 +9,12 @@ import { AxiosConfig } from '../util'
 import { getLegacyDataBYO, openEditLegacyModalBYO, handleLegacyLogCheck } from './WorkoutBuilderActions'
 import { useSelector } from 'react-redux';
 import { getData } from './dataManipulation';
+import { legacyNameToId } from '../util';
 import * as actionTypes from '../Action/actionTypes';
+
+// Guided-plan Program editing shares the Foundation curriculum with BYO — same Neon
+// route, keyed on the shared course-global byo_settings. courseName -> program id.
+const neonId = userData => userData.neonUserId || localStorage.getItem('neonUserId');
 
 export const SET_PROGRESSION = 'SET_PROGRESSION';
 export const UPDATE_PROGRESSIONS = 'UPDATE_PROGRESSIONS'
@@ -25,13 +30,18 @@ export const GetUserPorgressions = (courseName, todaysDate, exerciseId) => async
   console.log("state is:", state)
   console.log("state.legacyCourse.allProgressions:", state.legacyCourse.allProgressions)
   console.log("courseName is:", courseName)
-  let config = {
-    method: 'get',
-    url: `${API}/workout-service/programs/users/${userData.UserId}/date/${todaysDate}?workoutType=${courseName}`,
-    headers: {
-      'Authorization': `Bearer ${userData.webToken}`
-    }
-  };
+  // Legacy (AWS) users keep their AWS progression state; non-legacy users use Neon.
+  let config = userData.awsUserId
+    ? {
+        method: 'get',
+        url: `${API}/workout-service/programs/users/${userData.awsUserId}/date/${todaysDate}?workoutType=${courseName}`,
+        headers: { 'Authorization': `Bearer ${userData.webToken}` }
+      }
+    : {
+        method: 'get',
+        url: `${NEWAPI}/api/user/workout/byo/program?userId=${encodeURIComponent(neonId(userData))}&courseId=${legacyNameToId[courseName]}&date=${todaysDate}&section=levels`,
+        headers: { 'Authorization': `Bearer ${userData.webToken}` }
+      };
 
 
   Axios(config)
@@ -154,22 +164,32 @@ export const ManageDiffculty = (type, exerciseId, date) => (dispatch, getState) 
 
   let config;
   if (isBuildYourOwn) {
+    // BYO: Neon program route (curriculum sub-phase) — same {body, message} response shape.
+    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
     config = {
       method: 'put',
-      url: `${API}/byo/settings/users/${userData.UserId}/difficulty/${type}/?workoutType=${legacyPage.courseId}&exerciseId=${exerciseId}&date=${legacyPage.byoDate}`,
+      url: `${NEWAPI}/api/user/workout/byo/program`,
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${userData.webToken}`
-      }
+      },
+      data: { userId: neonUserId, courseId: legacyPage.courseId, op: 'difficulty', exerciseId, type, date: legacyPage.byoDate }
+    };
+  }
+  else if (userData.awsUserId) {
+    config = {
+      method: 'put',
+      url: `${API}/workout-service/users/${userData.awsUserId}/difficulty/${type}/?workoutType=${legacyPage.name}&exerciseId=${exerciseId}&date=${date}`,
+      headers: { 'Authorization': `Bearer ${userData.webToken}` }
     };
   }
   else {
-    console.log("in LegacyAction/ManageDiffculty")
+    // Non-legacy: Neon curriculum route (shared byo_settings).
     config = {
       method: 'put',
-      url: `${API}/workout-service/users/${userData.UserId}/difficulty/${type}/?workoutType=${legacyPage.name}&exerciseId=${exerciseId}&date=${date}`,
-      headers: {
-        'Authorization': `Bearer ${userData.webToken}`
-      }
+      url: `${NEWAPI}/api/user/workout/byo/program`,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
+      data: { userId: neonId(userData), courseId: legacyNameToId[legacyPage.name], op: 'difficulty', exerciseId, type, date }
     };
   }
   Axios(config)
@@ -240,10 +260,26 @@ export const handleNotes = (notes, progressionId, masterySteps, date, sectionKey
   }
 
   if (isBuildYourOwn) {
-    config = AxiosConfig('PUT', `/byo/log/notes/users/${userData.UserId}?workoutType=${legacyPage.courseId}`, userData.webToken, { data: body })
+    // BYO: Neon program-notes op (curriculum sub-phase).
+    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    config = {
+      method: 'post',
+      url: `${NEWAPI}/api/user/workout/byo`,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
+      data: { userId: neonUserId, op: 'program-notes', date: date, courseId: legacyPage.courseId, exerciseId: progressionId, notes }
+    }
+  }
+  else if (userData.awsUserId) {
+    config = AxiosConfig('POST', `/program-log/notes/users/${userData.awsUserId}`, userData.webToken, { data: body })
   }
   else {
-    config = AxiosConfig('POST', `/program-log/notes/users/${userData.UserId}`, userData.webToken, { data: body })
+    // Non-legacy: Neon program-notes (section 'levels').
+    config = {
+      method: 'post',
+      url: `${NEWAPI}/api/user/workout/byo`,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
+      data: { userId: neonId(userData), op: 'program-notes', section: 'levels', date, courseId: legacyNameToId[legacyPage.name], exerciseId: progressionId, notes }
+    }
   }
 
   Axios(config)
@@ -278,9 +314,13 @@ export const handleLegacyLog = (date, exerciseId, mobilityStatus, autoProg, step
   let selectedProgessions = _.cloneDeep(legacyPage.selectedProgessions);
 
   if (isBuildYourOwn) {
+    // BYO: Neon program-log op (curriculum sub-phase).
+    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
     let body = {
-      userId: userData.UserId,
+      userId: neonUserId,
+      op: 'program-log',
       date: date,
+      courseId: legacyPage.courseId,
       exerciseId: exerciseId,
       imStatus: mobilityStatus,
       autoProgress: autoProg,
@@ -288,7 +328,12 @@ export const handleLegacyLog = (date, exerciseId, mobilityStatus, autoProg, step
       masterySets: steps,
       setsAndRepsDTOList: logList
     }
-    Axios(AxiosConfig('post', `/byo/log/program/users/${userData.UserId}?workoutType=${legacyPage.courseId}`, userData.webToken, { data: body }))
+    Axios({
+      method: 'post',
+      url: `${NEWAPI}/api/user/workout/byo`,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
+      data: body
+    })
       .then(res => {
         dispatch(handleLegacyLogCheck());
         dispatch(getLegacyDataBYO(legacyPage.name, legacyPage.dateIndex));
@@ -298,18 +343,27 @@ export const handleLegacyLog = (date, exerciseId, mobilityStatus, autoProg, step
       })
   }
   else {
-    let config = {
+    // Guided-plan program logging: legacy -> AWS, non-legacy -> Neon (section 'levels').
+    let config = userData.awsUserId
+      ? {
+          method: 'post',
+          url: `${API}/workout-service/programs/users/${userData.awsUserId}/logging?workoutType=${legacyPage.name}`,
+          headers: { 'Authorization': `Bearer ${userData.webToken}` },
+          data: { userId: userData.awsUserId, date, exerciseId, imStatus: mobilityStatus, autoprogress: autoProg, notes: '', masterySets: steps, setsAndRepsDTOList: logList }
+        }
+      : {
       method: 'post',
-      url: `${API}/workout-service/programs/users/${userData.UserId}/logging?workoutType=${legacyPage.name}`,
-      headers: {
-        'Authorization': `Bearer ${userData.webToken}`
-      },
+      url: `${NEWAPI}/api/user/workout/byo`,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
       data: {
-        userId: userData.UserId,
+        userId: neonId(userData),
+        op: 'program-log',
+        section: 'levels',
         date: date,
+        courseId: legacyNameToId[legacyPage.name],
         exerciseId: exerciseId,
         imStatus: mobilityStatus,
-        autoprogress: autoProg,
+        autoProgress: autoProg,
         notes: '',
         masterySets: steps,
         setsAndRepsDTOList: logList
@@ -317,94 +371,11 @@ export const handleLegacyLog = (date, exerciseId, mobilityStatus, autoProg, step
     };
 
     Axios(config)
-      .then(response => {
-        let res = response.data.body;
-        let LevelKeys = Object.keys(res);
-        let updatedProgression = {};
-
-        // NOTE: Bellow code is built to account for most progression logging that stays within the same level. Loggiging A1-A6, B1-b6, C1-C6 (level one of core).
-        // if user loggs the final progression and stays in the same step this code will fire off. If not then see next block.\
-        // This block also takes into account moving from step to step within a level, A1->A2. Object return will at most be 2 within the level section. Meaning Level 1
-        // section A will have either one object or two. If one then staying on the same progression. If 2 then moving up a progression A1->A2.
-        if (LevelKeys.length === 1) {
-          LevelKeys.forEach(lvlKey => {
-            const section = res[lvlKey];
-            let sectionKeys = Object.keys(section);
-
-            sectionKeys.forEach(sctKey => {
-              if (res[lvlKey][sctKey].length === 1) {
-                let foundIndex = allProgressions[lvlKey][sctKey].findIndex(item => res[lvlKey][sctKey][0].exerciseId === item.exerciseId);
-                updatedProgression = { ...res[lvlKey][sctKey][0], section: sctKey, levelKey: lvlKey, index: foundIndex };
-                allProgressions[lvlKey][sctKey][foundIndex] = updatedProgression;
-
-                // In the event there are no progressions after 100% completion of final progression. Meaning A6 logged 100% but nothing comes after that the this will fire off.
-                if (!updatedProgression.selected) {
-                  selectedProgessions = selectedProgessions.filter(item => item.exerciseId !== updatedProgression.exerciseId);
-                }
-                else {
-                  let selectedIndex = selectedProgessions.findIndex(item => updatedProgression.exerciseId === item.exerciseId);
-                  selectedProgessions[selectedIndex] = updatedProgression;
-                }
-
-              }
-
-              if (res[lvlKey][sctKey].length === 2) {
-                let foundIndexOrignal = allProgressions[lvlKey][sctKey].findIndex(item => res[lvlKey][sctKey][0].exerciseId === item.exerciseId);
-                let foundIndexNew = allProgressions[lvlKey][sctKey].findIndex(item => res[lvlKey][sctKey][1].exerciseId === item.exerciseId);
-
-                let updatedProgressionOrignal = {
-                  ...res[lvlKey][sctKey][0],
-                  section: sctKey,
-                  levelKey: lvlKey,
-                  index: foundIndexOrignal
-                };
-
-                let updatedProgressionNew = {
-                  ...res[lvlKey][sctKey][1],
-                  section: sctKey,
-                  levelKey: lvlKey,
-                  index: foundIndexOrignal
-                };
-
-                allProgressions[lvlKey][sctKey][foundIndexOrignal] = updatedProgressionOrignal;
-                allProgressions[lvlKey][sctKey][foundIndexNew] = updatedProgressionNew;
-
-                let selectedIndex = selectedProgessions.findIndex(item => updatedProgressionOrignal.exerciseId === item.exerciseId);
-                selectedProgessions[selectedIndex] = updatedProgressionNew;
-              }
-            });
-          });
-        }
-        // Note: Block from moving level level. A6(level one) -> A7 (level two). See AWS doc for all scenarios and explanations.
-
-        if (LevelKeys.length === 2) {
-          const oldLevel = LevelKeys[0];
-          const newLevel = LevelKeys[1];
-
-          const oldLvlSection = Object.keys(res[oldLevel])[0];
-          const newLvlSection = Object.keys(res[newLevel])[0];
-
-          let oldIndexInAll = allProgressions[oldLevel][oldLvlSection].findIndex(item => res[oldLevel][oldLvlSection][0].exerciseId === item.exerciseId);
-          let newIndexInAll = allProgressions[newLevel][newLvlSection].findIndex(item => res[newLevel][newLvlSection][0].exerciseId === item.exerciseId);
-
-          allProgressions[oldLevel][oldLvlSection][oldIndexInAll] = { ...res[oldLevel][oldLvlSection][0], section: oldLvlSection, levelKey: oldLevel, index: oldIndexInAll };
-          allProgressions[newLevel][newLvlSection][newIndexInAll] = { ...res[newLevel][newLvlSection][0], section: newLvlSection, levelKey: newLevel, index: newIndexInAll };
-
-          let selectedIndexOld = selectedProgessions.findIndex(item => allProgressions[oldLevel][oldLvlSection][oldIndexInAll].exerciseId === item.exerciseId);
-          selectedProgessions[selectedIndexOld] = allProgressions[newLevel][newLvlSection][newIndexInAll];
-
-        }
-
-        // selectedProgessions = orderProgressionArray(selectedProgessions);
-
-        dispatch({
-          type: UPDATE_PROGRESSIONS,
-          selectedProgression: selectedProgessions,
-          allProgressions: allProgressions,
-        })
-
-        dispatch(showToast(response.data.message, 'success'))
-
+      .then(() => {
+        // Neon program-log returns {status:200}; re-read the guided-plan progression
+        // view + weekly schedule to reflect the logged/advanced state.
+        dispatch(GetUserPorgressions(legacyPage.name, date));
+        dispatch(getLevelPLan());
         dispatch(getUpdatedUserSchedule());
       }).catch(err => {
         dispatch(showToast('Something went wrong.', 'error'))
@@ -424,25 +395,38 @@ export const handleDeleteProgression = (exerciseId, isLevels = false, masterySet
 
   let config;
   let purpose = "Delete"
-  if (postAWS) {
+  if (isBuildYourOwn) {
+    // BYO: Neon program route, single path for every user type (curriculum sub-phase).
+    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    Axios({
+      method: 'put',
+      url: `${NEWAPI}/api/user/workout/byo/program`,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
+      data: { userId: neonUserId, courseId: legacyPage.courseId, op: 'deselect', exerciseId },
+    }).then(() => {
+      dispatch(getLegacyDataBYO(legacyPage.name, legacyPage.dateIndex));
+      dispatch(openEditLegacyModalBYO());
+      dispatch(handleLegacyLogCheck());
+    }).catch(err => {
+      dispatch(showToast('Something went wrong.', 'error'))
+      Sentry.captureException(err);
+    });
+  } else if (postAWS) {
 
     dispatch(handleProgression(exerciseId, masterySet, date, isLevels, purpose))
     dispatch(showToast('Successfully updated ' + legacyPage.name, 'success'))
 
+  } else if (userData.awsUserId) {
+    config = AxiosConfig('DELETE', `/workout-service/users/${userData.awsUserId}/exercises/${exerciseId}?workoutType=${legacyPage.name}`, userData.webToken)
   } else {
-    if (isBuildYourOwn) {
-      config = AxiosConfig(
-        'DELETE',
-        `/byo/settings/users/${userData.UserId}/exercises/${exerciseId}?workoutType=${legacyPage.courseId}`,
-        userData.webToken
-      )
-    }
-    else {
-      config = AxiosConfig(
-        'DELETE',
-        `/workout-service/users/${userData.UserId}/exercises/${exerciseId}?workoutType=${legacyPage.name}`,
-        userData.webToken
-      )
+    {
+      // Non-legacy: Neon deselect (shared byo_settings).
+      config = {
+        method: 'put',
+        url: `${NEWAPI}/api/user/workout/byo/program`,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
+        data: { userId: neonId(userData), courseId: legacyNameToId[legacyPage.name], op: 'deselect', exerciseId }
+      }
     }
     Axios(config)
       .then(response => {
@@ -513,7 +497,23 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
   let config;
   let purpose = "Add"
   //all data: legacyPage?.allProgressions
-  if (postAWS) {
+  if (isBuildYourOwn) {
+    // BYO: Neon program route, single path for every user type (curriculum sub-phase).
+    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    Axios({
+      method: 'put',
+      url: `${NEWAPI}/api/user/workout/byo/program`,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
+      data: { userId: neonUserId, courseId: legacyPage.courseId, op: 'select', exerciseId, masterySetId, date: legacyPage.byoDate },
+    }).then(() => {
+      dispatch(getLegacyDataBYO(legacyPage.name, legacyPage.dateIndex));
+      dispatch(openEditLegacyModalBYO());
+      dispatch(handleLegacyLogCheck());
+    }).catch(err => {
+      dispatch(showToast('Something went wrong.', 'error'))
+      Sentry.captureException(err);
+    });
+  } else if (postAWS) {
 
     dispatch(handleProgression(exerciseId, masterySet, date, isLevels, purpose))
 
@@ -696,12 +696,17 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
         userData.webToken
       )
     }
+    else if (userData.awsUserId) {
+      config = AxiosConfig('PUT', `/workout-service/users/${userData.awsUserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.name}&date=${date}`, userData.webToken)
+    }
     else {
-      config = AxiosConfig(
-        'PUT',
-        `/workout-service/users/${userData.UserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.name}&date=${date}`,
-        userData.webToken
-      )
+      // Non-legacy: Neon select (shared byo_settings).
+      config = {
+        method: 'put',
+        url: `${NEWAPI}/api/user/workout/byo/program`,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
+        data: { userId: neonId(userData), courseId: legacyNameToId[legacyPage.name], op: 'select', exerciseId, masterySetId, date }
+      }
     }
     Axios(config)
       .then(res => {

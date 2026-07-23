@@ -65,14 +65,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const API = process.env.REACT_APP_API;
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const isThriveUser = useSelector(state => state.login.isThriveUser)
   const isAdmin = useSelector(state => state.login.isAdmin ? true : false);
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  const userId = useSelector(state => state.login.neonUserId);
   const postAWS = useSelector(state => state.login.postAWS)
   const [anchorEl, setAnchorEl] = useState(null);
   const handleOpen = (event) => setAnchorEl(event.currentTarget);
@@ -93,10 +93,12 @@ function PrimarySearchAppBar(props) {
   const handleReset = () => {
     var config = {
       method: 'delete',
-      url: `${API}/thrive/reset/users/${userId}`,
+      url: `${NEWAPI}/api/user/workout/thrive`,
       headers: {
         'Authorization': `Bearer ${webToken}`,
+        'Content-Type': 'application/json',
       },
+      data: { userId },
     };
     axios(config)
       .then(res => {
@@ -112,10 +114,12 @@ function PrimarySearchAppBar(props) {
   const secondCall = () => {
     var config = {
       method: 'post',
-      url: `${API}/thrive/reset/permissions/users/${userId}`,
+      url: `${NEWAPI}/api/user/workout/thrive`,
       headers: {
         'Authorization': `Bearer ${webToken}`,
+        'Content-Type': 'application/json',
       },
+      data: { userId, op: 'reset-permissions' },
     };
     axios(config)
       .then(res => dispatch(showToast('Successful reset Thrive.', 'success')))

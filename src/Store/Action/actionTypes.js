@@ -26,6 +26,8 @@ export const SHOW_TOAST = 'SHOW_TOAST'
 export const HIDE_TOAST = 'HIDE_TOAST'
 
 export const SET_NEW_AUTH = 'SET_NEW_AUTH';
+export const SET_NEON_USER_ID = 'SET_NEON_USER_ID';
+export const SET_USER_STANDING = 'SET_USER_STANDING';
 
 /*
 * Reason for all these actions for New memebr site is to make it easier to test and debug with sentry

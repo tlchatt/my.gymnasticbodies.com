@@ -47,13 +47,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const API = process.env.REACT_APP_API;
+const NEWAPI = process.env.REACT_APP_API_NEW;
+const THRIVE_URL = `${NEWAPI}/api/user/workout/thrive`;
 
 export default function ThriveLessons(props) {
   const classes = useStyles();
   const isThriveUser = useSelector(state => state.login.isThriveUser)
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  const userId = useSelector(state => state.login.neonUserId);
 
   const [loading, setLoading] = useState(true);
   const [lessons, setLessons] = useState([]);
@@ -71,10 +72,12 @@ export default function ThriveLessons(props) {
   const handleUnlock = () => {
     let config = {
       method: 'post',
-      url: `${API}/thrive/unlock/users/${userId}`,
+      url: THRIVE_URL,
       headers: {
         'Authorization': `Bearer ${webToken}`,
+        'Content-Type': 'application/json',
       },
+      data: { userId, op: 'unlock' },
     };
     axios(config)
       .then(res => {
@@ -104,9 +107,10 @@ export default function ThriveLessons(props) {
   }
 
   const getUserData = useCallback(() => {
+    if (!userId) return;
     var config = {
       method: 'get',
-      url: `${API}/thrive/lessons/users/${userId}`,
+      url: `${THRIVE_URL}?userId=${encodeURIComponent(userId)}&view=lessons`,
       headers: {
         'Authorization': `Bearer ${webToken}`
       }
@@ -127,10 +131,12 @@ export default function ThriveLessons(props) {
   const secondCall = () => {
     var config = {
       method: 'post',
-      url: `${API}/thrive/reset/permissions/users/${userId}`,
+      url: THRIVE_URL,
       headers: {
         'Authorization': `Bearer ${webToken}`,
+        'Content-Type': 'application/json',
       },
+      data: { userId, op: 'reset-permissions' },
     };
     axios(config)
       .then(res => props.showToast('Successful reset Thrive.', 'success'))
@@ -142,10 +148,12 @@ export default function ThriveLessons(props) {
   const handleReset = () => {
     var config = {
       method: 'delete',
-      url: `${API}/thrive/reset/users/${userId}`,
+      url: THRIVE_URL,
       headers: {
         'Authorization': `Bearer ${webToken}`,
+        'Content-Type': 'application/json',
       },
+      data: { userId },
     };
     axios(config)
       .then(res => {

@@ -59,6 +59,22 @@ export const AxiosConfig = (method, endPoint, webToken, ...args ) => {
   }
 }
 
+// Neon (app.gymnasticbodies.com) variant of AxiosConfig — same signature so call sites
+// swap with a one-line diff. Token is optional: legacy users carry an AWS JWT the Neon
+// routes tolerate/ignore (they key on the explicit userId in the request instead).
+const NEWAPI = process.env.REACT_APP_API_NEW;
+export const AxiosConfigNeon = (method, endPoint, webToken, ...args) => {
+  return {
+    method: method,
+    url: `${NEWAPI}${endPoint}`,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(webToken ? { 'Authorization': `Bearer ${webToken}` } : {}),
+    },
+    ...args[0]
+  }
+}
+
 
 export const areAllSameBool = (arr, name) => {
   const first = arr[0][name];

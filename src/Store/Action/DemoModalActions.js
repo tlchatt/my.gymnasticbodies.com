@@ -4,6 +4,7 @@ export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 
 const API = process.env.REACT_APP_API;
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const legacyNameToId = {
   'Core': 59207,
@@ -23,9 +24,10 @@ export const OpenModal = (exerciseId) => (dispatch, getState) => {
   let config;
 
   if (isBuildYourOwn) {
+    // BYO: Neon demo-video catalog (curriculum sub-phase) — same {body:{Strength,Mobility}} shape.
     config = {
       method: 'get',
-      url: `${API}/byo/settings/videos/exercise/${exerciseId}/users/${userData.UserId}?workoutType=${legacyNameToId[workoutName]}`,
+      url: `${NEWAPI}/api/user/workout/byo/program?courseId=${legacyNameToId[workoutName]}&exerciseId=${exerciseId}&view=demo`,
       headers: {
         'Authorization': `Bearer ${userData.webToken}`
       }

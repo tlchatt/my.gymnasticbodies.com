@@ -24,12 +24,13 @@ const useStyles = makeStyles(theme=>({
   }
 }))
 
-const API = process.env.REACT_APP_API;
+const NEWAPI = process.env.REACT_APP_API_NEW;
+const THRIVE_URL = `${NEWAPI}/api/user/workout/thrive`;
 
 const ThriveTasks = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  const userId = useSelector(state => state.login.neonUserId);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   // const [missedDays, setMissedDays] = useState(false);
@@ -37,9 +38,10 @@ const ThriveTasks = props => {
   const classes = useStyles();
 
   const getUserData = useCallback( () => {
+    if (!userId) return;
     var config = {
-      method: 'post',
-      url: `${API}/thrive/tasks/users/${userId}`,
+      method: 'get',
+      url: `${THRIVE_URL}?userId=${encodeURIComponent(userId)}&view=tasks`,
       headers: {
         'Authorization': `Bearer ${webToken}`
       }
@@ -62,10 +64,12 @@ const ThriveTasks = props => {
     let taskIds = tasks.map(task => task.usersTaskId).join(',')
     var config = {
       method: 'post',
-      url: `${API}/thrive/tasks/log/users/${userId}?taskIds=${taskIds}`,
+      url: THRIVE_URL,
       headers: {
-        'Authorization': `Bearer ${webToken}`
-      }
+        'Authorization': `Bearer ${webToken}`,
+        'Content-Type': 'application/json'
+      },
+      data: { userId, op: 'log-tasks', taskIds }
     };
     setLoading(true);
     axios(config).then(res => {

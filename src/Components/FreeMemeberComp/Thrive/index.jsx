@@ -29,12 +29,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const API = process.env.REACT_APP_API;
+const NEWAPI = process.env.REACT_APP_API_NEW;
+const THRIVE_URL = `${NEWAPI}/api/user/workout/thrive`;
 
 function Thrive(props) {
   const classes = useStyles();
   const webToken = useSelector(state => state.login.webToken);
-  const UserId = useSelector(state => state.login.UserId);
+  const UserId = useSelector(state => state.login.neonUserId);
   const { open } = props;
 
   const [loading, setLoading] = useState(true);
@@ -54,12 +55,15 @@ function Thrive(props) {
   useEffect(() => {
     if (open) {
       const checkInitial = () => {
+        if (!UserId) return;
         let config = {
           method: 'post',
-          url: `${API}/thrive/welcome/permissions/users/${UserId}`,
+          url: THRIVE_URL,
           headers: {
             'Authorization': `Bearer ${webToken}`,
+            'Content-Type': 'application/json',
           },
+          data: { userId: UserId, op: 'permissions' },
         };
 
         Axios(config).then(response => {

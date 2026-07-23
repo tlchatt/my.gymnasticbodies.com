@@ -1,12 +1,30 @@
 import Axios from 'axios'
 import { showToast } from './calendarActions'
+import { ensureNeonUserId } from './loginActions'
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek'
 import _ from 'lodash';
 import * as Sentry from "@sentry/react";
 
 import * as actions from './actionTypes';
 
-const API = process.env.REACT_APP_API;
+// White Board runs on the Neon workout API (AWS /auto-pilot/* replaced 2026-07).
+const NEWAPI = process.env.REACT_APP_API_NEW;
+const AP_URL = `${NEWAPI}/api/user/workout/autopilot`;
+
+// Resolve the Neon UUID every autopilot call is keyed on; null → caller should bail
+// (ensureNeonUserId re-resolves for the next attempt).
+const resolveNeonUserId = async (dispatch, state) =>
+  state.login.neonUserId || await dispatch(ensureNeonUserId());
+
+// Today's date (YYYY-MM-DD) in the user's timezone — en-CA locale formats as ISO.
+const todayIso = timezone => new Date().toLocaleDateString('en-CA', { timeZone: timezone });
+
+// ISO date for a rendered day key ("MONDAY,MAY 18") within the current week.
+const isoDateForDayKey = (timezone, dateKey) => {
+  const keys = getCalanderDate(timezone, 'dddd,MMMM D').map(k => k.toUpperCase());
+  const idx = keys.indexOf(String(dateKey).toUpperCase());
+  return idx >= 0 ? getCalanderDate(timezone)[idx] : null;
+};
 
 // check if all items in array are the same
 const areAllSame = (arr) => {
@@ -20,10 +38,11 @@ const areAllSameBool = (arr) => {
   return arr.every(item => item === first) ? first : false;
 }
 
-export const fetchFreeMember = () => (dispatch, getState) => { //  "userLevel": "White Board", ??
-  console.log("fetchFreeMember = () =>  /auto-pilot/view/weekly/users/${UserId}`")
+export const fetchFreeMember = () => async (dispatch, getState) => { //  "userLevel": "White Board", ??
+  console.log("fetchFreeMember -> GET /api/user/workout/autopilot")
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken, timezone } = state.login;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
   let intermediate1 = {//userLevel: "Intermediate One"
     "firstName": "Luke",
     "lastName": "",
@@ -580,9 +599,11 @@ export const fetchFreeMember = () => (dispatch, getState) => { //  "userLevel": 
         "SUNDAY,DECEMBER 21": null
     }
 }
+  if (!neonUserId) return;
+  const weekDays = getCalanderDate(timezone);
   const config = {
     method: 'get',
-    url: `${API}/auto-pilot/view/weekly/users/${UserId}`,
+    url: `${AP_URL}?userId=${encodeURIComponent(neonUserId)}&weekStart=${weekDays[0]}&today=${todayIso(timezone)}`,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
@@ -618,14 +639,23 @@ export const fetchFreeMember = () => (dispatch, getState) => { //  "userLevel": 
     })
     dispatch(getAllSavedWorkouts());
   }).catch(error => {
-    console.log('Luke Data OverWrite \n export const fetchFreeMember = () => (dispatch, getState) => {')
+    // Real error state (the old canned-week fallback masked failures with fake data).
+    Sentry.captureException(error);
+    const dayKeys = getCalanderDate(timezone, 'dddd,MMMM D').map(k => k.toUpperCase());
+    const emptyDayView = {};
+    dayKeys.forEach(k => { emptyDayView[k] = null; });
     dispatch({
       type: actions.SET_FREE_MEMBER,
       payload: {
-        ...intermediate1,
+        firstName: state.login.firstName || '',
+        lastName: '',
+        startDate: weekDays[0],
+        endDate: weekDays[6],
+        todaysDate: todayIso(timezone),
+        dayView: emptyDayView,
       },
     })
-
+    dispatch(showToast('Could not load your White Board — please try again.', 'error'))
   });
 }
 
@@ -671,11 +701,13 @@ export const updateRounds = (rounds, dateKey) => (dispatch, getState) => {
   });
 }
 
-export const resetSingleProg = (autoPilotId, dateKeyIndex, dateKey) => (dispatch, getState) => {
+export const resetSingleProg = (autoPilotId, dateKeyIndex, dateKey) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
   const weekDay = getCalanderDate(timezone)[dateKeyIndex];
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   const newDayView = _.cloneDeep(dayView);
   const workoutData = newDayView[dateKey].exerciseListForDay;
@@ -684,11 +716,12 @@ export const resetSingleProg = (autoPilotId, dateKeyIndex, dateKey) => (dispatch
 
 
   const config = {
-    method: 'put',
-    url: `${API}/auto-pilot/refresh/one/users/${UserId}/apId/${autoPilotId}?date=${weekDay}&rounds=${rounds}`,
+    method: 'post',
+    url: AP_URL,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
+    data: { userId: neonUserId, op: 'refresh-one', date: weekDay, autoPilotId, rounds },
   };
 
   Axios(config).then(response => {
@@ -708,11 +741,13 @@ export const resetSingleProg = (autoPilotId, dateKeyIndex, dateKey) => (dispatch
   });
 }
 
-export const resetAllProg = (dateKeyIndex, dateKey) => (dispatch, getState) => {
+export const resetAllProg = (dateKeyIndex, dateKey) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
   const weekDay = getCalanderDate(timezone)[dateKeyIndex];
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
   const newDayView = _.cloneDeep(dayView);
   const workoutData = newDayView[dateKey].exerciseListForDay;
   const newWorkoutData = _.cloneDeep(workoutData);
@@ -721,12 +756,12 @@ export const resetAllProg = (dateKeyIndex, dateKey) => (dispatch, getState) => {
   let catArry = workoutData.filter(item => !item.isLogged).map(item => item.autoPilotId);
 
   const config = {
-    method: 'put',
-    url: `${API}/auto-pilot/refresh/all/users/${UserId}?date=${weekDay}&rounds=${rounds}`,
+    method: 'post',
+    url: AP_URL,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
-    data: catArry
+    data: { userId: neonUserId, op: 'refresh-all', date: weekDay, autoPilotIds: catArry, rounds },
   };
 
   Axios(config).then(response => {
@@ -750,11 +785,13 @@ export const resetAllProg = (dateKeyIndex, dateKey) => (dispatch, getState) => {
   });
 }
 
-export const markAllDone = (dateKeyIndex, dateKey) => (dispatch, getState) => {
+export const markAllDone = (dateKeyIndex, dateKey) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
   const weekDay = getCalanderDate(timezone)[dateKeyIndex];
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
   const newDayView = _.cloneDeep(dayView);
   const workoutData = newDayView[dateKey].exerciseListForDay;
   const rounds = newDayView[dateKey].rounds
@@ -768,12 +805,12 @@ export const markAllDone = (dateKeyIndex, dateKey) => (dispatch, getState) => {
   });
 
   const config = {
-    method: 'put',
-    url: `${API}/auto-pilot/mark-alldone/users/${UserId}?date=${weekDay}`,
+    method: 'post',
+    url: AP_URL,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
-    data: catArry
+    data: { userId: neonUserId, op: 'mark-alldone', date: weekDay, items: catArry },
   };
 
   Axios(config).then(response => {
@@ -792,20 +829,23 @@ export const markAllDone = (dateKeyIndex, dateKey) => (dispatch, getState) => {
   });
 }
 
-export const logIndivdualDays = (autopilotId, dateKey, repsOrSec) => (dispatch, getState) => {
+export const logIndivdualDays = (autopilotId, dateKey, repsOrSec) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
   const newDayView = _.cloneDeep(dayView);
   const workoutData = newDayView[dateKey].exerciseListForDay;
   const rounds = newDayView[dateKey].rounds
 
   const config = {
-    method: 'put',
-    url: `${API}/auto-pilot/log/users/${UserId}/apId/${autopilotId}?rounds=${rounds}&secsOrReps=${repsOrSec}`,
+    method: 'post',
+    url: AP_URL,
     headers: {
       'Authorization': `Bearer ${webToken}`,
-    }
+    },
+    data: { userId: neonUserId, op: 'log', date: isoDateForDayKey(timezone, dateKey), autoPilotId: autopilotId, rounds, secsOrReps: repsOrSec },
   };
 
   Axios(config).then(response => {
@@ -831,9 +871,9 @@ export const logIndivdualDays = (autopilotId, dateKey, repsOrSec) => (dispatch, 
 
 }
 
-export const deleteCategory = (autoPilotId, currentDateIndex, currentDate) => (dispatch, getState) => {
+export const deleteCategory = (autoPilotId, currentDateIndex, currentDate) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
   const weekDay = getCalanderDate(timezone)[currentDateIndex]
   const workoutData = dayView[currentDate].exerciseListForDay;
@@ -845,13 +885,15 @@ export const deleteCategory = (autoPilotId, currentDateIndex, currentDate) => (d
     }, 2500)
   }
   else {
-    //  http://api-test.gymnasticbodies.com/auto-pilot/category/users/348441/id/11?date=2021-08-12
+    const neonUserId = await resolveNeonUserId(dispatch, state);
+    if (!neonUserId) return;
     const config = {
-      method: 'delete',
-      url: `${API}/auto-pilot/category/users/${UserId}/id/${autoPilotId}?date=${weekDay}`,
+      method: 'post',
+      url: AP_URL,
       headers: {
         'Authorization': `Bearer ${webToken}`,
       },
+      data: { userId: neonUserId, op: 'delete-category', date: weekDay, autoPilotId },
     };
 
     Axios(config).then(response => {
@@ -871,22 +913,23 @@ export const deleteCategory = (autoPilotId, currentDateIndex, currentDate) => (d
   }
 }
 
-export const addNewCategory = (name, currentDateIndex, currentDate) => (dispatch, getState) => {
+export const addNewCategory = (name, currentDateIndex, currentDate) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
   const weekDay = getCalanderDate(timezone)[currentDateIndex]
   const rounds = dayView[currentDate].rounds
   let workoutData = dayView[currentDate].exerciseListForDay;
-
-  // http://api-test.gymnasticbodies.com/auto-pilot/category/users/348441?category=Mobile&rounds=3&date=2021-08-12
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   const config = {
     method: 'post',
-    url: `${API}/auto-pilot/category/users/${UserId}?category=${name}&rounds=${rounds}&date=${weekDay}`,
+    url: AP_URL,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
+    data: { userId: neonUserId, op: 'add-category', date: weekDay, category: name, rounds },
   };
 
 
@@ -910,20 +953,22 @@ export const addNewCategory = (name, currentDateIndex, currentDate) => (dispatch
   });
 }
 
-export const generateWorkout = (genDateIndex, genDate) => (dispatch, getState) => {
+export const generateWorkout = (genDateIndex, genDate) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
 
   const weekDays = getCalanderDate(timezone, 'YYYY-MM-DD');
-
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   const config = {
     method: 'post',
-    url: `${API}/auto-pilot/generate/users/${UserId}?date=${weekDays[genDateIndex]}`,
+    url: AP_URL,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
+    data: { userId: neonUserId, op: 'generate', date: weekDays[genDateIndex] },
   };
 
   Axios(config).then(response => {
@@ -949,20 +994,22 @@ export const generateWorkout = (genDateIndex, genDate) => (dispatch, getState) =
   });
 }
 
-export const loadPreviousDay = (genDateIndex, genDate) => (dispatch, getState) => {
+export const loadPreviousDay = (genDateIndex, genDate) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
 
   const weekDays = getCalanderDate(timezone, 'YYYY-MM-DD')[genDateIndex];
-
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   const config = {
     method: 'post',
-    url: `${API}/auto-pilot/copy-previous/users/${UserId}?date=${weekDays}`,
+    url: AP_URL,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
+    data: { userId: neonUserId, op: 'copy-previous', date: weekDays },
   };
 
   Axios(config).then(response => {
@@ -993,19 +1040,23 @@ export const loadPreviousDay = (genDateIndex, genDate) => (dispatch, getState) =
   });
 }
 
-export const saveWorkout = (currentDateIndex, title, description) => (dispatch, getState) => {
+export const saveWorkout = (currentDateIndex, title, description) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const weekDay = getCalanderDate(timezone)[currentDateIndex];
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   const config = {
     method: 'post',
-    url: `${API}/auto-pilot/favorites/users/${UserId}?date=${weekDay}`,
+    url: `${AP_URL}/favorites`,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
     data: {
-      userId: UserId,
+      userId: neonUserId,
+      op: 'create',
+      date: weekDay,
       title: title,
       description: description,
       dateCreated: weekDay
@@ -1019,13 +1070,15 @@ export const saveWorkout = (currentDateIndex, title, description) => (dispatch, 
   });
 }
 
-export const getAllSavedWorkouts = () => (dispatch, getState) => {
+export const getAllSavedWorkouts = () => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken } = state.login;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   const config = {
     method: 'get',
-    url: `${API}/auto-pilot/favorites/all/users/${UserId}`,
+    url: `${AP_URL}/favorites?userId=${encodeURIComponent(neonUserId)}`,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
@@ -1040,16 +1093,19 @@ export const getAllSavedWorkouts = () => (dispatch, getState) => {
   });
 }
 
-export const deleteSavedWorkout = (id) => (dispatch, getState) => {
+export const deleteSavedWorkout = (id) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken } = state.login;
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   const config = {
     method: 'delete',
-    url: `${API}/auto-pilot/users/${UserId}/favorites/${id}`,
+    url: `${AP_URL}/favorites`,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
+    data: { userId: neonUserId, favoriteId: id },
   }
   Axios(config).then(response => {
     dispatch(fetchFreeMember());
@@ -1059,18 +1115,21 @@ export const deleteSavedWorkout = (id) => (dispatch, getState) => {
   });
 }
 
-export const loadSavedWorkout = (id, currentDateIndex, currentDate) => (dispatch, getState) => {
+export const loadSavedWorkout = (id, currentDateIndex, currentDate) => async (dispatch, getState) => {
   const state = getState();
-  const { webToken, UserId, timezone } = state.login;
+  const { webToken, timezone } = state.login;
   const { dayView } = state.freeMember;
   const weekDay = getCalanderDate(timezone)[currentDateIndex]
+  const neonUserId = await resolveNeonUserId(dispatch, state);
+  if (!neonUserId) return;
 
   const config = {
     method: 'post',
-    url: `${API}/auto-pilot/favorites/${id}/users/${UserId}?date=${weekDay}`,
+    url: AP_URL,
     headers: {
       'Authorization': `Bearer ${webToken}`,
     },
+    data: { userId: neonUserId, op: 'apply-favorite', date: weekDay, favoriteId: id },
   }
   Axios(config).then(response => {
     const { data } = response;
