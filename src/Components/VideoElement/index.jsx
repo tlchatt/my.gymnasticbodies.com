@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logEvent } from '../../util/clientLogger';
 
 // Native <video> player that replaces ReactJWPlayer app-wide.
 //
@@ -22,6 +23,18 @@ const VideoElement = ({ playlist = [], autoPlay = true, onComplete, style }) => 
 
   useEffect(() => {
     setIndex(0);
+    // Silent-failure detector: a non-empty playlist whose items ALL resolve to an
+    // empty src means the upstream data gave us undefined mediaId(s). This renders a
+    // blank modal with no <video> and no native onError — exactly the "videos won't
+    // load" reports we can't otherwise see. Fires once per distinct playlist.
+    if (playlist.length && !playlist.some((p) => p && p.src)) {
+      logEvent('my.video.missing_src', {
+        level: 'warn',
+        component: 'VideoElement',
+        total: playlist.length,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signature]);
 
   if (!playlist.length) return null;
@@ -46,7 +59,18 @@ const VideoElement = ({ playlist = [], autoPlay = true, onComplete, style }) => 
       poster={current.poster}
       src={current.src}
       onEnded={handleEnded}
-      onError={(err) => console.log('VideoElement onError', err)}
+      onError={() => logEvent('my.video.error', {
+        level: 'error',
+        component: 'VideoElement',
+        src: current.src,
+        index,
+        total: playlist.length,
+      })}
+      onStalled={() => logEvent('my.video.stalled', {
+        level: 'warn',
+        component: 'VideoElement',
+        src: current.src,
+      })}
       style={{ width: '100%', display: 'block', ...style }}
     />
   );

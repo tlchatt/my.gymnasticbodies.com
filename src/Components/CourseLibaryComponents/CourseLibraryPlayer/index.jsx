@@ -1,4 +1,5 @@
 import React from 'react';
+import { logEvent } from '../../../util/clientLogger';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -98,7 +99,18 @@ const DemoPlayer = props => {
                   autoPlay
                   style={{ width: '100%', display: 'block' }}
                   src={`${BLOB}/${mediaId}.mp4`}
-                  onError={(err) => console.log("video onError", err)}
+                  onError={() => logEvent('my.video.error', {
+                    level: 'error',
+                    component: 'CourseLibraryPlayer',
+                    mediaId,
+                    src: `${BLOB}/${mediaId}.mp4`,
+                    title,
+                  })}
+                  onStalled={() => logEvent('my.video.stalled', {
+                    level: 'warn',
+                    component: 'CourseLibraryPlayer',
+                    mediaId,
+                  })}
                 />
               : null
           }

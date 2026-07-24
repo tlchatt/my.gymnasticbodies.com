@@ -21,6 +21,7 @@ import ProgressionRows from '../../Components/CourseLibaryComponents/Progression
 import PlaylistRow from '../../Components/CourseLibaryComponents/PlaylistRow'
 import CourseLibraryPlayer from '../../Components/CourseLibaryComponents/CourseLibraryPlayer'
 import OhNoModal from '../../Components/OhNoModal';
+import { logEvent } from '../../util/clientLogger';
 
 import { mainCourses } from './data';
 
@@ -3522,25 +3523,37 @@ const CourseLibrary = (props) => {
 
 
     axios(config).then(response => {
-      const keys = Object.keys(response.data);
-      if (response.data === "YOU AREN'T ENROLLED IN THIS COURSE.") {
-        console.log('YOU AREN\'T ENROLLED IN THIS COURSE');
-        setThirdRow({
-          show: false,
-          data: [],
-          loading: false
-        })
+      const data = response.data;
+      // The legacy AWS course-library endpoint returns a PLAIN STRING for any course it
+      // doesn't recognize: "YOU AREN'T ENROLLED IN THIS COURSE." OR — for the newer
+      // non-legacy courses (Foundation Intro / Restore / Fundamentals / Elements) — the
+      // literal "Please pass in Valid parameters." Running Object.keys() on that string
+      // yielded character-index keys ("0","1","2"...) which rendered as blank numbered
+      // cards and then crashed the whole SPA on click (allProgs became a single character,
+      // so allProgs.map threw "map is not a function", with no error boundary to catch it).
+      // Treat ANY non-object payload as "course unavailable" instead of rendering it.
+      const isValidPayload = data && typeof data === 'object' && !Array.isArray(data);
+      if (!isValidPayload) {
+        logEvent('my.course.error', {
+          level: 'warn',
+          component: 'CourseLibrary',
+          reason: 'non_object_course_response',
+          nameId: row.nameId,
+          courseName: row.name || row.courseName,
+          status: response.status,
+          sample: typeof data === 'string' ? data.slice(0, 120) : typeof data,
+        });
+        setThirdRow({ show: false, data: [], loading: false });
         setOhNoModal(true);
+        return;
       }
-      else {
-        setThirdRow({
-          show: true,
-          data: keys,
-          loading: false,
-          imagePrefix: cleanName(row.name ? row.name : row.courseName),
-          allData: response.data
-        })
-      }
+      setThirdRow({
+        show: true,
+        data: Object.keys(data),
+        loading: false,
+        imagePrefix: cleanName(row.name ? row.name : row.courseName),
+        allData: data,
+      });
     }).catch(error => {
       let responseData = {}
       if (row.name == "Foundation 1") {
@@ -23591,7 +23604,7 @@ const CourseLibrary = (props) => {
           : null
       }
       {
-        allProgs.length > 0
+        Array.isArray(allProgs) && allProgs.length > 0
           ? <Box style={{ width: '100%' }}>
             <div style={{ position: 'relative' }}>
               <div ref={allProgsRef} style={{ position: 'absolute', top: -54, left: 0 }}></div>
