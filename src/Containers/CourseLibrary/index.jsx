@@ -5,11 +5,7 @@ import {
   Typography,
   Box,
   Divider,
-  CircularProgress,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Button
+  CircularProgress
 } from '@material-ui/core';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
@@ -3449,7 +3445,6 @@ const CourseLibrary = (props) => {
   const [allProgs, setAllProgs] = useState([]);
 
   const [ohNoModal, setOhNoModal] = useState(false);
-  const [courseUnavailable, setCourseUnavailable] = useState(false);
 
   const [hideReps, setHideReps] = useState(false);
 
@@ -3548,17 +3543,17 @@ const CourseLibrary = (props) => {
           status: response.status,
           sample: typeof data === 'string' ? data.slice(0, 120) : typeof data,
         });
-        setThirdRow({ show: false, data: [], loading: false });
         if (data === "YOU AREN'T ENROLLED IN THIS COURSE.") {
           // Genuine entitlement gate — the legit purchase prompt.
+          setThirdRow({ show: false, data: [], loading: false });
           setOhNoModal(true);
-        } else {
-          // AWS doesn't recognize this course (the newer non-legacy courses return
-          // "Please pass in Valid parameters."). NOT an entitlement issue — never tell an
-          // active member to purchase content they already have. Show a neutral notice.
-          setCourseUnavailable(true);
+          return;
         }
-        return;
+        // AWS doesn't recognize this course — the newer non-legacy courses (Foundation
+        // Intro / Restore / Elements / Fundamentals) return "Please pass in Valid
+        // parameters." Render them from the local embedded course data (the SAME source
+        // Neon users already use) by routing into the .catch fallback below.
+        throw new Error('aws-course-unrecognized');
       }
       setThirdRow({
         show: true,
@@ -23632,22 +23627,6 @@ const CourseLibrary = (props) => {
       }
       <CourseLibraryPlayer CloseModal={closeModal} {...playerState} />
       <OhNoModal open={ohNoModal} handleClose={() => setOhNoModal(false)} />
-      <Dialog open={courseUnavailable} onClose={() => setCourseUnavailable(false)} maxWidth="sm" fullWidth>
-        <DialogContent style={{ padding: 32, textAlign: 'center' }}>
-          <Typography variant="h5" style={{ marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Coming Soon
-          </Typography>
-          <Typography variant="body1">
-            This course is being added to your library and isn’t available just yet.
-            Your membership is active — please check back soon.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setCourseUnavailable(false)} variant="contained" color="primary">
-            Got it
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Wrapper>
   );
 }
