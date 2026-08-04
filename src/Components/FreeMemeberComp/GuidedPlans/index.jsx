@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {  useHistory, useLocation} from 'react-router-dom';
 import axios from 'axios';
 import * as Sentry from "@sentry/react";
-import { AxiosConfig } from '../../../Store/util';
 import clsx from 'clsx'
 
 import PathSelection from '../InitialPage/PathSelection'
@@ -13,6 +12,8 @@ import { setLevelPath, continutePreviosLevel } from '../../../Store/Action/Level
 import { openOhNo } from '../../../Store/Reducers/OhNoReducer';
 
 import { LinkRef } from '../../UtilComponents/LinkOverride';
+
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -105,7 +106,8 @@ export default function GuidedPlans(props) {
 
   const levelId = useSelector(state => state.login.levelId);
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
+  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
   const guidedPlanAccessLevels = useSelector(state => state.login.guidedPlanAccessLevels);
 
 
@@ -140,8 +142,12 @@ export default function GuidedPlans(props) {
   }
 
   useEffect(() => {
-    if (isInDrawer && open && levelId !== 0  ) {
-      axios(AxiosConfig('get', `/myschedule/levels/lastViewed/users/${userId}`, webToken)).then(res => {
+    if (isInDrawer && open && levelId !== 0 && userId) {
+      axios({
+        method: 'get',
+        url: `${NEWAPI}/api/user/workout/levels?op=lastViewed&userId=${encodeURIComponent(userId)}`,
+        headers: { 'Authorization': `Bearer ${webToken}` }
+      }).then(res => {
         if (res.data.lastLoginLevel > 0 ) {
           setLastLoginLevel(res.data.lastLoginLevel)
           setSelectedPath(res.data.lastLoginLevel)
