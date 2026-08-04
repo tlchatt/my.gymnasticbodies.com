@@ -30,18 +30,13 @@ export const GetUserPorgressions = (courseName, todaysDate, exerciseId) => async
   console.log("state is:", state)
   console.log("state.legacyCourse.allProgressions:", state.legacyCourse.allProgressions)
   console.log("courseName is:", courseName)
-  // Legacy (AWS) users keep their AWS progression state; non-legacy users use Neon.
-  let config = userData.awsUserId
-    ? {
-        method: 'get',
-        url: `${API}/workout-service/programs/users/${userData.awsUserId}/date/${todaysDate}?workoutType=${courseName}`,
-        headers: { 'Authorization': `Bearer ${userData.webToken}` }
-      }
-    : {
-        method: 'get',
-        url: `${NEWAPI}/api/user/workout/byo/program?userId=${encodeURIComponent(neonId(userData))}&courseId=${legacyNameToId[courseName]}&date=${todaysDate}&section=levels`,
-        headers: { 'Authorization': `Bearer ${userData.webToken}` }
-      };
+  // All users read progression state from Neon. Legacy guided-plan history was seeded
+  // into user_logs section 'levels' on 2026-08-03, so the AWS branch is no longer needed.
+  let config = {
+    method: 'get',
+    url: `${NEWAPI}/api/user/workout/byo/program?userId=${encodeURIComponent(neonId(userData))}&courseId=${legacyNameToId[courseName]}&date=${todaysDate}&section=levels`,
+    headers: { 'Authorization': `Bearer ${userData.webToken}` }
+  };
 
 
   Axios(config)
@@ -176,15 +171,8 @@ export const ManageDiffculty = (type, exerciseId, date) => (dispatch, getState) 
       data: { userId: neonUserId, courseId: legacyPage.courseId, op: 'difficulty', exerciseId, type, date: legacyPage.byoDate }
     };
   }
-  else if (userData.awsUserId) {
-    config = {
-      method: 'put',
-      url: `${API}/workout-service/users/${userData.awsUserId}/difficulty/${type}/?workoutType=${legacyPage.name}&exerciseId=${exerciseId}&date=${date}`,
-      headers: { 'Authorization': `Bearer ${userData.webToken}` }
-    };
-  }
   else {
-    // Non-legacy: Neon curriculum route (shared byo_settings).
+    // All guided-plan users: Neon curriculum route (shared byo_settings).
     config = {
       method: 'put',
       url: `${NEWAPI}/api/user/workout/byo/program`,
@@ -246,19 +234,6 @@ export const handleNotes = (notes, progressionId, masterySteps, date, sectionKey
   const selectedProgessions = _.cloneDeep(legacyPage.selectedProgessions);
 
   let config;
-  let body = {
-    userId: userData.UserId,
-    date: date,
-    exerciseId: progressionId,
-    notes: notes,
-    masterySets: {
-      masterySetId: masterySteps.masterySetId,
-      sets: masterySteps.sets,
-      repsOrSecs: masterySteps.repsOrSecs
-    },
-    setsAndRepsDTOList: []
-  }
-
   if (isBuildYourOwn) {
     // BYO: Neon program-notes op (curriculum sub-phase).
     const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
@@ -269,11 +244,8 @@ export const handleNotes = (notes, progressionId, masterySteps, date, sectionKey
       data: { userId: neonUserId, op: 'program-notes', date: date, courseId: legacyPage.courseId, exerciseId: progressionId, notes }
     }
   }
-  else if (userData.awsUserId) {
-    config = AxiosConfig('POST', `/program-log/notes/users/${userData.awsUserId}`, userData.webToken, { data: body })
-  }
   else {
-    // Non-legacy: Neon program-notes (section 'levels').
+    // All guided-plan users: Neon program-notes (section 'levels').
     config = {
       method: 'post',
       url: `${NEWAPI}/api/user/workout/byo`,
@@ -343,15 +315,8 @@ export const handleLegacyLog = (date, exerciseId, mobilityStatus, autoProg, step
       })
   }
   else {
-    // Guided-plan program logging: legacy -> AWS, non-legacy -> Neon (section 'levels').
-    let config = userData.awsUserId
-      ? {
-          method: 'post',
-          url: `${API}/workout-service/programs/users/${userData.awsUserId}/logging?workoutType=${legacyPage.name}`,
-          headers: { 'Authorization': `Bearer ${userData.webToken}` },
-          data: { userId: userData.awsUserId, date, exerciseId, imStatus: mobilityStatus, autoprogress: autoProg, notes: '', masterySets: steps, setsAndRepsDTOList: logList }
-        }
-      : {
+    // Guided-plan program logging — Neon for all users (section 'levels').
+    let config = {
       method: 'post',
       url: `${NEWAPI}/api/user/workout/byo`,
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` },
@@ -416,11 +381,9 @@ export const handleDeleteProgression = (exerciseId, isLevels = false, masterySet
     dispatch(handleProgression(exerciseId, masterySet, date, isLevels, purpose))
     dispatch(showToast('Successfully updated ' + legacyPage.name, 'success'))
 
-  } else if (userData.awsUserId) {
-    config = AxiosConfig('DELETE', `/workout-service/users/${userData.awsUserId}/exercises/${exerciseId}?workoutType=${legacyPage.name}`, userData.webToken)
   } else {
     {
-      // Non-legacy: Neon deselect (shared byo_settings).
+      // All guided-plan users: Neon deselect (shared byo_settings).
       config = {
         method: 'put',
         url: `${NEWAPI}/api/user/workout/byo/program`,
@@ -696,11 +659,8 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
         userData.webToken
       )
     }
-    else if (userData.awsUserId) {
-      config = AxiosConfig('PUT', `/workout-service/users/${userData.awsUserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.name}&date=${date}`, userData.webToken)
-    }
     else {
-      // Non-legacy: Neon select (shared byo_settings).
+      // All guided-plan users: Neon select (shared byo_settings).
       config = {
         method: 'put',
         url: `${NEWAPI}/api/user/workout/byo/program`,
