@@ -56,8 +56,50 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const NEWAPI = process.env.REACT_APP_API_NEW;
+
 const LoginFrom = (props) => {
   const classes = useStyles();
+
+  // ---- Admin / test sign-in ------------------------------------------------
+  // Signs in as a member with an email only — used by support ("show me what this
+  // member sees") and by testing. The secret arrives as ?impersonate=<secret> and is
+  // held in sessionStorage for the tab, so a reload keeps the mode. Never written to
+  // localStorage, never bundled. The server (/api/admin/impersonate) does the
+  // authorising — an app. admin session works too, via credentials:'include'.
+  const [impEmail, setImpEmail] = React.useState('');
+  const [impBusy, setImpBusy] = React.useState(false);
+  const [impError, setImpError] = React.useState('');
+  const impersonateSecret = React.useMemo(() => {
+    try {
+      const fromUrl = new URLSearchParams(window.location.search).get('impersonate');
+      if (fromUrl) { sessionStorage.setItem('impersonateSecret', fromUrl); return fromUrl; }
+      return sessionStorage.getItem('impersonateSecret') || '';
+    } catch (e) { return ''; }
+  }, []);
+
+  async function assumeMember(event) {
+    event.preventDefault();
+    const email = (impEmail || '').trim();
+    if (!email) { setImpError('Enter a member email'); return; }
+    setImpBusy(true);
+    setImpError('');
+    try {
+      const res = await fetch(`${NEWAPI}/api/admin/impersonate`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'x-impersonation-secret': impersonateSecret },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setImpError(data.error || `Failed (${res.status})`); setImpBusy(false); return; }
+      for (const [k, v] of Object.entries(data.session)) localStorage.setItem(k, v);
+      window.location.replace('/');
+    } catch (err) {
+      setImpError(err.message || 'Request failed');
+      setImpBusy(false);
+    }
+  }
 
   const LinkRef = React.forwardRef((props, ref) =>
     <div style={{ display: 'contents' }} ref={ref}>
@@ -78,6 +120,41 @@ const LoginFrom = (props) => {
   if (props.loading) {
     loginForm = (
       <CircularProgress className={classes.loader} />
+    );
+  }
+  else if (impersonateSecret) {
+    // Email-only sign-in for admins and automated tests.
+    loginForm = (
+      <form className={classes.form} noValidate onSubmit={assumeMember}>
+        <Typography variant="body2" style={{ marginBottom: 8 }}>
+          Admin / test sign-in — member email only
+        </Typography>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="impEmail"
+          label="Member Email"
+          name="impEmail"
+          autoFocus
+          value={impEmail}
+          onChange={(event) => setImpEmail(event.target.value)}
+          error={!!impError}
+          helperText={impError || ''}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          disabled={impBusy}
+        >
+          {impBusy ? 'Signing in…' : 'Sign in as member'}
+        </Button>
+        <Box mt={5}><Copyright /></Box>
+      </form>
     );
   }
   else {
