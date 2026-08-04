@@ -34,17 +34,19 @@ const useStyles = makeStyles(theme => ({
 const MissedDays = props => {
   const classes = useStyles();
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
+  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
   const [missedDays, setMissedDays] = useState([]);
   const [initialMissedDays, setInitailMissedDays] = useState([])
   const dispatch = useDispatch();
   const { open } = props
-  const API = process.env.REACT_APP_API;
+  const API = process.env.REACT_APP_API_NEW;
   useEffect(() => {
     const getUserData = () => {
+      if (!userId) return;
       var config = {
         method: 'get',
-        url: `${API}/thrive/tasks/missedlog/users/${userId}`,
+        url: `${API}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=missed`,
         headers: {
           'Authorization': `Bearer ${webToken}`
         }
@@ -83,10 +85,12 @@ const MissedDays = props => {
 
     var config = {
       method: 'post',
-      url: `${API}/thrive/tasks/missedlog/users/${userId}?days=${days.join(',')}`,
+      url: `${API}/api/user/workout/thrive`,
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${webToken}`
-      }
+      },
+      data: { userId, op: 'missed-log', days: days.join(',') }
     };
 
     axios(config).then(res => {

@@ -77,12 +77,13 @@ const useStyles = makeStyles(theme=>({
   }
 }))
 
-const API = process.env.REACT_APP_API;
+const API = process.env.REACT_APP_API_NEW;
 
 const ThriveTasks = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
+  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
   const dispatch = useDispatch();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -92,9 +93,11 @@ const ThriveTasks = props => {
   const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
 
   const getUserData = useCallback( () => {
+    if (!userId) return;
+    // AWS served the task list from a POST; the Neon route is a plain read.
     var config = {
-      method: 'post',
-      url: `${API}/thrive/tasks/users/${userId}`,
+      method: 'get',
+      url: `${API}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=tasks`,
       headers: {
         'Authorization': `Bearer ${webToken}`
       }
@@ -117,8 +120,10 @@ const ThriveTasks = props => {
     let taskIds = tasks.map(task => task.usersTaskId).join(',')
     var config = {
       method: 'post',
-      url: `${API}/thrive/tasks/log/users/${userId}?taskIds=${taskIds}`,
+      url: `${API}/api/user/workout/thrive`,
+      data: { userId, op: 'log-tasks', taskIds },
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${webToken}`
       }
     };

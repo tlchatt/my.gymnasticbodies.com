@@ -79,12 +79,13 @@ const useStyles = makeStyles(theme=>({
   },
 }))
 
-const API = process.env.REACT_APP_API;
+const API = process.env.REACT_APP_API_NEW;
 
 const ThriveLessons = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser)
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
+  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
 
   const [loading, setLoading] = useState(true);
   const [lessons, setLessons] = useState([]);
@@ -101,8 +102,10 @@ const ThriveLessons = props => {
   const handleUnlock = () => {
     var config = {
       method: 'post',
-      url: `${API}/thrive/unlock/users/${userId}`,
+      url: `${API}/api/user/workout/thrive`,
+      data: { userId, op: 'unlock' },
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${webToken}`,
       },
     };
@@ -126,7 +129,7 @@ const ThriveLessons = props => {
   const getUserData = useCallback(() => {
     var config = {
       method: 'get',
-      url: `${API}/thrive/lessons/users/${userId}`,
+      url: `${API}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=lessons`,
       headers: {
         'Authorization': `Bearer ${webToken}`
       }

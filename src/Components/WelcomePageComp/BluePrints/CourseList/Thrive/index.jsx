@@ -14,18 +14,20 @@ import ResetThrive from '../../../../Thrive/ResetThrive.jsx';
 
 import { showToast } from '../../../../../Store/Action/calendarActions';
 
-const API = process.env.REACT_APP_API;
+const API = process.env.REACT_APP_API_NEW;
 
 const Thrive = (props) => {
   const [open, setOpen] = useState(false);
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
+  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
   const dispatch = useDispatch();
 
   const handleReset = () => {
     var config = {
       method: 'delete',
-      url: `${API}/thrive/reset/users/${userId}`,
+      url: `${API}/api/user/workout/thrive`,
+      data: { userId, op: 'reset' },
       headers: {
         'Authorization': `Bearer ${webToken}`,
       },
@@ -44,7 +46,8 @@ const Thrive = (props) => {
   const secondCall = () => {
     var config = {
       method: 'post',
-      url: `${API}/thrive/reset/permissions/users/${userId}`,
+      url: `${API}/api/user/workout/thrive`,
+      data: { userId, op: 'reset-permissions' },
       headers: {
         'Authorization': `Bearer ${webToken}`,
       },

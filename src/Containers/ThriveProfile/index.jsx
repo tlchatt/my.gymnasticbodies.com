@@ -94,13 +94,14 @@ const useStyles = makeStyles(theme=>({
   },
 }))
 
-const API = process.env.REACT_APP_API;
+const API = process.env.REACT_APP_API_NEW;
 
 const ThriveProfile = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
   const firstName = useSelector(state => state.login.firstName);
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
+  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
   const [heightType, setHeightType] = useState(0)
   const [weightType, setWeightType] = useState(0)
   const [weight, setWeight] = useState('')
@@ -196,7 +197,7 @@ const ThriveProfile = props => {
     const getUserData = () => {
       var config = {
         method: 'get',
-        url: `${API}/thrive/profile/users/${userId}`,
+        url: `${API}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=profile`,
         headers: {
           'Authorization': `Bearer ${webToken}`
         }
@@ -232,11 +233,12 @@ const ThriveProfile = props => {
       formData.append('currentImg', '')
     }
 
+    formData.append('userId', userId);
     formData.append('myProfileRequest', JSON.stringify({ units: heightType, height1: height, height2: inches, weight: ~~weight }));
 
     var config = {
       method: 'post',
-      url: `${API}/thrive/profile/users/${userId}`,
+      url: `${API}/api/user/workout/thrive`,
       headers: {
         'Authorization': `Bearer ${webToken}`,
         'Content-Type': 'multipart/form-data',
