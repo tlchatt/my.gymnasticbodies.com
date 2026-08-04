@@ -3,7 +3,6 @@ import * as Sentry from "@sentry/react";
 export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 
-const API = process.env.REACT_APP_API;
 const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const legacyNameToId = {
@@ -18,30 +17,21 @@ const legacyNameToId = {
 export const OpenModal = (exerciseId) => (dispatch, getState) => {
   const state = getState();
   const userData = state.login;
-  const workoutType = state.legacyCourse.name;
-  const isBuildYourOwn = state.legacyCourse.isBuildYourOwn;
   const workoutName = state.legacyCourse.name;
   let config;
 
-  if (isBuildYourOwn) {
-    // BYO: Neon demo-video catalog (curriculum sub-phase) — same {body:{Strength,Mobility}} shape.
-    config = {
-      method: 'get',
-      url: `${NEWAPI}/api/user/workout/byo/program?courseId=${legacyNameToId[workoutName]}&exerciseId=${exerciseId}&view=demo`,
-      headers: {
-        'Authorization': `Bearer ${userData.webToken}`
-      }
-    };
-  }
-  else {
-    config = {
-      method: 'get',
-      url: `${API}/workout-service/videos/exercise/${exerciseId}/users/${userData.UserId}?workoutType=${workoutType}`,
-      headers: {
-        'Authorization': `Bearer ${userData.webToken}`
-      }
-    };
-  }
+  // Neon demo-video catalog for BYO and Guided Plans alike — same
+  // {body:{Strength,Mobility}} shape. This is a catalog lookup by course + exercise, so
+  // no user id is involved. The old non-BYO branch sent state.login.UserId to AWS, which
+  // is a Neon UUID for Neon-authed members; AWS rejected it and the modal silently fell
+  // back to hardcoded data covering only exerciseId 1.
+  config = {
+    method: 'get',
+    url: `${NEWAPI}/api/user/workout/byo/program?courseId=${legacyNameToId[workoutName]}&exerciseId=${exerciseId}&view=demo`,
+    headers: {
+      'Authorization': `Bearer ${userData.webToken}`
+    }
+  };
 
 
   axios(config).then(res => {
