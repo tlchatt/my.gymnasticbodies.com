@@ -155,8 +155,18 @@ const checkAuthTimeout = (expirationTime) => {
   };
 };
 
+// Entry point. Neon is tried FIRST and AWS is the fallback — the reverse of the original
+// order. Anyone who could sign in before still can, because both rails are still tried;
+// the difference is that AWS is no longer required for a normal login, which is what makes
+// switching it off safe.
 export const Login = (username, password) => dispatch => {
   logEvent('my.login.attempt', { email: username });
+  dispatch(LoginNew(username, password));
+};
+
+// Legacy AWS sign-in. Now only reached when Neon rejects the credentials — e.g. one of the
+// ~300 accounts with no Neon password. Sets postAWS = false.
+export const LoginLegacy = (username, password) => dispatch => {
   dispatch(LoginStart());
 
   const config = {
@@ -245,7 +255,7 @@ export const Login = (username, password) => dispatch => {
               }
             } catch (_) {}
 
-            logEvent('my.login.success', { email: username });
+            logEvent('my.login.success', { email: username, data: { rail: 'aws' } });
             decoded.neonUserId = neonUserId
             decoded.awsUserId = decoded.cid
             dispatch(LoginAsync(
@@ -345,7 +355,7 @@ export const Login = (username, password) => dispatch => {
               }
             } catch (_) {}
 
-            logEvent('my.login.success', { email: username });
+            logEvent('my.login.success', { email: username, data: { rail: 'aws' } });
             decoded.neonUserId = neonUserId
             decoded.awsUserId = decoded.cid
             dispatch(
@@ -368,9 +378,12 @@ export const Login = (username, password) => dispatch => {
       }
     })
     .catch(err => {
-      dispatch(LoginNew(username, password))
+      // End of the line: Neon rejected them and so did AWS.
+      logEvent('my.login.failed', { email: username, data: { rail: 'aws' } });
+      dispatch(loginFail());
+      Sentry.captureException(err);
     });
-}//old user login, postAWS = false
+}//legacy AWS login, postAWS = false
 
 export const LoginNew = (username, password) => dispatch => {
   console.log(" inside export const LoginNew = (username, password) => dispatch => {")
@@ -489,7 +502,9 @@ export const LoginNew = (username, password) => dispatch => {
         }
       } catch (_) {}
 
-      logEvent('my.login.success', { email: username });
+      // Record WHICH rail authenticated — previously this event only carried the email, so
+      // there was no way to see how many members still depend on AWS.
+      logEvent('my.login.success', { email: username, data: { rail: 'neon' } });
       dispatch(
         LoginAsync(
           authToken,
@@ -506,11 +521,13 @@ export const LoginNew = (username, password) => dispatch => {
 
     })
     .catch(err => {
-      logEvent('my.login.failed', { email: username });
-      dispatch(loginFail())
-      Sentry.captureException(err);
+      // Neon rejected the credentials — fall back to AWS, which still covers the accounts
+      // whose password never made it into Neon. Not an error yet, so it is not sent to
+      // Sentry; LoginLegacy reports the real failure if AWS rejects them too.
+      logEvent('my.login.neon_miss', { email: username });
+      dispatch(LoginLegacy(username, password));
     });
-}//new user failover login, postAWS = true
+}//primary Neon login, postAWS = true
 
 const LoginAsync = (webToken, data, userState, timezone) => {
   /*
@@ -817,114 +834,6 @@ export const authCheckState = (props) => (dispatch, getState) => {
   }
 };
 
-
-const getNewAuthToken = (refreshToken) => dispatch => {
-  let newAuthConfig = {
-    method: 'get',
-    url: `${API}/auth/refreshToken`,
-    headers: {
-      'Authorization': `Bearer ${refreshToken}`,
-    },
-  };
-
-  axios(newAuthConfig).then(res => {
-    const newAuthToken = res.data.authorizationToken;
-    const decoded = jwt.decode(newAuthToken)
-
-
-    const expirationDate = new Date(new Date().getTime() + (decoded.exp - decoded.iat) * 1000);
-    const { timezone } = res.data;
-
-    localStorage.setItem('authToken', newAuthToken);
-    localStorage.setItem('AuthExpirationDate', expirationDate);
-    localStorage.setItem('timezone', timezone);
-
-    let userDataConfig = {
-      method: 'get',
-      url: `${API}/welcome/users`,
-      headers: {
-        'Authorization': `Bearer ${newAuthToken}`,
-      },
-    };
-
-    if (res.data.isFreeMember && (!res.data.isAllAccessUser && !res.data.hasCourseProduct)) {
-      userDataConfig = {
-        ...userDataConfig,
-        method: 'GET',
-        url: `${API}/welcome/v1/users`,
-      }
-
-      axios(userDataConfig)
-        .then(res => dispatch(
-          LoginAsync(
-            newAuthToken,
-            decoded,
-            {
-              ...res.data,
-              showAllAccessSite: true,
-              isFreeMember: true
-            },
-            timezone)
-        ))
-        .catch(err => {
-          dispatch(
-            LoginAsync(
-              newAuthToken,
-              decoded,
-              {
-                ...res.data,
-                showAllAccessSite: true,
-                isFreeMember: true
-              },
-              timezone)
-          )
-          //dispatch(loginFail())
-          // Sentry.captureException(err);
-        });
-    }
-    else {
-      userDataConfig = {
-        ...userDataConfig,
-        method: 'GET',
-        url: `${API}/welcome/v1/users`,
-      }
-
-      axios(userDataConfig)
-        .then(res => dispatch(
-          LoginAsync(
-            newAuthToken,
-            decoded,
-            {
-              ...res.data,
-              showAllAccessSite: true,
-              isFreeMember: false
-            },
-            timezone)
-        ))
-        .catch(err => {
-          dispatch(
-            LoginAsync(
-              newAuthToken,
-              decoded,
-              {
-                ...res.data,
-                showAllAccessSite: true,
-                isFreeMember: false
-              },
-              timezone)
-          )
-          //dispatch(loginFail())
-          //Sentry.captureException(err);
-        });
-    }
-  }).catch(err => {
-    dispatch(loginFail())
-
-    //Sentry.captureException(err);
-
-  })
-
-}
 
 export const Logout = () => {
   localStorage.removeItem('authToken');
