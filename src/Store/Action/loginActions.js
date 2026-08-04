@@ -7,7 +7,6 @@ import { showToast } from './calendarActions'
 import { AxiosConfig } from '../util'
 import { logEvent } from '../../util/clientLogger'
 
-const API = process.env.REACT_APP_API;
 const NEWAPI = process.env.REACT_APP_API_NEW
 const levelObj = {
   0: {
@@ -164,227 +163,6 @@ export const Login = (username, password) => dispatch => {
   dispatch(LoginNew(username, password));
 };
 
-// Legacy AWS sign-in. Now only reached when Neon rejects the credentials — e.g. one of the
-// ~300 accounts with no Neon password. Sets postAWS = false.
-export const LoginLegacy = (username, password) => dispatch => {
-  dispatch(LoginStart());
-
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    }
-  }
-
-  axios.post(API + '/auth', { username, password, timezone: moment.tz.guess() }, config)
-    .then(res => {
-      console.log("/auth res.data", res.data)
-
-      const authToken = res.data.jwtAuthorizationToken;
-      const refreshToken = res.data.jwtRefreshToken;
-      const decodeRefresh = jwt.decode(refreshToken);
-      const decoded = jwt.decode(authToken);
-      const expirationDate = new Date(new Date().getTime() + (decoded.exp - decoded.iat) * 1000);
-      const refreshExpireTime = new Date(new Date().getTime() + (decodeRefresh.exp - decodeRefresh.iat) * 1000);
-
-      const { timezone } = res.data;
-      localStorage.setItem('authToken', authToken);
-      localStorage.setItem('AuthExpirationDate', expirationDate);
-
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('refreshExpireTime', refreshExpireTime);
-
-      localStorage.setItem('timezone', timezone);
-      localStorage.setItem('postAWS', false);
-
-
-      let userConfig = {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Authorization": `Bearer ${authToken}`
-        }
-      }
-      // res.data.isAllAccessUser = true
-      // res.data.isFreeMember = true
-      // res.data.hasCourseProduct = true
-
-      if (res.data.isFreeMember && (!res.data.isAllAccessUser && !res.data.hasCourseProduct)) {
-        console.log('login isFreeMember && IF')
-        userConfig = {
-          ...userConfig,
-          method: 'GET',
-          url: `${API}/welcome/v1/users`,
-        }
-        res.data.postAWS = false
-        console.log("res.data later is:", res.data)
-        axios(userConfig)
-          .then(async res => {
-            localStorage.setItem('name', res.data.fname);
-            localStorage.setItem('username', username);
-            localStorage.setItem('userId', res.data.contactId);
-            // Awaited so the Neon UUID is in Redux before the app renders — the
-            // ${NEWAPI} workout routes are keyed on it. Failure is non-fatal:
-            // ensureNeonUserId() resolves it later via /api/user/id.
-            let neonUserId = null;
-            try {
-              const subRes = await axios.post(`${NEWAPI}/api/user/subscription`, {
-                password,
-                email: username,
-                name: res.data.fname,
-                postAWS: false,
-                reason: "registerWPass",
-                awsCustomerId: res?.data?.contactId
-              }, { headers: { "Content-Type": "application/json" } });
-              neonUserId = subRes?.data?.data?.id || null;
-              if (neonUserId) {
-                localStorage.setItem('userId', neonUserId);
-                localStorage.setItem('neonUserId', neonUserId);
-              }
-            } catch (_) {}
-
-            try {
-              const renewalRes = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(username)}`);
-              if (renewalRes.ok) {
-                const { needsRenewal } = await renewalRes.json();
-                if (needsRenewal) {
-                  logEvent('my.login.renewal_redirect', { email: username });
-                  window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
-                  return;
-                }
-              }
-            } catch (_) {}
-
-            logEvent('my.login.success', { email: username, data: { rail: 'aws' } });
-            decoded.neonUserId = neonUserId
-            decoded.awsUserId = decoded.cid
-            dispatch(LoginAsync(
-              authToken,
-              decoded,
-              {
-                ...res.data,
-                showAllAccessSite: true,
-                isFreeMember: true
-              },
-              timezone))
-          })
-          .catch(err => {
-            console.log('err login isFreeMember && IF', err)
-            dispatch(loginFail())
-            Sentry.captureException(err);
-          });
-      }
-
-      else {
-        console.log('login else')
-        userConfig = {
-          ...userConfig,
-          method: 'GET',
-          url: `${API}/welcome/v1/users`,
-        }
-
-        axios(userConfig)
-          .then(async res => {
-            console.log("/welcome/v1/users res.data", res.data)
-            let resGoal = {
-              "fname": "Luke",
-              "lname": "",
-              "contactId": 411847,
-              "emailId": "lukesearra@icloud.com",
-              "isAllAccessUser": true,
-              "isThriveUser": true,
-              "isAdmin": false,
-              "playerScript": "?exp=1765836948935&sig=ab9dfa7b1177b34f5db031964d6bd4a7",
-              "guidedPlanAccessLevels": [
-                0,
-                1,
-                2,
-                3,
-                4
-              ],
-              "userLevel": "Beginner",
-              "levelId": 0
-            }
-            localStorage.setItem('name', res.data.fname);
-            localStorage.setItem('username', username);
-            localStorage.setItem('userId', res.data.contactId);
-            console.log("decoded:", decoded)
-
-            console.log("c", res.data)
-            res.data.postAWS = false
-
-            // registerWPass — awaited so the Neon UUID lands in Redux before render
-            // (the ${NEWAPI} workout routes key on it). Non-fatal on failure:
-            // ensureNeonUserId() resolves it later via /api/user/id.
-            let neonUserId = null
-            const config = {
-              headers: {
-                "Content-Type": "application/json"
-              }
-            }
-            let data = {
-              password: password,
-              email: username,
-              name: res.data.fname,
-              postAWS: false,
-              reason: "registerWPass",
-              awsCustomerId:res?.data?.contactId
-            }
-            try {
-              const subRes = await axios.post(`${NEWAPI}/api/user/subscription`, data, config)
-              neonUserId = subRes?.data?.data?.id || null
-              console.log("neonUserId from res is:", neonUserId)
-              if (neonUserId) {
-                localStorage.setItem('userId', neonUserId);
-                localStorage.setItem('neonUserId', neonUserId);
-              }
-            } catch (error) {
-              // Sentry.captureException(error);
-            }
-
-
-            try {
-              const renewalRes = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(username)}`);
-              if (renewalRes.ok) {
-                const { needsRenewal } = await renewalRes.json();
-                if (needsRenewal) {
-                  logEvent('my.login.renewal_redirect', { email: username });
-                  window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
-                  return;
-                }
-              }
-            } catch (_) {}
-
-            logEvent('my.login.success', { email: username, data: { rail: 'aws' } });
-            decoded.neonUserId = neonUserId
-            decoded.awsUserId = decoded.cid
-            dispatch(
-              LoginAsync(
-                authToken,
-                decoded,
-                {
-                  ...res.data,
-                  showAllAccessSite: true,
-                  isFreeMember: false
-                },
-                timezone)
-            )
-          })
-          .catch(err => {
-            console.log('err login else', err)
-            dispatch(loginFail())
-            Sentry.captureException(err);
-          });
-      }
-    })
-    .catch(err => {
-      // End of the line: Neon rejected them and so did AWS.
-      logEvent('my.login.failed', { email: username, data: { rail: 'aws' } });
-      dispatch(loginFail());
-      Sentry.captureException(err);
-    });
-}//legacy AWS login, postAWS = false
-
 export const LoginNew = (username, password) => dispatch => {
   console.log(" inside export const LoginNew = (username, password) => dispatch => {")
   dispatch(LoginStart());
@@ -521,11 +299,13 @@ export const LoginNew = (username, password) => dispatch => {
 
     })
     .catch(err => {
-      // Neon rejected the credentials — fall back to AWS, which still covers the accounts
-      // whose password never made it into Neon. Not an error yet, so it is not sent to
-      // Sentry; LoginLegacy reports the real failure if AWS rejects them too.
-      logEvent('my.login.neon_miss', { email: username });
-      dispatch(LoginLegacy(username, password));
+      // Neon is the only rail. There is deliberately no AWS fallback: the accounts with no
+      // Neon password cannot authenticate against AWS either (AWS delegates to Keap, and
+      // they had no Keap password to migrate), so a fallback would have protected nobody
+      // while keeping AWS load-bearing. They recover through password reset.
+      logEvent('my.login.failed', { email: username, data: { rail: 'neon' } });
+      dispatch(loginFail());
+      Sentry.captureException(err);
     });
 }//primary Neon login, postAWS = true
 

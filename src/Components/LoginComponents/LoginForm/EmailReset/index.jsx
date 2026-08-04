@@ -58,8 +58,7 @@ const EmailForm = () => {
   const [fail, setFail] = useState({ isFaield: false, message: '', variation: 'error' });
   const [wait, setWait] = useState(false);
   let form;
-  const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
-  const API = process.env.REACT_APP_API;
+  const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
   const NEWAPI = process.env.REACT_APP_API_NEW
   const handleChange = (e) => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

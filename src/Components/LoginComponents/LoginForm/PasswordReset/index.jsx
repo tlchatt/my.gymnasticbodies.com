@@ -10,9 +10,9 @@ import { NavLink } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
-import axios from 'axios';
 import * as Sentry from "@sentry/react";
 
+import { logEvent } from '../../../../util/clientLogger';
 import Aux from '../../../../HOC/aux';
 import Copyright from "../Copyright";
 import SnackBar from '../../../SnakBar';
@@ -57,24 +57,15 @@ const PassWordReset = (props) => {
   const [PassWordOne, setPassWordOne] = useState('');
   const [PassWordTwo, setPassWordTwo] = useState('');
   const [fail, setFail] = useState({ isFaield: false, message: '', variation: 'error' });
-  const API = process.env.REACT_APP_API;
   const NEWAPI = process.env.REACT_APP_API_NEW
   let form;
 
   useEffect(() => {
-    axios.get(`${API}/password/reset-password?id=${props.match.params.id}&token=${props.match.params.token}`)
-      .then(res => {
-        setDone(false);
-      }).catch(err => {
-        setDone(false);
-        // Sentry.captureException(err);
-        // setFail({ isFaield: true, message: 'Invalid Reset Link.', variation: 'error' });
-        // setTimeout(() => {
-        //   setFail({ isFaield: false, message: '', variation: 'error' })
-        //   setRedirect(true);
-        // }, 2500);
-      })
-  }, [props.match.params.id, props.match.params.token, API]);
+    // The old AWS link-validation GET set done=false in BOTH its then and its catch, so it
+    // never actually gated anything. Dropped rather than reimplemented — the reset POST
+    // below validates the token server-side, which is the check that matters.
+    setDone(false);
+  }, [props.match.params.id, props.match.params.token]);
 
   const LinkRef = React.forwardRef((props, ref) =>
     <div style={{ display: 'contents' }} ref={ref}>
@@ -116,9 +107,17 @@ const PassWordReset = (props) => {
           "Access-Control-Allow-Origin": "*",
         }
       }
-      const passwordResetDto = `{"userId": ${props.match.params.id}, "password": "${PassWordOne}", "confirmPassword": "${PassWordTwo}", "token": "${props.match.params.token}"}`;
-      axios.post(API + "/password/change-password", null, { params: { passwordResetDto } }, config)
+      // Neon only. This previously POSTed to AWS and used Neon merely as a catch-fallback.
+      const data = {
+        userId: props.match.params.id,
+        password: PassWordOne,
+        confirmPassword: PassWordTwo,
+        token: props.match.params.token
+      }
+
+      Axios.post(NEWAPI + '/api/user/resetPassword', data, config)
         .then(res => {
+          logEvent('my.auth.reset_password.success', { data: { userId: props.match.params.id } });
           setDone(true);
           setFail({ isFaield: true, message: 'Password Saved.', variation: 'success' });
           setTimeout(() => {
@@ -127,36 +126,21 @@ const PassWordReset = (props) => {
           }, 2500);
         })
         .catch(err => {
-          // console.log(err);
-          const config = {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
-          console.log("passwordResetDto:", passwordResetDto)
-          let data = {
-            userId: props.match.params.id,
-            password: PassWordOne,
-            confirmPassword: PassWordTwo,
-            token: props.match.params.token
-          }
-
-          Axios.post(NEWAPI + '/api/user/resetPassword', data, config)
-            .then(res => {
-              setDone(true);
-              setFail({ isFaield: true, message: 'Password Saved.', variation: 'success' });
-              setTimeout(() => {
-                setFail({ isFaield: false, message: '', variation: 'success' })
-                setRedirect(true)
-              }, 2500);
-            }).catch(error => {
-              Sentry.captureException(err);
-              setFail({ isFaield: true, message: 'Failed to Save Password', variation: 'error' });
-              setTimeout(() => {
-                setFail({ isFaield: false, message: '', variation: 'error' })
-              }, 2500);
-            });
-
+          // This is now the ONLY way a member can recover an account, so a failure here
+          // is a lockout. Capture enough to tell an expired token from a server fault.
+          logEvent('my.auth.reset_password.failed', {
+            data: {
+              userId: props.match.params.id,
+              status: err?.response?.status ?? null,
+              serverError: err?.response?.data?.error ?? null,
+              message: err?.message,
+            },
+          });
+          Sentry.captureException(err);
+          setFail({ isFaield: true, message: 'Failed to Save Password', variation: 'error' });
+          setTimeout(() => {
+            setFail({ isFaield: false, message: '', variation: 'error' })
+          }, 2500);
         });
     }
   }

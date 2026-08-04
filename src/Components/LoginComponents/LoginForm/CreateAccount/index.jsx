@@ -12,6 +12,7 @@ import axios from 'axios';
 import { useDispatch } from "react-redux";
 import * as Sentry from "@sentry/react";
 
+import { logEvent } from '../../../../util/clientLogger';
 import Copyright from "../Copyright";
 import SnackBar from '../../../SnakBar'
 import Aux from "../../../../HOC/aux"
@@ -58,7 +59,7 @@ const CreateAccount = () => {
   const [wait, setWait] = useState(false);
   let form;
   const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
-  const API = process.env.REACT_APP_API;
+  const NEWAPI = process.env.REACT_APP_API_NEW;
 
   const [PassWordOne, setPassWordOne] = useState('');
   const [PassWordTwo, setPassWordTwo] = useState('');
@@ -75,24 +76,34 @@ const CreateAccount = () => {
 
     if (email.email !== '') {
       setWait(true);
-      axios.post(`${API}/login/freemember/signup?emailId=${email.email}&password=${PassWordOne}`)
+      // Neon sign-up via better-auth (emailAndPassword is enabled server-side). This
+      // replaces AWS /login/freemember/signup. better-auth reports a duplicate address as
+      // a 4xx rather than a 200 with a message, so the "already exists" case moves into
+      // the catch and is distinguished by status/code.
+      axios.post(`${NEWAPI}/api/auth/sign-up/email`, {
+        email: email.email,
+        password: PassWordOne,
+        name: email.email.split('@')[0],
+      }, { headers: { 'Content-Type': 'application/json' } })
         .then(res => {
-          if (res.data.message === "Account already exists.") {
-            setFail({ isFailed: true, message: 'Looks like you already have an account. Please Login!', variation: 'error' });
-            setWait(false);
-            setPassWordOne('');
-            setPassWordTwo('');
-            setTimeout(() => {
-              setFail({ ...fail , isFailed: false });
-            }, 2500);
-          }
-          else {
-            dispatch(Login(res.data.EmailId, PassWordOne));
-          }
-      })
+          dispatch(Login(email.email, PassWordOne));
+        })
       .catch(err => {
-        setFail({ isFailed: true, message: 'Failed to create account. Please Try Again.', variation: 'error' })
-        Sentry.captureException(err);
+        const status = err?.response?.status;
+        const code = err?.response?.data?.code || err?.response?.data?.message || '';
+        const exists = status === 422 || /exist|already|unique/i.test(String(code));
+        logEvent('my.auth.signup.failed', {
+          email: email.email,
+          data: { status: status ?? null, code: String(code).slice(0, 120), exists },
+        });
+        setFail({
+          isFailed: true,
+          message: exists
+            ? 'Looks like you already have an account. Please Login!'
+            : 'Failed to create account. Please Try Again.',
+          variation: 'error'
+        })
+        if (!exists) Sentry.captureException(err);
         setPassWordOne('');
         setPassWordTwo('');
         setTimeout(() => {
