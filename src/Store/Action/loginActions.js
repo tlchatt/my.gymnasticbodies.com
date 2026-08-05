@@ -271,8 +271,16 @@ export const LoginNew = (username, password) => dispatch => {
       try {
         const renewalRes = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(username)}`);
         if (renewalRes.ok) {
-          const { needsRenewal } = await renewalRes.json();
-          if (needsRenewal) {
+          const { needsRenewal, hasAwsIdentity } = await renewalRes.json();
+          // Legacy members signed in through AWS until 2026-08-04, and that path never
+          // ran this check — only the Neon fallback did. Making Neon the only rail put
+          // the paywall in front of a cohort that had never seen it, and lifetime members
+          // were bounced to /renew within hours of the cutover. Skip the redirect for
+          // anyone holding an AWS identity so each cohort keeps the behaviour it had.
+          if (needsRenewal && hasAwsIdentity) {
+            logEvent('my.login.renewal_skipped_legacy', { email: username });
+          }
+          if (needsRenewal && !hasAwsIdentity) {
             logEvent('my.login.renewal_redirect', { email: username });
             window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
             return;
