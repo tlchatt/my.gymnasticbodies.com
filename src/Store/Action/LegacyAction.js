@@ -10,6 +10,8 @@ import { getLegacyDataBYO, openEditLegacyModalBYO, handleLegacyLogCheck } from '
 import { useSelector } from 'react-redux';
 import { getData } from './dataManipulation';
 import { legacyNameToId } from '../util';
+import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek';
+import { logEvent } from '../../util/clientLogger';
 import * as actionTypes from '../Action/actionTypes';
 
 // Guided-plan Program editing shares the Foundation curriculum with BYO — same Neon
@@ -652,15 +654,10 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
 
     dispatch(showToast('Successfully updated ' + legacyPage.name, 'success'))
   } else {
-    if (isBuildYourOwn) {
-      config = AxiosConfig(
-        'PUT',
-        `/byo/settings/users/${userData.UserId}/exercises/${exerciseId}/masterySets/${masterySetId}?workoutType=${legacyPage.courseId}&date=${legacyPage.byoDate}`,
-        userData.webToken
-      )
-    }
-    else {
-      // All guided-plan users: Neon select (shared byo_settings).
+    {
+      // Unreachable BYO branch removed: the outer `if (isBuildYourOwn)` above already
+      // handles BYO, so this inner one could never run. It was the last AWS call here.
+      // All users: Neon select (shared byo_settings).
       config = {
         method: 'put',
         url: `${NEWAPI}/api/user/workout/byo/program`,
@@ -697,22 +694,29 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
 
 }
 
+// Refreshes the calendar after a schedule edit. AWS had a bespoke "detailed-view"
+// endpoint; on Neon the weekly levels view is that same data, so this reads the current
+// week and feeds the calendar reducer.
 export const getUpdatedUserSchedule = () => (dispatch, getState) => {
   const state = getState();
   const userData = state.login;
+  const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+  if (!neonUserId) return;
 
-  let config = {
+  const weekStart = getCalanderDate(userData.timezone)[0];
+  const level = userData.levelId ?? 2;
+
+  Axios({
     method: 'GET',
-    url: `${API}/myschedule/detailed-view/users/${userData.UserId}`,
-    headers: {
-      'Authorization': `Bearer ${userData.webToken}`
-    }
-  };
-
-  Axios(config)
+    url: `${NEWAPI}/api/user/workout/levels?userId=${encodeURIComponent(neonUserId)}&level=${level}&weekStart=${weekStart}`,
+    headers: { 'Authorization': `Bearer ${userData.webToken}` },
+  })
     .then(res => {
       dispatch(SetCaladner(res.data))
-    }).catch(err => Sentry.captureException(err))
+    }).catch(err => {
+      logEvent('my.calendar.refresh_failed', { data: { status: err?.response?.status ?? null } });
+      Sentry.captureException(err)
+    })
 }
 
 export const CloseModal = () => {

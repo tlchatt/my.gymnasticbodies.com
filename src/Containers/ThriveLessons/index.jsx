@@ -79,7 +79,7 @@ const useStyles = makeStyles(theme=>({
   },
 }))
 
-const API = process.env.REACT_APP_API_NEW;
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const ThriveLessons = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser)
@@ -102,7 +102,7 @@ const ThriveLessons = props => {
   const handleUnlock = () => {
     var config = {
       method: 'post',
-      url: `${API}/api/user/workout/thrive`,
+      url: `${NEWAPI}/api/user/workout/thrive`,
       data: { userId, op: 'unlock' },
       headers: {
         'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const ThriveLessons = props => {
   const getUserData = useCallback(() => {
     var config = {
       method: 'get',
-      url: `${API}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=lessons`,
+      url: `${NEWAPI}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=lessons`,
       headers: {
         'Authorization': `Bearer ${webToken}`
       }

@@ -14,7 +14,7 @@ import ResetThrive from '../../../../Thrive/ResetThrive.jsx';
 
 import { showToast } from '../../../../../Store/Action/calendarActions';
 
-const API = process.env.REACT_APP_API_NEW;
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const Thrive = (props) => {
   const [open, setOpen] = useState(false);
@@ -26,7 +26,7 @@ const Thrive = (props) => {
   const handleReset = () => {
     var config = {
       method: 'delete',
-      url: `${API}/api/user/workout/thrive`,
+      url: `${NEWAPI}/api/user/workout/thrive`,
       data: { userId, op: 'reset' },
       headers: {
         'Authorization': `Bearer ${webToken}`,
@@ -46,7 +46,7 @@ const Thrive = (props) => {
   const secondCall = () => {
     var config = {
       method: 'post',
-      url: `${API}/api/user/workout/thrive`,
+      url: `${NEWAPI}/api/user/workout/thrive`,
       data: { userId, op: 'reset-permissions' },
       headers: {
         'Authorization': `Bearer ${webToken}`,

@@ -19,6 +19,7 @@ import Container from '../../Components/UtilComponents/Container'
 import AdminUnlockLesson from '../../Components/Thrive/AdminUnlockLesson.jsx'
 
 import { showToast } from '../../Store/Action/calendarActions'
+import { logEvent } from '../../util/clientLogger';
 import axios from 'axios';
 
 
@@ -77,9 +78,7 @@ const useStyles = makeStyles(theme=>({
     display: 'flex',
     justifyContent: 'center'
   },
-}))
-
-const API = process.env.REACT_APP_API;
+}))
 
 const EditUser = props => {
   const classes = useStyles();
@@ -97,33 +96,11 @@ const EditUser = props => {
   const handleUnlockTask = (taskNo) => {
     const userId = location.userId;
 
-    var config = {
-      method: 'post',
-      url: `${API}/thrive/admin/users/${userId}/tasks/${taskNo}`,
-      headers: {
-        'Authorization': `Bearer ${webToken}`
-      }
-    };
-
-    axios(config).then(res => {
-      let newLessons = _.cloneDeep(lessons);
-      let foundIndex = newLessons.findIndex(lesson => lesson.taskNo === taskNo);
-
-      newLessons[foundIndex] = {
-        ...newLessons[foundIndex],
-        isTaskOpened: true,
-        unlockedDate: moment().format('YYYY-MM-DD')
-      }
-
-      // console.log(newLessons);
-
-      dispatch(showToast(`Unlocked Task ${taskNo}`, 'success'))
-
-      setLessons(newLessons);
-    }).catch(err => {
-      dispatch(showToast(`Something Went wrong`, 'error'));
-      Sentry.captureException(err);
-    })
+    // Backed onto the AWS thrive-admin endpoint, which is gone; this screen is also
+    // unreachable because state.login.isAdmin is hardcoded false. Thrive admin now lives
+    // in the app.gymnasticbodies.com admin panel, behind real admin auth.
+    logEvent('my.admin.moved', { data: { screen: 'thrive-unlock-task', taskNo, userId } });
+    dispatch(showToast('Thrive admin has moved to app.gymnasticbodies.com/admin', 'error'));
   }
 
   const edit = (

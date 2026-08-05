@@ -15,8 +15,11 @@ import PathSelection from '../../Components/FreeMemeberComp/InitialPage/PathSele
 import LegacyWorkoutModal from '../../Components/LegacyWorkoutModal';
 
 import { AxiosConfig } from '../../Store/util';
+import { logEvent } from '../../util/clientLogger';
 import { openDrawer } from '../../Store/Reducers/OpenDrawerReducer'
 import { UpdateUserLevelId } from '../../Store/Action/loginActions';
+
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 
 
@@ -113,17 +116,23 @@ export default function MyCourses(props) {
 
   // Get Data useEffect
   useEffect(() => {
-    axios(AxiosConfig('GET', `/byo/workout/my-courses/users/${userData.UserId}`, userData.webToken))
+    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    if (!neonUserId) { setIsLoading(false); return; }
+    axios({
+      method: 'get',
+      url: `${NEWAPI}/api/user/workout/courses?userId=${encodeURIComponent(neonUserId)}`,
+      headers: { Authorization: `Bearer ${userData.webToken}` },
+    })
       .then(res => {
-        setAllUserCourses(res.data.courses)
-        setDayIndex(res.data.dayIndex)
+        // Neon returns the course array directly; AWS wrapped it as {courses, dayIndex}.
+        setAllUserCourses(Array.isArray(res.data) ? res.data : (res.data?.courses || []))
         setIsLoading(false)
       })
       .catch(err => {
-        console.log(err);
+        logEvent('my.courses.load_failed', { data: { status: err?.response?.status ?? null } });
         setIsLoading(false);
       });
-  }, [userData.UserId, userData.webToken])
+  }, [userData.neonUserId, userData.webToken])
 
 
   // Handlers
@@ -196,11 +205,16 @@ export default function MyCourses(props) {
       dispatch(openDrawer('GuidedPlans'))
     }
     if (selectedIndex === 2) {
-      axios(AxiosConfig('PUT', `/myschedule/choose/my-courses/users/${userData.UserId}/level/10`, userData.webToken))
+      axios.post(`${NEWAPI}/api/user/workout/courses`, {
+        userId: (userData.neonUserId || localStorage.getItem('neonUserId')),
+        op: 'choose-my-courses',
+      }, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` } })
         .then(res => {
-          dispatch(UpdateUserLevelId(res.data))
+          dispatch(UpdateUserLevelId(res.data?.levelId ?? 10))
           history.push('/')
-        }).catch(err => { })
+        }).catch(err => {
+          logEvent('my.courses.choose_failed', { data: { status: err?.response?.status ?? null } });
+        })
     }
   }
 

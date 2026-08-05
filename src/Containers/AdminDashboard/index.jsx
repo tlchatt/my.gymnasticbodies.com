@@ -14,6 +14,7 @@ import axios from 'axios'
 import * as Sentry from "@sentry/react";
 
 import { showToast } from '../../Store/Action/calendarActions'
+import { logEvent } from '../../util/clientLogger';
 
 import RandomImage from '../Login/images';
 
@@ -52,9 +53,7 @@ const useStyles = makeStyles(theme => ({
     width: '75%',
     marginTop: 8
   }
-}))
-
-const API = process.env.REACT_APP_API;
+}))
 
 const AdminDashboard = (props) => {
   const classes = useStyles();
@@ -66,25 +65,13 @@ const AdminDashboard = (props) => {
 
   const findUser = () => {
     if (userName.email !== '') {
-      var config = {
-        method: 'get',
-        url: `${API}/thrive/admin/users/email/${userName.email}`,
-        headers: {
-          'Authorization': `Bearer ${webToken}`
-        }
-      };
-
-      setLoading(true)
-
-      axios(config).then(res => {
-        props.history.push({ pathname: '/edit-user', data: res.data.tasksInfo, userEmail: userName.email, tagIds: res.data.tagIds, userId: res.data.userId })
-        // console.log(res)
-      }).catch(err => {
-        setLoading(false);
-        setUserName({ email: '', valid: true });
-        dispatch(showToast('Something went wrong. Please Try again.', 'error'))
-        Sentry.captureException(err);
-      })
+      // This screen backed onto the AWS thrive-admin endpoints, which are gone. It is also
+      // already unreachable: state.login.isAdmin is hardcoded false in both surviving login
+      // paths, so nobody can open /admin. Rather than call a dead host, say where the
+      // capability lives now — the app.gymnasticbodies.com admin panel, which has real
+      // admin auth instead of a client-side flag.
+      logEvent('my.admin.moved', { data: { screen: 'thrive-admin-lookup' } });
+      dispatch(showToast('Thrive admin has moved to app.gymnasticbodies.com/admin', 'error'))
     } else {
       dispatch(showToast('Please enter a valid email.', 'error'))
     }

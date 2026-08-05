@@ -94,7 +94,7 @@ const useStyles = makeStyles(theme=>({
   },
 }))
 
-const API = process.env.REACT_APP_API_NEW;
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const ThriveProfile = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
@@ -197,7 +197,7 @@ const ThriveProfile = props => {
     const getUserData = () => {
       var config = {
         method: 'get',
-        url: `${API}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=profile`,
+        url: `${NEWAPI}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=profile`,
         headers: {
           'Authorization': `Bearer ${webToken}`
         }
@@ -238,7 +238,7 @@ const ThriveProfile = props => {
 
     var config = {
       method: 'post',
-      url: `${API}/api/user/workout/thrive`,
+      url: `${NEWAPI}/api/user/workout/thrive`,
       headers: {
         'Authorization': `Bearer ${webToken}`,
         'Content-Type': 'multipart/form-data',

@@ -5,7 +5,9 @@ import { SetAllSubClassesInitial } from './actionsSetAllSubClasses';
 import { getCurrentWeek } from '../util';
 import _ from 'lodash'
 import * as Sentry from "@sentry/react";
-const API = process.env.REACT_APP_API;
+import { logEvent } from '../../util/clientLogger';
+
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 export const SetCaladner = (updatedData) => {
   return {
@@ -35,11 +37,23 @@ export const DragAndDrop = ({ postId, oldDay, newDay }, updatedData) => (dispatc
     'SATURDAY': 6,
     'SUNDAY' : 7,
   }
-  axios.put(
-    `${API}/myschedule/users/${userId}?wpPostId=${postId}&oldDayIndex=${DtoDIndex[oldDay]}&newDayIndex=${DtoDIndex[newDay]}`,
-    null,
-    userConfig
-  ).then(data => {}).catch(err => Sentry.captureException(err))
+  axios.post(`${NEWAPI}/api/user/workout/levels`, {
+    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    op: 'move-item',
+    level: state.login.levelId,
+    classId: Number(postId),
+    fromDayIndex: DtoDIndex[oldDay],
+    toDayIndex: DtoDIndex[newDay],
+  }, userConfig)
+    .then(() => {})
+    .catch(err => {
+      // The optimistic SetCaladner above already moved the card, so a silent failure here
+      // means the UI and the stored week disagree until the next reload.
+      logEvent('my.calendar.move_failed', {
+        data: { classId: postId, oldDay, newDay, status: err?.response?.status ?? null },
+      });
+      Sentry.captureException(err);
+    })
 }
 
 export const DeleteClass = ({ dayIndex, postId }, newState) => (dispatch, getState) => {
@@ -52,13 +66,18 @@ export const DeleteClass = ({ dayIndex, postId }, newState) => (dispatch, getSta
       "Authorization": `Bearer ${state.login.webToken}`
     }
   }
-  axios.delete(
-    `${API}/myschedule/users/${userId}?dayIndex=${dayIndex+1}&wpPostId=${postId}`,
-    userConfig
-  ).then(data => {
+  axios.post(`${NEWAPI}/api/user/workout/levels`, {
+    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    op: 'remove-item',
+    level: state.login.levelId,
+    dayIndex: dayIndex + 1,
+    classId: Number(postId),
+  }, userConfig).then(data => {
     dispatch(SetCaladner(newState))
   }).catch(err => {
-    // console.log(err)
+    logEvent('my.calendar.delete_failed', {
+      data: { classId: postId, dayIndex, status: err?.response?.status ?? null },
+    });
     Sentry.captureException(err)
   })
 }
@@ -124,27 +143,28 @@ export const ChooseLevel = (planData) => (dispatch, getState) => {
       "Authorization": `Bearer ${state.login.webToken}`
     }
   }
-  const url = `${API}/myschedule/users/${userId}/plans/${planData.planId}/weekIndexes/${planData.weekIndex}`;
-
-  axios.post(url, null, userConfig)
-    .then(data => {
-      dispatch(SetCaladner(data.data.body))
+  // Choosing a plan level rewrites the stored week from that level's template, which is
+  // what AWS did. The follow-up /welcome/users refresh is dropped: it only repopulated
+  // myCourses, which no longer comes from AWS.
+  const level = planData.planId - 1;
+  axios.post(`${NEWAPI}/api/user/workout/levels`, {
+    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    op: 'choose-level',
+    level,
+    workoutOrPlanId: planData.planId,
+  }, userConfig)
+    .then(() => {
       dispatch(UpdateUserPlan({
         planId: planData.planId,
         weekIndex: planData.weekIndex,
-        level: planData.planId - 1
+        level
       }))
-
-      dispatch(asyncSetLevelSuccess(planData.planId - 1));
-
-      axios.get(`${API}/welcome/users`, userConfig)
-        .then(userData => {
-          dispatch(SetAllClassesInitial(userData.data.myCourses))
-          dispatch(SetAllSubClassesInitial(userData.data.myCourses))
-        })
+      dispatch(asyncSetLevelSuccess(level));
     })
     .catch(err => {
-      // console.log(err);
+      logEvent('my.calendar.choose_level_failed', {
+        data: { planId: planData.planId, level, status: err?.response?.status ?? null },
+      });
       dispatch(asyncSetLevelFail());
       Sentry.captureException(err)
     });
@@ -160,9 +180,20 @@ export const UpdateSchedule = (data) => (dispatch, getState) => {
       "Authorization": `Bearer ${state.login.webToken}`
     }
   }
-  const url = `${API}/myschedule/users/${userId}/classes/${data.courseId}?dayIndexes=${data.dayIndexes}`;
-  axios.put(url, null, userConfig)
-    .then(data => dispatch(SetCaladner(data.data.body))).catch(err => Sentry.captureException(err))
+  axios.post(`${NEWAPI}/api/user/workout/levels`, {
+    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    op: 'add-class-days',
+    level: state.login.levelId,
+    classId: Number(data.courseId),
+    dayIndexes: data.dayIndexes,
+  }, userConfig)
+    .then(() => {})
+    .catch(err => {
+      logEvent('my.calendar.update_schedule_failed', {
+        data: { classId: data.courseId, dayIndexes: String(data.dayIndexes), status: err?.response?.status ?? null },
+      });
+      Sentry.captureException(err)
+    })
 }
 
 export const LogNonLegacyCourse = (courseId, day, taskId) => (dispatch, getState) => {
@@ -176,7 +207,12 @@ export const LogNonLegacyCourse = (courseId, day, taskId) => (dispatch, getState
     }
   }
 
-  axios.post(`${API}/workout-service/classes/users/${userId}/logging?wpPostId=${courseId}&date=${currentDay}`, null, userConfig)
+  axios.post(`${NEWAPI}/api/user/workout/levels`, {
+    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    op: 'log-class',
+    date: currentDay,
+    classIds: [Number(courseId)],
+  }, userConfig)
     .then(res => {
       let userTasks = _.cloneDeep(state.calendar.tasks);
 

@@ -3509,20 +3509,15 @@ const CourseLibrary = (props) => {
       loading: true
     })
 
-    const config = {
-      method: 'get',
-      url: `${API}/workout-service/course-library/users/${UserId}/?workoutName=${row.nameId}`,
-      headers: {
-        Authorization: `Bearer ${webToken}`
-      }
-    }
-
     if (allProgs.length > 0) {
       setAllProgs([]);
     }
 
-
-    axios(config).then(response => {
+    // Course content is served from the local embedded dataset (the same source Neon users
+    // already used), so there is no network call here at all. The AWS course-library
+    // endpoint is gone; rejecting immediately routes into the .catch below, which is the
+    // local-render path that was already the fallback for every course.
+    Promise.reject(new Error('course-library-local')).then(response => {
       const data = response.data;
       // The legacy AWS course-library endpoint returns a PLAIN STRING for any course it
       // doesn't recognize: "YOU AREN'T ENROLLED IN THIS COURSE." OR — for the newer

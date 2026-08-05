@@ -23,9 +23,8 @@ const NEWAPI = process.env.REACT_APP_API_NEW
 const neonIdOf = state => state.login.neonUserId || localStorage.getItem('neonUserId') || state.login.UserId;
 
 export const getBeginnerLevel = () => (dispatch, getState) => {/* incomplete, has failover directly to lukeData */
-  console.log('getBeginnerLevel = () => `/myschedule/beginner/view/weekly/users/$')
   const state = getState();
-  const { webToken, UserId } = state.login;
+  const { webToken, timezone } = state.login;
   let lukeData = {
     "MONDAY,DECEMBER 1": {
       "scheduleId": 31595,
@@ -195,7 +194,7 @@ export const getBeginnerLevel = () => (dispatch, getState) => {/* incomplete, ha
       "classesList": null
     }
   }
-  Axios(AxiosConfig('get', `/myschedule/beginner/view/weekly/users/${UserId}`, webToken)).then(res => {
+  Axios({ method: 'get', url: `${NEWAPI}/api/user/workout/levels?userId=${encodeURIComponent((state.login.neonUserId || localStorage.getItem('neonUserId')))}&view=beginner&weekStart=${getCalanderDate(timezone)[0]}`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` } }).then(res => {
     console.log('  res', res)
     dispatch({
       type: actionTypes.SET_LEVELS,
@@ -218,7 +217,7 @@ export const selectBeginenrWorkout = (dateIndex, dateKey, workoutId) => (dispatc
   const date = getCalanderDate(timezone)[dateIndex];
 
 
-  Axios(AxiosConfig('POST', `/myschedule/beginner/users/${UserId}/workouts/${workoutId}?date=${date}`, webToken)).then(res => {
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'select-beginner-workout', dayIndex: dateIndex + 1, workoutId, date } }).then(res => {
     dispatch({
       type: actionTypes.GET_WORKOUT,
       payload: {
@@ -246,7 +245,7 @@ export const logAllBeginnerWorkout = (dateIndex, dateKey, courseIds = []) => (di
     ? courseIds
     : newWorkoutData.filter(w => w.isLogged === false).map(w => w.classId);
 
-  Axios(AxiosConfig('POST', `/class-log/beginner/users/${UserId}?loggedDate=${date}`, webToken, { data: courseIdArray }))
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'log-beginner', date, classIds: courseIdArray } })
     .then(res => {
       console.log('Axios response:', res);
 
@@ -364,7 +363,7 @@ export const removeBeginnerWorkoutLog = (dateIndex, dateKey, courseId) => (dispa
 
   let newWorkoutData = levelsOneToFour ? userSchedule[dateKey] : userSchedule[dateKey].classesList;
 
-  Axios(AxiosConfig('DELETE', `/class-log/beginner/users/${UserId}?loggedDate=${date}&classId=${courseId}`, webToken)).then(res => {
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'unlog-beginner', date, classIds: [courseId] } }).then(res => {
     const index = newWorkoutData.findIndex(w => w.classId === courseId);
     newWorkoutData[index].isLogged = false;
     let action = levelsOneToFour
@@ -3277,7 +3276,7 @@ export const clearOutDay = (dayIndex, isBeginner = false) => (dispatch, getState
     ? `/myschedule/beginner/users/${UserId}/dayIndex/${dayIndex + 1}`
     : `/myschedule/levels/users/${UserId}/dayIndex/${dayIndex + 1}`;
 
-  Axios(AxiosConfig('DELETE', endPoint, webToken))
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: isBeginner ? 'clear-beginner-day' : 'clear-day', level: state.login.levelId, dayIndex: dayIndex + 1 } })
     .then(res => {
       let newUserSchedule = _.cloneDeep(userSchedule);
       newUserSchedule[userScheduleKey] = [];
@@ -3297,7 +3296,7 @@ export const clearOutDayBeginner = (dayIndex) => (dispatch, getState) => {
 
   const userScheduleKey = Object.keys(userSchedule)[dayIndex];
 
-  Axios(AxiosConfig('DELETE', `/myschedule/beginner/users/${UserId}/dayIndex/${dayIndex + 1}`, webToken))
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'clear-beginner-day', dayIndex: dayIndex + 1 } })
     .then(res => {
       let newUserSchedule = _.cloneDeep(userSchedule);
 
@@ -3321,7 +3320,7 @@ export const generateWorkoutLevels = (workoutId, dateIndex, dateKey) => (dispatc
   const { userSchedule } = state.levels;
   const date = getCalanderDate(timezone)[dateIndex];
 
-  Axios(AxiosConfig('POST', `/myschedule/levels/users/${UserId}/level/${levelId}/workout/${workoutId}?date=${date}`, webToken)).then(res => {
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'add-workout', level: levelId, dayIndex: dateIndex + 1, classId: workoutId, date } }).then(res => {
     let workoutSchedule = res.data ? res.data : [];
     let newUserSchedule = _.cloneDeep(userSchedule);
 
@@ -3349,11 +3348,24 @@ export const refreshWMS = (scheduleId, trainingType, dateIndex, dateKey) => (dis
     "Stretch": 'stretch'
   };
 
-  Axios(AxiosConfig(
-    'PUT',
-    `/myschedule/levels/users/${UserId}/schedule/${scheduleId}/level/${levelId}?date=${date}&trainingType=${switchTrainingType[trainingType]}`,
-    webToken
-  )).then(res => {
+  // The item being swapped is identified by scheduleId in the UI, but the stored week
+  // holds classIds — resolve it from the day currently in state.
+  const currentClassId = (userSchedule[dateKey] || []).find(w => w.scheduleId === scheduleId)?.classId;
+
+  Axios({
+    method: 'post',
+    url: `${NEWAPI}/api/user/workout/levels`,
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` },
+    data: {
+      userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+      op: 'refresh-item',
+      level: levelId,
+      dayIndex: dateIndex + 1,
+      classId: currentClassId,
+      trainingType,
+      date,
+    },
+  }).then(res => {
     let workout = res.data;
     workout = processUserWorkout(workout);
 

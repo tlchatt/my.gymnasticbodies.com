@@ -77,7 +77,7 @@ const useStyles = makeStyles(theme=>({
   }
 }))
 
-const API = process.env.REACT_APP_API_NEW;
+const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const ThriveTasks = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
@@ -97,7 +97,7 @@ const ThriveTasks = props => {
     // AWS served the task list from a POST; the Neon route is a plain read.
     var config = {
       method: 'get',
-      url: `${API}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=tasks`,
+      url: `${NEWAPI}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=tasks`,
       headers: {
         'Authorization': `Bearer ${webToken}`
       }
@@ -120,7 +120,7 @@ const ThriveTasks = props => {
     let taskIds = tasks.map(task => task.usersTaskId).join(',')
     var config = {
       method: 'post',
-      url: `${API}/api/user/workout/thrive`,
+      url: `${NEWAPI}/api/user/workout/thrive`,
       data: { userId, op: 'log-tasks', taskIds },
       headers: {
         'Content-Type': 'application/json',
