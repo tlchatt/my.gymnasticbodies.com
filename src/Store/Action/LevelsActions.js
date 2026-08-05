@@ -12,6 +12,7 @@ import { showToast } from './calendarActions';
 import { SET_PROGRESSION } from './LegacyAction';
 import { getData, updateData } from './dataManipulation';
 import { ensureNeonUserId } from './loginActions';
+import { logEvent } from '../../util/clientLogger';
 import { defaultUpperBodyProgressions } from '../../data/FoundationUpperBody';
 import { defaultLowerBodyProgressions } from '../../data/FoundationLowerBody';
 import { defaultCoreProgressions } from '../../data/FoundationCore';
@@ -201,6 +202,9 @@ export const getBeginnerLevel = () => (dispatch, getState) => {/* incomplete, ha
       payload: { userSchedule: res.data }
     })
   }).catch(err => {
+    // The fallback below renders CANNED demo data with no error UI — this log is the
+    // only signal a real member's Beginner Plan read failed.
+    logEvent('my.workout.fetch_error', { data: { section: 'beginner', status: err?.response?.status ?? null } });
     console.warn('getBeginnerLevel using lukes data')
     dispatch({
       type: actionTypes.SET_LEVELS,
@@ -3179,11 +3183,18 @@ export const getLevelPLan = (type) => async (dispatch, getState) => {/* Guided P
         workoutSchedule[k] = workouts.map(processUserWorkout);
       })
 
+      // A week with no items on any day renders as a BLANK Guided Plans screen with no
+      // error — the seed-gap failure mode (empty stored levels_schedule).
+      if (!keys.length || keys.every(k => !(workoutSchedule[k] || []).length)) {
+        logEvent('my.workout.empty', { data: { section: 'levels' } });
+      }
+
       dispatch({
         type: actionTypes.SET_LEVELS,
         payload: { userSchedule: workoutSchedule }
       })
     }).catch(error => {
+      logEvent('my.workout.fetch_error', { data: { section: 'levels', status: error?.response?.status ?? null } });
       console.log('getLevelPLan failed, falling back to getLevelPlanNew', error)
       dispatch(getLevelPlanNew(type));
     });

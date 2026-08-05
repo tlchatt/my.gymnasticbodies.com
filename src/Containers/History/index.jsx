@@ -5,6 +5,7 @@ import Axios from 'axios';
 import * as Sentry from "@sentry/react";
 
 import { ensureNeonUserId } from '../../Store/Action/loginActions';
+import { logEvent } from '../../util/clientLogger';
 
 // Util Components
 import GridContainer from '../../Components/UtilComponents/Mui-GridContainer';
@@ -73,6 +74,8 @@ const History = () => {
     Axios(config).then(res => {
       setHistory(res.data);
     }).catch((err) => {
+      // Failure leaves the history calendar permanently blank with no error UI.
+      logEvent('my.workout.fetch_error', { data: { section: 'history', status: err?.response?.status ?? null } });
       Sentry.captureException(err);
     })
   }

@@ -79,7 +79,10 @@ export const GetUserPorgressions = (courseName, todaysDate, exerciseId) => async
       })
     })
     .catch(function (error) {
-      //all progressions - PC: 
+      // The fallback below reuses whatever progressions are already in Redux — stale or
+      // empty — with no error UI, so log the failed read.
+      logEvent('my.workout.fetch_error', { data: { section: 'program', status: error?.response?.status ?? null } });
+      //all progressions - PC:
       let allOrderedData = state.legacyCourse.allProgressions
       console.log("orderedData else:", allOrderedData)
       let userChosenProgressions = _.cloneDeep(allOrderedData);

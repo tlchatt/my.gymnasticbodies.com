@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek';
 import { AxiosConfig, AxiosConfigNeon, areAllSame, idToClass, legacyNameToId } from '../util'
+import { logEvent } from '../../util/clientLogger';
 
 // All BYO surfaces run on the Neon workout API (AWS /byo/* replaced 2026-07), including
 // the program-detail cluster served from static curriculum catalogs captured off live
@@ -308,6 +309,8 @@ export const getBYODashoard = () => async (dispatch, getState) => {
     })
     dispatch(getSavedWorkoutsBYO());
   }).catch(err => {
+    // A failed weekly read leaves the BYO dashboard blank with no error UI.
+    logEvent('my.workout.fetch_error', { data: { section: 'byo', status: err?.response?.status ?? null } });
     Sentry.captureException(err);
   })
 }

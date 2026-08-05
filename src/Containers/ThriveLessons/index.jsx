@@ -20,6 +20,7 @@ import ThriveModal from '../../Components/Thrive/ThriveModal.jsx'
 import UnlockAll from '../../Components/Thrive/UnlockAll.jsx'
 
 import { showToast } from '../../Store/Action/calendarActions'
+import { logEvent } from '../../util/clientLogger'
 
 
 const useStyles = makeStyles(theme=>({
@@ -137,7 +138,11 @@ const ThriveLessons = props => {
     axios(config).then(res => {
       setLessons(res.data)
       setLoading(false)
-    }).catch(err => Sentry.captureException(err))
+    }).catch(err => {
+      // Failure leaves the Thrive lessons screen spinning/blank with no error UI.
+      logEvent('my.workout.fetch_error', { data: { section: 'thrive', view: 'lessons', status: err?.response?.status ?? null } });
+      Sentry.captureException(err);
+    })
   }, [webToken, userId])
 
   useEffect(() => {

@@ -78,7 +78,11 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
   if (!neonUserId) return;
   try {
     const res = await fetch(`${NEWAPI}/api/user/workout/standing?userId=${encodeURIComponent(neonUserId)}`);
-    if (!res.ok) return;
+    if (!res.ok) {
+      // Silent failure leaves the hardcoded 'Advanced One' defaults in place.
+      logEvent('my.workout.fetch_error', { data: { section: 'standing', status: res.status } });
+      return;
+    }
     const s = await res.json();
     const payload = { isThriveUser: !!s.isThriveUser };
     if (s.levelId !== null && s.levelId !== undefined) {
@@ -87,12 +91,17 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
       localStorage.setItem('userLevelID', String(payload.levelId));
     }
     dispatch({ type: actionTypes.SET_USER_STANDING, payload });
-  } catch (_) {}
+  } catch (err) {
+    logEvent('my.workout.fetch_error', { data: { section: 'standing', error: err?.message || 'network' } });
+  }
 }
 
 // Ensures Redux holds the Neon UUID needed by the ${NEWAPI} workout routes.
 // Chain: Redux -> localStorage -> /api/user/id email resolver (covers legacy users
 // whose registerWPass call failed silently at login).
+// A session without a resolvable Neon id gets NO workout data anywhere — log that once
+// per page load (the resolver is retried by every thunk, so an unguarded log would spam).
+let neonIdMissLogged = false;
 export const ensureNeonUserId = () => async (dispatch, getState) => {
   const current = getState().login.neonUserId;
   if (current) return current;
@@ -115,7 +124,16 @@ export const ensureNeonUserId = () => async (dispatch, getState) => {
         return id;
       }
     }
-  } catch (_) {}
+    if (!neonIdMissLogged) {
+      neonIdMissLogged = true;
+      logEvent('my.auth.neon_id_missing', { email, data: { status: res.status } });
+    }
+  } catch (err) {
+    if (!neonIdMissLogged) {
+      neonIdMissLogged = true;
+      logEvent('my.auth.neon_id_missing', { email, data: { error: err?.message || 'network' } });
+    }
+  }
   return null;
 }
 
@@ -277,8 +295,13 @@ export const LoginNew = (username, password) => dispatch => {
             window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
             return;
           }
+        } else {
+          // A failed check fails OPEN — a paywalled member walks straight in unnoticed.
+          logEvent('my.login.renewal_check_failed', { email: username, data: { status: renewalRes.status } });
         }
-      } catch (_) {}
+      } catch (err) {
+        logEvent('my.login.renewal_check_failed', { email: username, data: { error: err?.message || 'network' } });
+      }
 
       // Record WHICH rail authenticated — previously this event only carried the email, so
       // there was no way to see how many members still depend on AWS.
@@ -303,7 +326,14 @@ export const LoginNew = (username, password) => dispatch => {
       // Neon password cannot authenticate against AWS either (AWS delegates to Keap, and
       // they had no Keap password to migrate), so a fallback would have protected nobody
       // while keeping AWS load-bearing. They recover through password reset.
-      logEvent('my.login.failed', { email: username, data: { rail: 'neon' } });
+      // Reason: /api/authentication returns bad credentials as a 200 whose body has no
+      // user object, which surfaces here as a TypeError (no response, no request). An
+      // HTTP error response means the server failed; a request with no response means
+      // the network did. Distinguishing them separates "wrong password" support tickets
+      // from real outages.
+      const status = err?.response?.status ?? null;
+      const reason = err?.response ? 'server_error' : (err?.request ? 'network' : 'bad_credentials');
+      logEvent('my.login.failed', { email: username, data: { rail: 'neon', reason, status } });
       dispatch(loginFail());
       Sentry.captureException(err);
     });

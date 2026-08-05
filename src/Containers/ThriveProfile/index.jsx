@@ -22,6 +22,7 @@ import ImageUpload from '../../Components/UtilComponents/ImageUpload';
 import GridContainer from '../../Components/UtilComponents/Mui-GridContainer'
 import Container from '../../Components/UtilComponents/Container'
 import { showToast } from '../../Store/Action/calendarActions'
+import { logEvent } from '../../util/clientLogger'
 
 const useStyles = makeStyles(theme=>({
   background: { background: '#eeeeee', marginBottom: 12 },
@@ -205,7 +206,11 @@ const ThriveProfile = props => {
       axios(config).then(res => {
         let userData = res.data;
         storeData(userData)
-      }).catch(err => Sentry.captureException(err))
+      }).catch(err => {
+        // Failure leaves the Thrive profile blank with no error UI.
+        logEvent('my.workout.fetch_error', { data: { section: 'thrive', view: 'profile', status: err?.response?.status ?? null } });
+        Sentry.captureException(err);
+      })
     }
     if (isThriveUser) {
       getUserData();

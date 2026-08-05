@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import { showToast } from './calendarActions'
 import { ensureNeonUserId } from './loginActions'
+import { logEvent } from '../../util/clientLogger'
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek'
 import _ from 'lodash';
 import * as Sentry from "@sentry/react";
@@ -640,6 +641,7 @@ export const fetchFreeMember = () => async (dispatch, getState) => { //  "userLe
     dispatch(getAllSavedWorkouts());
   }).catch(error => {
     // Real error state (the old canned-week fallback masked failures with fake data).
+    logEvent('my.workout.fetch_error', { data: { section: 'autopilot', status: error?.response?.status ?? null } });
     Sentry.captureException(error);
     const dayKeys = getCalanderDate(timezone, 'dddd,MMMM D').map(k => k.toUpperCase());
     const emptyDayView = {};

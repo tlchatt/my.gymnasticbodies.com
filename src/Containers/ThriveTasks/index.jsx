@@ -18,6 +18,7 @@ import Container from '../../Components/UtilComponents/Container'
 // import MissedDays from '../../Components/Thrive/MissedDays.jsx'
 
 import { showToast } from '../../Store/Action/calendarActions'
+import { logEvent } from '../../util/clientLogger'
 
 const useStyles = makeStyles(theme=>({
   background: { background: '#eeeeee', marginBottom: 12 },
@@ -106,7 +107,11 @@ const ThriveTasks = props => {
       setTasks(res.data)
       setLoading(false);
 
-    }).catch(err => Sentry.captureException(err))
+    }).catch(err => {
+      // Failure leaves the Thrive tasks screen spinning/blank with no error UI.
+      logEvent('my.workout.fetch_error', { data: { section: 'thrive', view: 'tasks', status: err?.response?.status ?? null } });
+      Sentry.captureException(err);
+    })
   }, [webToken, userId])
 
   useEffect(() => {
