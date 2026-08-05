@@ -692,6 +692,22 @@ export const getLevelPLan = (type) => async (dispatch, getState) => {/* Guided P
   const state = getState();
   const { webToken, levelId, timezone } = state.login;
 
+  // Weekly guided-plan templates only exist for levels 1-4. A session with no chosen
+  // level (levelId 0/null/undefined — the lastViewed "no level chosen" sentinel) has
+  // nothing to fetch: send the member to the plan picker instead of firing a request
+  // the API can only reject. Out-of-range seeded AWS ids (5/9/10/11/99) still fetch —
+  // the server normalises them and the user's own stored week wins anyway.
+  if (!between(levelId, 1, 4)) {
+    logEvent('my.workout.invalid_level', { data: { section: 'levels', levelId: levelId ?? null } });
+    if (!Number(levelId)) { // 0, '0', null, undefined, NaN — no level ever chosen
+      dispatch({
+        type: actionTypes.SET_USER_LEVEL,
+        payload: { userLevel: 'New User', levelId: 0, showAllOpen: false }
+      });
+      return;
+    }
+  }
+
   // All users read the weekly guided-plan schedule from Neon. Legacy in-progress state
   // (logged days + program progression) was seeded into user_logs section 'levels' on
   // 2026-08-03, which is what previously made this unsafe to flip.
