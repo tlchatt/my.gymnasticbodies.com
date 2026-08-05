@@ -65,7 +65,10 @@ export default function Row(props) {
 
   let completed = 0;
   let legacyHistory;
-  if (row.type === 'Programs') {
+  // AWS history entries carried a progression array; Neon-written entries do not.
+  // Without the guard a single Neon 'Programs' entry white-screens the whole app.
+  const hasProgression = Array.isArray(row.progression);
+  if (row.type === 'Programs' && hasProgression) {
     row.progression.forEach(prog => {
       if (prog.status > 0) {
         completed++;
@@ -97,7 +100,7 @@ export default function Row(props) {
                         <TableCell style={{ padding: '6px 0 6px 10px' }}>
                           <ul className={classes.setList}>
                             {
-                              historyRow.setsAndRepsList.map((set, index) => {
+                              (historyRow.setsAndRepsList || []).map((set, index) => {
                                 if (isStretchFollow(historyRow.exerciseId)) {
                                   return <li key={index}></li>
                                 }
@@ -150,7 +153,7 @@ export default function Row(props) {
             row.courseName || row.exerciseName
           }
           {
-            row.type === 'Programs'
+            row.type === 'Programs' && hasProgression
               ? <IconButton style={{ marginLeft: 8 }} aria-label="expand row" size="small" onClick={() => setOpen(!open)}>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</IconButton>
               : null
           }
@@ -158,7 +161,7 @@ export default function Row(props) {
             row.type==="Exercise" ? ` : ${row.rounds}x${row.repsOrSecs} - ${row.level}` : null
           }
         </TableCell>
-        <TableCell align="right" colSpan={3}>{ row.type === 'Classes' || row.type==="Exercise" ? 1 : row.type === 'Programs' ? completed : 'Logged'}</TableCell>
+        <TableCell align="right" colSpan={3}>{ row.type === 'Classes' || row.type==="Exercise" ? 1 : row.type === 'Programs' && hasProgression ? completed : 'Logged'}</TableCell>
       </TableRow>
       {
         row.type !== 'Classes'
