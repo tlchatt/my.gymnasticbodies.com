@@ -10,7 +10,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
 import VideoElement from '../../VideoElement';
-import { toPlaylistItem } from '../../../lib/video';
+import { resolvePlaylist } from '../../../lib/video';
 
 // import DiscordChat from '../../NonLegacyModal/DiscordChat'
 
@@ -81,13 +81,13 @@ const LegacyWorkoutPLayer = props => {
 
   const playSingle = (id) => {
     setActiveId(id);
-    setPlaylist([toPlaylistItem(id)]);
+    setPlaylist(resolvePlaylist(id));
   };
 
   useEffect(() => {
     if (open && playerData && !isFollowAlong) {
       setActiveId(playerData.videoUrl);
-      setPlaylist([toPlaylistItem(playerData.videoUrl)]);
+      setPlaylist(resolvePlaylist(playerData.videoUrl));
     }
     if (open && followAlong && isFollowAlong) {
       setActiveId(null);

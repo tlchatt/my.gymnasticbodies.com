@@ -1,5 +1,6 @@
 import React from 'react';
-import { logEvent } from '../../../util/clientLogger';
+import VideoElement from '../../VideoElement';
+import { resolvePlaylist } from '../../../lib/video';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -8,8 +9,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles, Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
-
-const BLOB = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com';
 
 const useSytles = makeStyles(theme => ({
   padding: {
@@ -69,7 +68,6 @@ const DemoPlayer = props => {
   const classes = useSytles(phoneScreen);
 
   const { open, videoName, CloseModal , title} = props;
-  const mediaId = videoName ? videoName.split(/[.?]/)[0] : videoName;
 
   return (
     <React.Fragment>
@@ -93,25 +91,10 @@ const DemoPlayer = props => {
         <DialogContent classes={{ root: classes.padding }}>
           {
             open && videoName
-              ? <video
-                  key={mediaId}
-                  controls
-                  autoPlay
-                  style={{ width: '100%', display: 'block' }}
-                  src={`${BLOB}/${mediaId}.mp4`}
-                  onError={() => logEvent('my.video.error', {
-                    level: 'error',
-                    component: 'CourseLibraryPlayer',
-                    mediaId,
-                    src: `${BLOB}/${mediaId}.mp4`,
-                    title,
-                  })}
-                  onStalled={() => logEvent('my.video.stalled', {
-                    level: 'warn',
-                    component: 'CourseLibraryPlayer',
-                    mediaId,
-                  })}
-                />
+              // resolvePlaylist expands a JW playlist-container id (e.g. a Follow
+              // Along class) into its real segment ids — a raw container id 404s
+              // against Blob. VideoElement auto-advances and logs errors/stalls.
+              ? <VideoElement playlist={resolvePlaylist(videoName)} />
               : null
           }
         </DialogContent>

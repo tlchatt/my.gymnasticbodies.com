@@ -15,7 +15,7 @@ import ExceriseCard from './ExceriseCard'
 import EditModal from '../LegacyEditModal';
 import LegacyWorkoutPLayer from './LegacyVideoPlayer'
 import NoProgNotice from './NoProgNotice'
-import { toPlaylistItem } from '../../lib/video';
+import { resolvePlaylist } from '../../lib/video';
 
 import { GetUserPorgressions, Reset, CloseModal as CloseEditModal } from '../../Store/Action/LegacyAction';
 import { getLegacyDataBYO, openEditLegacyModalBYO } from '../../Store/Action/WorkoutBuilderActions';
@@ -129,7 +129,7 @@ const LegacyWorkoutModal = props => {
           }
         });
 
-        return ids.map(toPlaylistItem);
+        return ids.flatMap(resolvePlaylist);
       }
       return [];
     }

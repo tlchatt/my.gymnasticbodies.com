@@ -16,7 +16,12 @@ import playlistMap from '../data/playlistMap.json';
 
 export const BLOB_BASE = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com';
 
-export const cleanMediaId = (id) => (id ? String(id).split(/[.?]/)[0] : '');
+export const cleanMediaId = (id) => {
+  const key = id ? String(id).split(/[.?]/)[0] : '';
+  // Some AWS-exported catalog rows stringified a missing id into "null.json?exp=..."
+  // — treat it as no video (VideoElement renders nothing) instead of a 404 player.
+  return key === 'null' || key === 'undefined' ? '' : key;
+};
 
 export const getVideoUrl = (id) => {
   const mediaId = cleanMediaId(id);

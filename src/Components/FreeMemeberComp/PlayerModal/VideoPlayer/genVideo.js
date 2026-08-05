@@ -1,11 +1,12 @@
-import { toPlaylistItem } from '../../../../lib/video';
+import { resolvePlaylist } from '../../../../lib/video';
 
 // Builds the follow-along playlists for the workout player.
 //
 // Previously each of these fetched every JW feed (content.jwplatform.com/feeds/{id})
 // at runtime to resolve a media ID into a multi-quality MP4 `sources` array. Now that
 // video is served from Vercel Blob, the id resolves directly to a single MP4 URL, so
-// these are synchronous: they just map each id through toPlaylistItem(id) -> { src, poster }.
+// these are synchronous: each id runs through resolvePlaylist(id), which expands JW
+// playlist-container ids into their real segment ids -> [{ src, poster }].
 // The repeat/rounds/left-right SEQUENCING is unchanged — only the per-item value changed.
 // VideoElement plays the resulting array in order, auto-advancing on `ended`.
 const utilFunctions = {
@@ -72,10 +73,10 @@ const utilFunctions = {
       })
     }
 
-    return ids.map(toPlaylistItem);
+    return ids.flatMap(resolvePlaylist);
   },
   generateBeginnerFollowAlong: (arrayToProccess) => {
-    return arrayToProccess.map(prog => toPlaylistItem(prog.mediaId));
+    return arrayToProccess.flatMap(prog => resolvePlaylist(prog.mediaId));
   },
   generateLevelsFollowAlong: (arrayToProccess) => {
     let ids = [];
@@ -111,7 +112,7 @@ const utilFunctions = {
       }
     })
 
-    return ids.map(toPlaylistItem);
+    return ids.flatMap(resolvePlaylist);
   },
   generateIndividualWorkout: (workout, roundsVideos, byoUserSchedule, dateKey) => {
     const mediaId = workout.mediaId;
@@ -136,7 +137,7 @@ const utilFunctions = {
       ];
     })
 
-    return ids.map(toPlaylistItem);
+    return ids.flatMap(resolvePlaylist);
   },
 }
 

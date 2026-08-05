@@ -10,7 +10,7 @@ import { useTheme } from '@material-ui/core/styles';
 import Interweave from 'interweave';
 
 import VideoElement from '../VideoElement';
-import { toPlaylistItem } from '../../lib/video';
+import { resolvePlaylist } from '../../lib/video';
 
 
 const useSytles = makeStyles(theme => ({
@@ -98,7 +98,7 @@ const ThriveModal = props => {
             <Paper elevation={2}>
               {
                 props.open && props.mediaId
-                  ? <VideoElement playlist={[toPlaylistItem(mediaId)]} />
+                  ? <VideoElement playlist={resolvePlaylist(mediaId)} />
                   : null
               }
             </Paper>

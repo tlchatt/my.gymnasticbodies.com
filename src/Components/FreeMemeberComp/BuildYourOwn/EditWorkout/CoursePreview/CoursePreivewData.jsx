@@ -3,7 +3,7 @@ import { Typography, makeStyles, Grid, Card, Button } from '@material-ui/core';
 import Interweave from 'interweave';
 
 import VideoElement from '../../../../VideoElement';
-import { toPlaylistItem } from '../../../../../lib/video';
+import { resolvePlaylist } from '../../../../../lib/video';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -39,7 +39,7 @@ const CoursePreivewData = (props) => {
       {
         !props.isSubCoursePreview ? <Grid item xs={12} sm={10} md={10} lg={12} className={classes.videoGrid} >
           <Card elevation={6} style={{ margin: '12px auto', maxWidth: 710 }}>
-            <VideoElement playlist={[toPlaylistItem(props.mediaId)]} />
+            <VideoElement playlist={resolvePlaylist(props.mediaId)} />
           </Card>
         </Grid>
           : null

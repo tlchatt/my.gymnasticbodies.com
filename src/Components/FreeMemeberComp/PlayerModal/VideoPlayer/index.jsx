@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import utilFunctions from './genVideo';
 
 import VideoElement from '../../../VideoElement';
-import { toPlaylistItem } from '../../../../lib/video';
+import { resolvePlaylist } from '../../../../lib/video';
 
 
 const preVideo = ['Q3ZceB5O', '5l7lZtsw', 'y1Ves9uz', 'aoGlNem1', 'Qgf6i6Rq'];
@@ -98,7 +98,7 @@ const VideoPlayer = props => {
           // videos[0].mediaId (JW signed-feed format), not a top-level mediaId.
           const prog = singleProg[0];
           const id = prog.mediaId || (prog.videos && prog.videos[0] && prog.videos[0].mediaId);
-          setFollowAlongArray([toPlaylistItem(id)])
+          setFollowAlongArray(resolvePlaylist(id))
         }
       }
       else if (levelsPlayer && !singleProg && isBeginnerPlan) {

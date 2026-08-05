@@ -9,7 +9,7 @@ import {
 
 import Wrapper from '../../Components/UtilComponents/Wrapper'
 import VideoElement from '../../Components/VideoElement';
-import { toPlaylistItem } from '../../lib/video';
+import { resolvePlaylist } from '../../lib/video';
 
 const useStyles = makeStyles(theme=>({
   background: { background: '#eeeeee', marginBottom: 12 },
@@ -92,7 +92,7 @@ const Advocates = (props) => {
         <Grid container justifyContent='center'>
           <Grid item xs={11} sm={10} md={10} lg={10}>
             <Paper elevation={4}>
-              <VideoElement playlist={[toPlaylistItem(howTos[params.route].mediaId)]} />
+              <VideoElement playlist={resolvePlaylist(howTos[params.route].mediaId)} />
             </Paper>
           </Grid>
         </Grid>

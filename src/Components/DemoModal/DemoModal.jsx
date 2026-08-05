@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CloseModal } from '../../Store/Action/DemoModalActions';
 import PlayerPreview from './PlayerPreview';
 import VideoElement from '../VideoElement';
-import { toPlaylistItem } from '../../lib/video';
+import { resolvePlaylist } from '../../lib/video';
 
 
 const useSytles = makeStyles(theme => ({
@@ -118,7 +118,7 @@ const DemoPlayer = props => {
         <DialogContent classes={{ root: classes.padding }}>
           {
             open && mediaId
-              ? <VideoElement playlist={[toPlaylistItem(mediaId)]} />
+              ? <VideoElement playlist={resolvePlaylist(mediaId)} />
               : null
           }
           <div className={classes.body}>

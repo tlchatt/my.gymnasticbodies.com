@@ -13,7 +13,7 @@ import { useHistory } from "react-router-dom";
 // eslint-disable-next-line
 import Recommendations from './recommendations.json'
 import VideoElement from '../../../VideoElement';
-import { toPlaylistItem } from '../../../../lib/video';
+import { resolvePlaylist } from '../../../../lib/video';
 import { NavLink } from "react-router-dom";
 
 // Custom components
@@ -152,7 +152,7 @@ const Recommendation = (props) => {
         <Paper elevation={2} style={{minHeight: 215}}>
           {
             myReco.current ?
-              <VideoElement playlist={[toPlaylistItem(Recommendations[myReco.current].mediaId)]} />
+              <VideoElement playlist={resolvePlaylist(Recommendations[myReco.current].mediaId)} />
               : ''
           }
 
