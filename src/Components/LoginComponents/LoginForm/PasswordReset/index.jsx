@@ -103,8 +103,11 @@ const PassWordReset = (props) => {
     else if (PassWordOne === PassWordTwo && !(PassWordOne === '' || PassWordTwo === '')) {
       const config = {
         headers: {
+          // Do NOT send Access-Control-Allow-Origin here — it is a RESPONSE header, and
+          // sending it on the request forced a CORS preflight the reset route didn't
+          // satisfy, so the browser blocked every save ("Network Error"). This was the
+          // dominant reset-password failure.
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         }
       }
       // Neon only. This previously POSTed to AWS and used Neon merely as a catch-fallback.

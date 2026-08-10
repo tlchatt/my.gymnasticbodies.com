@@ -58,7 +58,7 @@ const EmailForm = () => {
   const [fail, setFail] = useState({ isFaield: false, message: '', variation: 'error' });
   const [wait, setWait] = useState(false);
   let form;
-  const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
+  const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
   const NEWAPI = process.env.REACT_APP_API_NEW
   const handleChange = (e) => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,15 +78,17 @@ const EmailForm = () => {
       setWait(true);
       Axios.post(NEWAPI + '/api/user/resetLink', data, config)
         .then(res => {
-          /*setFail({ isFaield: true, message: 'Email Sent. Please Check your Email.', variation: 'success' });
+          // resetLink emails a single-use link carrying the real userId + token. The old
+          // in-app redirect to /reset-password/<id>/none was broken: resetLink returns the
+          // string "OK", so res.data.id was undefined and the token was hard-coded "none",
+          // which always failed token validation. We can't fix it by putting the token in
+          // the response body without letting anyone mint a reset token with no inbox
+          // access — so the member uses the emailed link instead.
+          setFail({ isFaield: true, message: 'Check your email for a link to reset your password.', variation: 'success' });
           setTimeout(() => {
             setFail({ isFaield: false, message: '', variation: 'success' });
             setWait(false);
-          }, 2500);*/
-          console.log("res is:",res.data)
-          //redirect user to update their password
-          history.push(`/reset-password/${res.data.id}/none`);
-          
+          }, 4000);
         }).catch(err => {
           setFail({ isFaield: true, message: 'Failed to Send. Please contact us at admin@gymnasticbodies.com to reset your password.', variation: 'error' })//new user alert!
           Sentry.captureException(err);
