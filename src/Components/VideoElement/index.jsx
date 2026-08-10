@@ -57,8 +57,11 @@ const VideoElement = ({ playlist = [], autoPlay = true, onComplete, style }) => 
       autoPlay={autoPlay}
       playsInline
       poster={current.poster}
-      src={current.src}
       onEnded={handleEnded}
+      onLoadStart={() => logEvent('my.video.loadstart', {
+        component: 'VideoElement',
+        src: current.src,
+      })}
       onError={() => logEvent('my.video.error', {
         level: 'error',
         component: 'VideoElement',
@@ -72,7 +75,14 @@ const VideoElement = ({ playlist = [], autoPlay = true, onComplete, style }) => 
         src: current.src,
       })}
       style={{ width: '100%', display: 'block', ...style }}
-    />
+    >
+      {(current.sources && current.sources.length
+        ? current.sources
+        : [{ src: current.src, type: 'video/mp4' }]
+      ).map((s, i) => (
+        <source key={i} src={s.src} type={s.type} />
+      ))}
+    </video>
   );
 };
 
