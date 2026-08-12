@@ -21,17 +21,28 @@ import playlistMap from '../data/playlistMap.json';
 
 export const BLOB_BASE = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com';
 
-// ---- optimized-rendition manifest (which ids have _480/_720/_1080 webm) ----
-// Fetched once at module load, cached in memory. Until it resolves, getVideoSources
-// returns the original .mp4 only — safe. Video modals open well after app init, so in
-// practice the manifest is loaded before the first play.
-let optimizedIds = new Set();
+// ---- optimized-rendition manifest ----
+// { videos: { id: ['1080','720','480'] } } — the tiers that ACTUALLY exist per video
+// (a low-res source may only have ['480'], or none). Fetched once at module load,
+// cached in memory. Until it resolves, getVideoSources returns the original .mp4 only —
+// safe. Video modals open well after app init, so the manifest is loaded before first play.
+let optimizedVideos = {};   // id -> array of available tier names
 try {
   fetch(`${BLOB_BASE}/optimized-manifest.json`, { cache: 'no-cache' })
     .then((r) => (r.ok ? r.json() : null))
-    .then((m) => { if (m && Array.isArray(m.ids)) optimizedIds = new Set(m.ids); })
+    .then((m) => { if (m && m.videos) optimizedVideos = m.videos; })
     .catch(() => {});
 } catch (_) { /* no fetch (very old env) — stay on originals */ }
+
+const TIER_ORDER = ['480', '720', '1080'];
+// Best available tier <= the wanted size; if none that small exists, the smallest available.
+// Returns null only when the video has no renditions at all.
+const bestAvailableTier = (avail, want) => {
+  if (!avail || !avail.length) return null;
+  const wantIdx = TIER_ORDER.indexOf(want);
+  for (let i = wantIdx; i >= 0; i--) if (avail.includes(TIER_ORDER[i])) return TIER_ORDER[i];
+  return [...avail].sort((a, b) => TIER_ORDER.indexOf(a) - TIER_ORDER.indexOf(b))[0];
+};
 
 // Pick the rendition tier for the current screen. Mobile (coarse pointer or small
 // viewport) -> 480p; desktop -> 720p. Fullscreen upscaling to 1080p is handled by the
@@ -59,7 +70,10 @@ export const cleanMediaId = (id) => {
   return key === 'null' || key === 'undefined' ? '' : key;
 };
 
-export const isOptimized = (id) => optimizedIds.has(cleanMediaId(id));
+export const isOptimized = (id) => {
+  const t = optimizedVideos[cleanMediaId(id)];
+  return !!(t && t.length);
+};
 
 export const renditionUrl = (id, tier) => {
   const mediaId = cleanMediaId(id);
@@ -82,9 +96,10 @@ export const getVideoSources = (id) => {
   const mediaId = cleanMediaId(id);
   if (!mediaId) return [];
   const original = { src: `${BLOB_BASE}/${mediaId}.mp4`, type: 'video/mp4' };
-  if (!optimizedIds.has(mediaId)) return [original];
+  const tier = bestAvailableTier(optimizedVideos[mediaId], pickTier());
+  if (!tier) return [original];   // no rendition exists — serve original, no spurious 404
   return [
-    { src: renditionUrl(mediaId, pickTier()), type: 'video/webm' },
+    { src: renditionUrl(mediaId, tier), type: 'video/webm' },
     original,
   ];
 };
