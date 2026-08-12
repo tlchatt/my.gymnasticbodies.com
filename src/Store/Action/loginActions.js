@@ -238,7 +238,10 @@ export const LoginNew = (username, password) => dispatch => {
       decodedGoal.postAWS = true
       // Neon-authed: the UUID IS the Neon user id (no legacy AWS id exists).
       decodedGoal.neonUserId = res.data.user.id
-      localStorage.setItem('neonUserId', res.data.user.id);
+      // Never persist an undefined id as the string "undefined": it is truthy, so
+      // downstream `|| localStorage.getItem('neonUserId')` fallbacks would send it to the
+      // API and every write failed the user_setting foreign key (broke progression edits).
+      if (res.data.user.id) localStorage.setItem('neonUserId', res.data.user.id);
 
       const today = new Date();
       const expirationDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);

@@ -3415,15 +3415,19 @@ export const refreshWMS = (scheduleId, trainingType, dateIndex, dateKey) => (dis
   });
 }
 // New LegacyActions
-export const ManageDificulty = (workoutIndex, dateKey, dateKeyIndex, exerciseId, type, section, step) => (dispatch, getState) => {
+export const ManageDificulty = (workoutIndex, dateKey, dateKeyIndex, exerciseId, type, section, step) => async (dispatch, getState) => {
   const state = getState();
   const { webToken, UserId, timezone } = state.login;
   const { userSchedule } = state.levels;
   const date = getCalanderDate(timezone)[dateKeyIndex];
   const legacyWorkout = userSchedule[dateKey][workoutIndex];
 
+  // Resolve the real Neon id (re-fetching via ensureNeonUserId if the session's is
+  // unresolved) instead of falling back to a possibly-"undefined" localStorage value —
+  // that string is truthy and failed the write, which is why progression edits didn't save.
+  const neonUserId = state.login.neonUserId || await dispatch(ensureNeonUserId());
   const courseName = legacyWorkout.category.replace('Foundation ', '');
-  Axios({method:'put',url:`${NEWAPI}/api/user/workout/byo/program`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:(state.login.neonUserId||localStorage.getItem('neonUserId')),courseId:legacyNameToId[courseName],op:'difficulty',exerciseId,type,date}})
+  Axios({method:'put',url:`${NEWAPI}/api/user/workout/byo/program`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:neonUserId,courseId:legacyNameToId[courseName],op:'difficulty',exerciseId,type,date}})
     .then(res => {
       console.log("res in ManageDificulty is:", res)
       dispatch(getLevelPLan())
