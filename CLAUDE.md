@@ -2,33 +2,42 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Local Dev Environment (use this — do NOT start a separate dev server)
+## Local Dev Environment (start it yourself — it is OFF by default)
 
-The dev server is **already running** as a **systemd `--user`** service on port **3014**,
-nginx-proxied over HTTPS. Use the `.dev` URL — do **not** run `npm start` yourself: a second process
-shares the same build/watch and fights over the port.
+**The dev server does NOT start at boot.** As of 2026-08-17 it is stopped and disabled so it costs
+nothing while nobody is working on this project. **Start it when you begin, stop it when you're
+done.** It's a systemd `--user` service on port **3014**, nginx-proxied over HTTPS.
 
 - **URL:** https://my.gymnasticbodies.dev
-- **Service:** `my-gymnasticbodies-dev.service`  (port 3014)
+- **Service:** `my-gymnasticbodies-dev.service`  (port 3014 — ~0.7 GB sitting idle, ~2 GB once the CRA build is warm)
 
 > **Old CRA (`react-scripts@4.0.3`).** The service is **pinned to Node v16.20.2** because the app
 > crashes on Node 22, and it runs `npm start` (not `next dev`) — there is no `.next` dir or
-> `next.config`. Restart the service after editing `.env` for changes to take effect.
+> `next.config`. Restart the service after editing `.env` for changes to take effect. Because it's
+> a full CRA webpack build rather than Next's on-demand compile, **first start takes ~30–60s**
+> before the site answers.
 
 ```bash
-systemctl --user is-active my-gymnasticbodies-dev.service   # already up? then just use the URL
-systemctl --user status   my-gymnasticbodies-dev.service    # status + recent logs
-systemctl --user restart  my-gymnasticbodies-dev.service    # after editing .env
-journalctl --user -u my-gymnasticbodies-dev.service -f       # live logs
+systemctl --user start     my-gymnasticbodies-dev.service   # begin working here
+systemctl --user stop      my-gymnasticbodies-dev.service   # done — frees the RAM
+systemctl --user restart   my-gymnasticbodies-dev.service   # after editing .env
+systemctl --user is-active my-gymnasticbodies-dev.service   # is it up?
+journalctl --user -u my-gymnasticbodies-dev.service -f      # live logs
 ```
 
-Before starting a dev server, check `systemctl --user is-active my-gymnasticbodies-dev.service`. If
-it's up, use the `.dev` URL and only **restart** the service — never start a second copy.
+**Still do not run `npm start` yourself — start the service instead.** It carries the Node v16 pin
+and the `PORT`/`BROWSER`/`DANGEROUSLY_DISABLE_HOST_CHECK` env the `.dev` proxy needs; a hand-run
+copy has none of that and will fight over port 3014. If the service is already active, use the
+`.dev` URL and only **restart** it; never start a second copy.
+
+To put it back to starting at boot: `systemctl --user enable --now my-gymnasticbodies-dev.service`
+(`disable --now` to undo). Every dev env can also be driven from the buttons at
+https://claude.tlchatt.com/dev-environments.
 
 ## Commands
 
 ```bash
-npm run start    # ONLY if my-gymnasticbodies-dev.service is stopped — normally use https://my.gymnasticbodies.dev (see Local Dev Environment above). Proxies to https://api.gymnasticbodies.com
+npm run start    # last resort only — prefer `systemctl --user start my-gymnasticbodies-dev.service` then https://my.gymnasticbodies.dev (see Local Dev Environment above). Run by hand it loses the Node v16 pin and the proxy env. Proxies to https://api.gymnasticbodies.com
 npm run build    # Production build (CRA)
 npm run test     # Jest (CRA defaults, no custom config)
 ```
