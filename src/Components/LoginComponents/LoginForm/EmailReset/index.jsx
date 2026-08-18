@@ -90,12 +90,22 @@ const EmailForm = () => {
             setWait(false);
           }, 4000);
         }).catch(err => {
-          setFail({ isFaield: true, message: 'Failed to Send. Please contact us at admin@gymnasticbodies.com to reset your password.', variation: 'error' })//new user alert!
-          Sentry.captureException(err);
+          // resetLink returns 400 with this body when the email has no Neon account.
+          // That is a "we don't recognise this address" case, NOT a send failure — the
+          // old generic "Failed to Send" message made a simple typo look like an outage.
+          const status = err?.response?.status;
+          const body = typeof err?.response?.data === 'string' ? err.response.data : '';
+          const notFound = status === 400 && /not present in the neon DB/i.test(body);
+          const message = notFound
+            ? "We couldn't find an account with that email. Please check the spelling and try again."
+            : 'Failed to Send. Please contact us at admin@gymnasticbodies.com to reset your password.';
+          setFail({ isFaield: true, message, variation: 'error' })
+          // A real fault (network/SendGrid) is still worth capturing; an unknown email is not.
+          if (!notFound) Sentry.captureException(err);
           setTimeout(() => {
             setFail({ isFaield: false, message: '', variation: 'error' })
             setWait(false);
-          }, 2500);
+          }, 4000);
           /*console.error('EmailForm failure')
           setFail({ isFaield: true, message: 'Failed to Send Email. Please Try Again.', variation: 'error' })//new user alert!
           Sentry.captureException(err);
