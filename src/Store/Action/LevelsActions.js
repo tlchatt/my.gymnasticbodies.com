@@ -3347,7 +3347,11 @@ export const generateWorkoutLevels = (workoutId, dateIndex, dateKey) => (dispatc
   const { userSchedule } = state.levels;
   const date = getCalanderDate(timezone)[dateIndex];
 
-  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'add-workout', level: levelId, dayIndex: dateIndex + 1, classId: workoutId, date } }).then(res => {
+  // Fill this empty day from the guided-level template (real catalog classIds), server-side.
+  // The old path sent a positional dropdown index (1-4) as classId, which the server rightly
+  // rejected as an unknown classId -> the day stayed blank ("Generate Workout does nothing").
+  // workoutId is no longer used.
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'fill-day-from-template', level: levelId, dayIndex: dateIndex + 1, date } }).then(res => {
     let workoutSchedule = res.data ? res.data : [];
     let newUserSchedule = _.cloneDeep(userSchedule);
 

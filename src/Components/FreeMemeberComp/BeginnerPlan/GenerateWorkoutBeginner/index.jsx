@@ -114,11 +114,17 @@ const GenerateWorkoutBeginner = (props) => {
           </Grid>
         }
         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.selectDiv}>
-          <Select className={classes.root} classes={{ root: classes.selectRoot }} id="fav-modal-input-with-icon-grid" native variant="outlined" onChange={handleChange} value={selectedOption}>
-            {
-              options ? options : [...Array(40)].map((item, index) => <option key={index} value={index + 1}> {'Workout ' + (index + 1)} </option>)
-            }
-          </Select>
+          {
+            // Guided Levels fill the day from the level template server-side, so no
+            // category picker is needed (the old dropdown sent a positional index that the
+            // server rejected). The dropdown stays for the actual Beginner Plan.
+            !isLevels &&
+            <Select className={classes.root} classes={{ root: classes.selectRoot }} id="fav-modal-input-with-icon-grid" native variant="outlined" onChange={handleChange} value={selectedOption}>
+              {
+                options ? options : [...Array(40)].map((item, index) => <option key={index} value={index + 1}> {'Workout ' + (index + 1)} </option>)
+              }
+            </Select>
+          }
           <Button size='large' variant='contained' startIcon={<AutorenewIcon />} style={{ backgroundColor: 'white', color: '#656464', fontSize: 18, padding: '4px 22px' }} onClick={handleSelect}>
             Generate Workout
           </Button>
