@@ -90,6 +90,16 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
       payload.userLevel = s.userLevel || levelObj[payload.levelId]?.userLevel;
       localStorage.setItem('userLevelID', String(payload.levelId));
     }
+    // Remembered guided level, independent of which section is current. Prefer a guided
+    // levelId (0-4); otherwise fall back to lastViewedLevel — this recovers the guided
+    // level for accounts whose levelId was polluted with a section code (9/10/...) by the
+    // AWS seed, so returning to Guided Plans restores it instead of forcing a re-pick.
+    const asGuided = (v) => {
+      const n = parseInt(v, 10);
+      return Number.isInteger(n) && n >= 0 && n <= 4 ? n : null;
+    };
+    const lastGuided = asGuided(s.levelId) ?? asGuided(s.lastViewedLevel);
+    if (lastGuided !== null) payload.lastGuidedLevel = lastGuided;
     dispatch({ type: actionTypes.SET_USER_STANDING, payload });
   } catch (err) {
     logEvent('my.workout.fetch_error', { data: { section: 'standing', error: err?.message || 'network' } });

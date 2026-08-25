@@ -569,6 +569,16 @@ export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState)
       leveld: leveld,
     }
   }
+  // Persist the guided level (0-4) to the standing row so it survives a reload — the
+  // standing row is what login reads. Sections (White Board=9, BYO=10) are excluded so
+  // they no longer overwrite the stored guided level with a section code.
+  if (Number.isInteger(leveld) && leveld >= 0 && leveld <= 4) {
+    Axios.put(NEWAPI + '/api/user/workout/standing', {
+      userId: neonIdOf(state),
+      levelId: leveld,
+      lastViewedLevel: leveld,
+    }, config).catch(() => {});
+  }
   Axios.post(NEWAPI + '/api/user/userStatus', data, config)
     .then(res => {
       let returnData = res.data[0]?.data;

@@ -91,9 +91,14 @@ const UpdateToken = (state, action) => {
 }
 
 const SetUserLevel = (state, action) => {
+  const nextLevelId = action.payload.levelId;
+  // A section (White Board=9, BYO=10) sets levelId to a section code — it must NOT
+  // erase the user's remembered guided level. Only a real guided level (0-4) updates it.
+  const isGuided = typeof nextLevelId === 'number' && nextLevelId >= 0 && nextLevelId <= 4;
   return updateObject(state, {
     ...action.payload,
     userLevel: state.isFreeMember ? 'Free Member' : action.payload.userLevel,
+    lastGuidedLevel: isGuided ? nextLevelId : state.lastGuidedLevel,
   });
 }
 
@@ -113,6 +118,7 @@ export const LoginReducer = (state = initailState, action) => {
       // Free members are always pinned to White Board regardless of seeded standing.
       userLevel: state.isFreeMember ? 'Free Member' : (action.payload.userLevel ?? state.userLevel),
       levelId: state.isFreeMember ? 9 : (action.payload.levelId ?? state.levelId),
+      lastGuidedLevel: action.payload.lastGuidedLevel ?? state.lastGuidedLevel,
     });
     case actionTypes.SET_USER_LEVEL: return SetUserLevel(state, action)
     case actionTypes.CONTINUE_USER_LEVEL: return SetUserLevel(state, action)

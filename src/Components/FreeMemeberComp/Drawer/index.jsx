@@ -17,6 +17,7 @@ import { GbWhite, GBWhiteHero } from '../../GymFitIcons/gbIcons';
 
 import { openOhNo } from '../../../Store/Reducers/OhNoReducer';
 import { closeDrawer } from '../../../Store/Reducers/OpenDrawerReducer'
+import { continutePreviosLevel } from '../../../Store/Action/LevelsActions';
 
 
 const drawerWidth = 210;
@@ -169,6 +170,7 @@ export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(props.isMobile ? false : true);
   const userNameFullName = useSelector(state => state.login.name)
   const levelId = useSelector(state => state.login.levelId)
+  const lastGuidedLevel = useSelector(state => state.login.lastGuidedLevel)
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -203,6 +205,17 @@ export default function MiniDrawer(props) {
   const handleOpenDrawer = (id) => {
     console.log("id is:", id)
     console.log("location.pathname:", location.pathname)
+    // Returning to Guided Plans from a section (White Board=9 / BYO=10): restore the
+    // remembered guided level directly instead of forcing the level chooser. Tapping
+    // Guided Plans while already on a guided level (0-4) still opens the chooser to switch.
+    if (id === 'GuidedPlans' && !between(levelId, 0, 4) && between(lastGuidedLevel, 0, 4)) {
+      dispatch(continutePreviosLevel(lastGuidedLevel));
+      handleCloseDrawer();
+      if (location.pathname !== '/') {
+        history.push('/');
+      }
+      return;
+    }
     if (location.pathname !== '/') {
       if (levelId === 9 && id === 'SwitchToAuto') {
         history.push('/');
