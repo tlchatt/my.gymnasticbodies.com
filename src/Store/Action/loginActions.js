@@ -105,13 +105,13 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
     // when they're in White Board, instead of the redundant word "White Board".
     if (s.apLevel !== null && s.apLevel !== undefined) payload.apLevel = Number(s.apLevel);
 
-    // Last place in the app. When the user last sat on the home screen ('/'), land them
+    // Current place in the app. When the user last sat on the home screen ('/'), land them
     // back in that section (Guided 0-4 / White Board 9 / BYO 10) instead of the default.
     // This is the single authority for the '/' landing levelId, so it can't race the
-    // LastLocationTracker (which only restores non-'/' routes). lastGuidedLevel above is
+    // CurrentLocationTracker (which only restores non-'/' routes). lastGuidedLevel above is
     // left untouched, so "back to Guided" still returns to the right guided level.
     const HOME_SECTIONS = [0, 1, 2, 3, 4, 9, 10];
-    const loc = s.lastLocation;
+    const loc = s.currentLocation;
     if (loc && loc.path === '/' && HOME_SECTIONS.includes(Number(loc.section))) {
       payload.levelId = Number(loc.section);
       payload.userLevel = levelObj[payload.levelId]?.userLevel || payload.userLevel;

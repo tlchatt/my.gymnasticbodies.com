@@ -13,10 +13,10 @@ const NEWAPI = process.env.REACT_APP_API_NEW;
 // non-'/' routes (Course Library, History, Thrive, ...) and records every move.
 const HOME_SECTIONS = [0, 1, 2, 3, 4, 9, 10];
 
-// Records the user's last place in the app (route path, plus which home section when on
-// '/') and restores it on the next login. One typed user_setting: 'last_location' =
+// Records the user's current place in the app (route path, plus which home section when on
+// '/') and restores it on the next login. One typed user_setting: 'current_location' =
 // { path, section }. Reuses the generic /api/user/userStatus read/write — no new endpoint.
-export default function LastLocationTracker() {
+export default function CurrentLocationTracker() {
   const location = useLocation();
   const history = useHistory();
 
@@ -43,7 +43,7 @@ export default function LastLocationTracker() {
     restoreStartedRef.current = true;
     if (location.pathname !== '/') { setRestoreDone(true); return; }
 
-    fetch(`${NEWAPI}/api/user/userStatus?userId=${encodeURIComponent(neonUserId)}&type=last_location`)
+    fetch(`${NEWAPI}/api/user/userStatus?userId=${encodeURIComponent(neonUserId)}&type=current_location`)
       .then((r) => (r.ok ? r.json() : null))
       .then((res) => {
         const data = res && res[0] && res[0].settings && res[0].settings.data;
@@ -68,7 +68,7 @@ export default function LastLocationTracker() {
       fetch(`${NEWAPI}/api/user/userStatus`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: neonUserId, type: 'last_location', data: { path, section } }),
+        body: JSON.stringify({ userId: neonUserId, type: 'current_location', data: { path, section } }),
       }).catch(() => {});
     }, 600);
 
