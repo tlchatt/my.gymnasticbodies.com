@@ -17,7 +17,7 @@ import { GbWhite, GBWhiteHero } from '../../GymFitIcons/gbIcons';
 
 import { openOhNo } from '../../../Store/Reducers/OhNoReducer';
 import { closeDrawer } from '../../../Store/Reducers/OpenDrawerReducer'
-import { continutePreviosLevel } from '../../../Store/Action/LevelsActions';
+import { continutePreviosLevel, setSection } from '../../../Store/Action/LevelsActions';
 
 
 const drawerWidth = 210;
@@ -172,6 +172,7 @@ export default function MiniDrawer(props) {
   const levelId = useSelector(state => state.login.levelId)
   const lastGuidedLevel = useSelector(state => state.login.lastGuidedLevel)
   const apLevel = useSelector(state => state.login.apLevel)
+  const section = useSelector(state => state.login.section)
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -203,13 +204,22 @@ export default function MiniDrawer(props) {
     }
   };
 
+  // Switch home-screen section directly — no "are you sure?" confirm modal.
+  const goToSection = (sec) => {
+    dispatch(setSection(sec));
+    handleCloseDrawer();
+    if (location.pathname !== '/') {
+      history.push('/');
+    }
+  };
+
   const handleOpenDrawer = (id) => {
     console.log("id is:", id)
     console.log("location.pathname:", location.pathname)
-    // Returning to Guided Plans from a section (White Board=9 / BYO=10): restore the
-    // remembered guided level directly instead of forcing the level chooser. Tapping
-    // Guided Plans while already on a guided level (0-4) still opens the chooser to switch.
-    if (id === 'GuidedPlans' && !between(levelId, 0, 4) && between(lastGuidedLevel, 0, 4)) {
+    // Returning to Guided Plans from another section: restore the remembered guided level
+    // directly instead of forcing the level chooser. Tapping Guided Plans while already in
+    // Guided still opens the chooser to switch levels.
+    if (id === 'GuidedPlans' && section !== 'guided' && between(lastGuidedLevel, 0, 4)) {
       dispatch(continutePreviosLevel(lastGuidedLevel));
       handleCloseDrawer();
       if (location.pathname !== '/') {
@@ -218,15 +228,7 @@ export default function MiniDrawer(props) {
       return;
     }
     if (location.pathname !== '/') {
-      if (levelId === 9 && id === 'SwitchToAuto') {
-        history.push('/');
-        handleCloseDrawer();
-      }
-      else if (between(levelId, 0, 4) && id === 'GuidedPlans') {
-        history.push('/');
-        handleCloseDrawer();
-      }
-      else if (levelId === 10 && id === 'BuildYourOwn') {
+      if (section === 'guided' && id === 'GuidedPlans') {
         history.push('/');
         handleCloseDrawer();
       }
@@ -270,7 +272,7 @@ export default function MiniDrawer(props) {
   const firstSection = [
       {
         text: 'White Board',
-        cb: () => isSinnglePoint && !isFreeMember ? dispatch(openOhNo()) : handleOpenDrawer('SwitchToAuto'),
+        cb: () => isSinnglePoint && !isFreeMember ? dispatch(openOhNo()) : goToSection('whiteboard'),
         imageName: 'bluewhiteboard.png',
         extraWidth: true,
         ids: [9],
@@ -279,7 +281,7 @@ export default function MiniDrawer(props) {
             if (openDrawer.open && openDrawer.componentId !== 'SwitchToAuto') {
               return false
             }
-            if (9 === levelId) {
+            if (section === 'whiteboard') {
               return true
             }
             if (openDrawer.open && openDrawer.componentId === 'SwitchToAuto') {
@@ -304,7 +306,7 @@ export default function MiniDrawer(props) {
             if (openDrawer.open && openDrawer.componentId !== 'GuidedPlans') {
               return false
             }
-            if ([0, 1, 2, 3, 4].indexOf(levelId) > -1) {
+            if (section === 'guided') {
               return true
             }
             if (openDrawer.open && openDrawer.componentId === 'GuidedPlans') {
@@ -321,7 +323,7 @@ export default function MiniDrawer(props) {
       },
       {
         text: 'Build Your Own Workout',
-        cb: () => handleCallBackFunction('BuildYourOwn'),
+        cb: () => isFreeMember ? dispatch(openOhNo()) : goToSection('byo'),
         imageName: 'BYO.png',
         ids: [10],
         drawerId: 'BuildYourOwn',
@@ -330,7 +332,7 @@ export default function MiniDrawer(props) {
             if (openDrawer.open && openDrawer.componentId !== 'BuildYourOwn') {
               return false
             }
-            if ([10].indexOf(levelId) > -1) {
+            if (section === 'byo') {
               return true
             }
             if (openDrawer.open && openDrawer.componentId === 'BuildYourOwn') {
@@ -454,9 +456,10 @@ export default function MiniDrawer(props) {
         <Collapse in={open}>
           <div className={classes.toolbar}>
             <Typography variant="body2" className={classes.title} style={{ fontSize: 16 }}>
-              {levelId === 9
+              {section === 'whiteboard'
                 ? (apLevel === 5 ? 'White Board · All Levels'
                   : (apLevel >= 1 && apLevel <= 4 ? `White Board · Level ${apLevel}` : 'White Board'))
+                : section === 'byo' ? 'Build Your Own'
                 : props.userChoosenLevel}
             </Typography>
           </div>

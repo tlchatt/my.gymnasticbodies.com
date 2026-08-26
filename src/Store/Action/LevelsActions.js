@@ -529,6 +529,13 @@ export const continutePreviosLevel = (levelId) => (dispatch, getState) => {
     dispatch(getLevelPlanNew());
   }
 }
+// Switch the visible home-screen section ('whiteboard' | 'byo'). This is NOT a level —
+// it does not touch levelId, so the user's guided level is preserved. The
+// CurrentLocationTracker persists the section so it is restored on next login.
+export const setSection = (section) => (dispatch) => {
+  dispatch({ type: actionTypes.SET_SECTION, payload: { section } });
+};
+
 export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) => (dispatch, getState) => {
   const state = getState();
   const { webToken, timezone, userLevel } = state.login;

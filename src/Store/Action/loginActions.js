@@ -85,37 +85,42 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
     }
     const s = await res.json();
     const payload = { isThriveUser: !!s.isThriveUser };
-    if (s.levelId !== null && s.levelId !== undefined) {
-      payload.levelId = parseInt(s.levelId, 10);
-      payload.userLevel = s.userLevel || levelObj[payload.levelId]?.userLevel;
-      localStorage.setItem('userLevelID', String(payload.levelId));
-    }
-    // Remembered guided level, independent of which section is current. Prefer a guided
-    // levelId (0-4); otherwise fall back to lastViewedLevel — this recovers the guided
-    // level for accounts whose levelId was polluted with a section code (9/10/...) by the
-    // AWS seed, so returning to Guided Plans restores it instead of forcing a re-pick.
+
+    // levelId is ONLY a guided training level (0-4) now — never a section code. Prefer a
+    // guided levelId; otherwise fall back to lastViewedLevel (recovers the guided level for
+    // accounts whose levelId was polluted with a section code 9/10/... by the AWS seed).
     const asGuided = (v) => {
       const n = parseInt(v, 10);
       return Number.isInteger(n) && n >= 0 && n <= 4 ? n : null;
     };
-    const lastGuided = asGuided(s.levelId) ?? asGuided(s.lastViewedLevel);
-    if (lastGuided !== null) payload.lastGuidedLevel = lastGuided;
+    const guidedLevel = asGuided(s.levelId) ?? asGuided(s.lastViewedLevel);
+    if (guidedLevel !== null) {
+      payload.levelId = guidedLevel;
+      payload.lastGuidedLevel = guidedLevel;
+      payload.userLevel = levelObj[guidedLevel]?.userLevel;
+      localStorage.setItem('userLevelID', String(guidedLevel));
+    }
 
     // White Board's own training level (1-4, or 5 = "All") — shown under the user's name
     // when they're in White Board, instead of the redundant word "White Board".
     if (s.apLevel !== null && s.apLevel !== undefined) payload.apLevel = Number(s.apLevel);
 
-    // Current place in the app. When the user last sat on the home screen ('/'), land them
-    // back in that section (Guided 0-4 / White Board 9 / BYO 10) instead of the default.
-    // This is the single authority for the '/' landing levelId, so it can't race the
-    // CurrentLocationTracker (which only restores non-'/' routes). lastGuidedLevel above is
-    // left untouched, so "back to Guided" still returns to the right guided level.
-    const HOME_SECTIONS = [0, 1, 2, 3, 4, 9, 10];
+    // Which home-screen section to show. Priority: the saved current_location section (when
+    // they last sat on '/'), else translate a seeded levelId code (9->whiteboard,10->byo),
+    // else default to Guided. This is the single authority for the '/' section, so it can't
+    // race the CurrentLocationTracker (which only restores non-'/' routes).
+    const sectionFromCode = (code) => {
+      const n = Number(code);
+      if (n === 9) return 'whiteboard';
+      if (n === 10) return 'byo';
+      return 'guided';
+    };
+    const VALID_SECTIONS = ['guided', 'whiteboard', 'byo'];
     const loc = s.currentLocation;
-    if (loc && loc.path === '/' && HOME_SECTIONS.includes(Number(loc.section))) {
-      payload.levelId = Number(loc.section);
-      payload.userLevel = levelObj[payload.levelId]?.userLevel || payload.userLevel;
-      localStorage.setItem('userLevelID', String(payload.levelId));
+    if (loc && loc.path === '/' && loc.section != null) {
+      payload.section = VALID_SECTIONS.includes(loc.section) ? loc.section : sectionFromCode(loc.section);
+    } else {
+      payload.section = sectionFromCode(s.levelId);
     }
     dispatch({ type: actionTypes.SET_USER_STANDING, payload });
   } catch (err) {

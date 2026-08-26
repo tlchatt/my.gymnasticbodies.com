@@ -116,6 +116,11 @@ export default function FreeMembers() {
   const isTablet = useMediaQuery(theme.breakpoints.down(1025));
   const timeZone = useSelector(state => state.login.timezone);
   const userLevel = useSelector(state => state.login.userLevel);
+  const section = useSelector(state => state.login.section);
+  const levelId = useSelector(state => state.login.levelId);
+  const hasGuidedLevel = Number.isInteger(levelId) && levelId >= 0 && levelId <= 4;
+  // The InitialPage chooser shows when the user is in Guided but hasn't picked a level yet.
+  const showingChooser = (section || 'guided') === 'guided' && !hasGuidedLevel;
   const isFreeMember = useSelector(state => state.login.isFreeMember);
   const isAllAccessUser = useSelector(state => state.login.isAllAccessUser)
 
@@ -135,27 +140,19 @@ export default function FreeMembers() {
     });
   };
 
+  // Which home-screen section renders is driven by `section` (guided/whiteboard/byo) — a
+  // section is NOT a level. Within Guided, the guided levelId picks Beginner (0) vs the
+  // Intermediate/Advanced plan (1-4); no level chosen yet -> the InitialPage chooser.
   const HandleRender = () => {
-    switch (userLevel) {
-      case 'White Board':
+    switch (section) {
+      case 'whiteboard':
         return <AutoPilot state={state} />
-      case 'Beginner':
-        return <BeginnerPlan state={state} isMobile={isMobile} />
-      case 'Intermediate One':
-        return <LevelsPlan state={state} isMobile={isMobile} />
-      case 'Intermediate Two':
-        return <LevelsPlan state={state} isMobile={isMobile} />
-      case 'Advanced One':
-        return <LevelsPlan state={state} isMobile={isMobile} />
-      case 'Advanced Two':
-        return <LevelsPlan state={state} isMobile={isMobile} />
-      case 'Build Your Own':
+      case 'byo':
         return <BuildYourOwn state={state} isMobile={isMobile} />
-      case 'My Courses':
-        return <Redirect to="/my-courses" />
-      case 'New User':
-        return <InitialPage />
+      case 'guided':
       default:
+        if (levelId === 0) return <BeginnerPlan state={state} isMobile={isMobile} />
+        if (hasGuidedLevel) return <LevelsPlan state={state} isMobile={isMobile} />
         return <InitialPage />
     }
   }
@@ -191,7 +188,7 @@ export default function FreeMembers() {
         <main className={classes.content}>
           <Grid container>
             {
-              userLevel !== 'New User' && location.pathname === '/'
+              !showingChooser && location.pathname === '/'
                 ? <Grid item xs={8} sm={11} md={11} lg={11} className={classes.headerArea}>
                   <div className={classes.titleDiv} >
                     <Typography variant="h4" className={classes.forceColor} style={{ fontWeight: 400 }}>

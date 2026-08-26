@@ -1,12 +1,23 @@
 import * as actionTypes from '../Action/actionTypes';
 import { updateObject } from '../util';
 
+// section = which home-screen the member is viewing. It is NOT a level. Legacy code stored
+// the section as a code in levelId (9 = White Board, 10 = Build Your Own); translate any
+// such code to a clean section name, and keep levelId for the guided training level (0-4).
+const sectionFromCode = (code) => {
+  const n = Number(code);
+  if (n === 9) return 'whiteboard';
+  if (n === 10) return 'byo';
+  return 'guided';
+};
+
 const initailState = {
   auth: false,
   webToken: '',
   loading: false,
   fail: false,
   didTryAutoLogin: false,
+  section: 'guided',
 }
 
 const LoginSuccess = (state, action) => {
@@ -27,6 +38,7 @@ const LoginSuccess = (state, action) => {
     detailedView: action.userState.detailedView,
     userLevel: action.userState.isFreeMember ? 'Free Member' : action.userState.userLevel,
     levelId: action.userState.isFreeMember ? 9 : action.userState.levelId,
+    section: action.userState.isFreeMember ? 'whiteboard' : sectionFromCode(action.userState.levelId),
     lastName: action.userState.lname,
     showAllAccessSite: action.userState.showAllAccessSite,
     isFreeMember: action.userState.isFreeMember,
@@ -47,6 +59,7 @@ const WelcomeSuccess = (state, action) => {
     isAdmin: action.paylod.isAdmin ? action.paylod.isAdmin : null,
     userLevel: action.paylod.isFreeMember ? 'Free Member' : action.paylod.userLevel,
     levelId: action.paylod.isFreeMember ? 9 : action.paylod.levelId,
+    section: action.paylod.isFreeMember ? 'whiteboard' : sectionFromCode(action.paylod.levelId),
     lastName: action.paylod.lname,
     showAllAccessSite: action.paylod.showAllAccessSite,
     isFreeMember: action.paylod.isFreeMember,
@@ -99,6 +112,8 @@ const SetUserLevel = (state, action) => {
     ...action.payload,
     userLevel: state.isFreeMember ? 'Free Member' : action.payload.userLevel,
     lastGuidedLevel: isGuided ? nextLevelId : state.lastGuidedLevel,
+    // Choosing a guided level means the Guided section is now showing.
+    section: isGuided ? 'guided' : state.section,
   });
 }
 
@@ -119,7 +134,9 @@ export const LoginReducer = (state = initailState, action) => {
       userLevel: state.isFreeMember ? 'Free Member' : (action.payload.userLevel ?? state.userLevel),
       levelId: state.isFreeMember ? 9 : (action.payload.levelId ?? state.levelId),
       lastGuidedLevel: action.payload.lastGuidedLevel ?? state.lastGuidedLevel,
+      section: state.isFreeMember ? 'whiteboard' : (action.payload.section ?? state.section),
     });
+    case actionTypes.SET_SECTION: return updateObject(state, { section: action.payload.section });
     case actionTypes.SET_USER_LEVEL: return SetUserLevel(state, action)
     case actionTypes.CONTINUE_USER_LEVEL: return SetUserLevel(state, action)
     case actionTypes.CHECK_WELCOME_SERVICE: return WelcomeSuccess(state, action);

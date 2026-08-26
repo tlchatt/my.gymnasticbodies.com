@@ -6,7 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { LinkRef } from '../../../UtilComponents/LinkOverride';
 
-import { setLevelPath } from '../../../../Store/Action/LevelsActions';
+import { setSection } from '../../../../Store/Action/LevelsActions';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -58,7 +58,8 @@ export default function SwitchToAutoModal(props) {
   const history = useHistory();
 
   const handleChangeToAutoPilot = () => {
-    dispatch(setLevelPath(9, handleClose))
+    dispatch(setSection('whiteboard'))
+    if (handleClose) handleClose()
     if (location.pathname !== '/') {
       history.push("/")
     }

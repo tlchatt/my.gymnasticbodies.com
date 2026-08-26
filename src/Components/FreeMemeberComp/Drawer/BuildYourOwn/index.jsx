@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { LinkRef } from '../../../UtilComponents/LinkOverride';
 
-import { setLevelPath } from '../../../../Store/Action/LevelsActions';
+import { setSection } from '../../../../Store/Action/LevelsActions';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -58,7 +58,8 @@ export default function BuildYourOwn(props) {
   const location = useLocation();
   const history = useHistory();
   const handleChangeToAutoPilot = () => {
-    dispatch(setLevelPath(10, handleClose))
+    dispatch(setSection('byo'))
+    if (handleClose) handleClose()
     if (location.pathname !== '/') {
       history.push("/")
     }

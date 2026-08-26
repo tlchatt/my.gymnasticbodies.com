@@ -49,6 +49,9 @@ export const UPDATE_SAVED_WORKOUTS = 'UPDATE_SAVED_WORKOUTS';
 
 export const SET_USER_LEVEL = 'SET_USER_LEVEL';
 export const CONTINUE_USER_LEVEL = 'CONTINUE_USER_LEVEL';
+// Which home-screen section is showing: 'guided' | 'whiteboard' | 'byo'. Unrelated to
+// levelId (a guided training level 0-4). See CurrentLocationTracker / fetchUserStanding.
+export const SET_SECTION = 'SET_SECTION';
 export const SET_LEVELS = 'SET_LEVELS';
 export const GET_WORKOUT = 'GET_WORKOUT';
 export const LOG_NON_LEGACY_WORKOUT = 'LOG_NON_LEGACY_WORKOUT';

@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import GuidedPlans from '../GuidedPlans';
 import FitnessQuiz from '../FitnessQuiz';
 
-import { setLevelPath } from '../../../Store/Action/LevelsActions'
+import { setLevelPath, setSection } from '../../../Store/Action/LevelsActions'
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -102,12 +102,10 @@ const InitialPage = (props) => {
       setChosenPath(Seelctions[selectedPath].selctionTitle);
     }
     if (Seelctions[selectedPath].selctionTitle === 'White Board') {
-      // Autoilot id is 9
-      dispatch( setLevelPath(9) )
+      dispatch( setSection('whiteboard') )
     }
     if (Seelctions[selectedPath].selctionTitle === 'Build Your Own') {
-      // Build Your Own id is 10
-      dispatch( setLevelPath(10) )
+      dispatch( setSection('byo') )
     }
   }
 
