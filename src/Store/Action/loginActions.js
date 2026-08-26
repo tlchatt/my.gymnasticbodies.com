@@ -154,13 +154,13 @@ export const checkWelcomeService = (userData) => {
   }
 }
 
-export const loginFail = () => dispatch => {
+export const loginFail = (message = 'Something went wrong, please try again.') => dispatch => {
   dispatch(StartFailLogin())
   dispatch(Logout());
-  dispatch(showToast('Something went wrong please try again.', 'error'))
+  dispatch(showToast(message, 'error'))
   setTimeout(() => {
     dispatch(clearLoginFail());
-  }, 2500)
+  }, 4000)
 }
 
 export const fourceLogoutFail = () => dispatch => {
@@ -347,7 +347,13 @@ export const LoginNew = (username, password) => dispatch => {
       const status = err?.response?.status ?? null;
       const reason = err?.response ? 'server_error' : (err?.request ? 'network' : 'bad_credentials');
       logEvent('my.login.failed', { email: username, data: { rail: 'neon', reason, status } });
-      dispatch(loginFail());
+      // Tell the user what actually went wrong instead of a generic "something went wrong".
+      const messageByReason = {
+        bad_credentials: "Incorrect email or password. Please double-check both and try again.",
+        server_error: "We couldn't sign you in right now — the server had a problem. Please try again in a moment.",
+        network: "Can't reach the server. Check your internet connection and try again.",
+      };
+      dispatch(loginFail(messageByReason[reason] || 'Something went wrong, please try again.'));
       Sentry.captureException(err);
     });
 }//primary Neon login, postAWS = true
