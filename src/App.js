@@ -9,6 +9,7 @@ import Header from './Components/Header'
 import Footer from './Components/Footer'
 import MobileFooter from './Components/MobileFooter'
 import Interceptor from './Components/UtilComponents/Interceptor'
+import LastLocationTracker from './Components/LastLocationTracker'
 import SnackBar from './Components/SnakBar'
 
 // Page imports
@@ -183,6 +184,7 @@ function App(props) {
   return (
 
     <div className="App">
+      {props.isAuth && <LastLocationTracker />}
       {routes}
       <SnackBar />
       <AlertNotice open={showAlertModal} message={isMaintenance.modalNote} handleClose={handleModalClose} />
