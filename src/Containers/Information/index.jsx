@@ -38,10 +38,10 @@ const infoLinks = [
     isExternalLink: true
   },
   {
-    title: 'Exercises',
-    imageUrl: 'https://www.gymnasticbodies.com/gymfit/wp-content/uploads/2022/01/info-icons-3.jpg',
-    link: "https://www.gymnasticbodies.com/exercises/",
-    isExternalLink: true
+    title: 'Courses',
+    imageUrl: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/rings.jpg',
+    link: "/my-courses",
+    isExternalLink: false
   }
 ]
 
