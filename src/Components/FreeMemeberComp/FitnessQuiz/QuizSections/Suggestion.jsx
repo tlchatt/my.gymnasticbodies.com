@@ -6,7 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { suggestedSecondary } from './secondaryText'
 
-import { setLevelPath } from '../../../../Store/Action/LevelsActions';
+import { setLevelPath, setWhiteboardLevel } from '../../../../Store/Action/LevelsActions';
 import { openOhNo } from '../../../../Store/Reducers/OhNoReducer'
 
 const useStyles = makeStyles(theme => ({
@@ -148,9 +148,13 @@ const Suggestion = (props) => {
   // Event Handlers
   const handleChooseLevel = () => {
     if (guidedPlanAccessLevels.length > 0 && guidedPlanAccessLevels.indexOf(suggestedLevel.index - 1) >= 0) {
-      
-      dispatch(setLevelPath(suggestedLevel.index - 1, props.handleClose))
-      
+
+      const guidedLevel = suggestedLevel.index - 1;
+      dispatch(setLevelPath(guidedLevel, props.handleClose))
+      // The quiz also sets the White Board level: map the guided level (0-4) to a White
+      // Board level (1-4); Beginner and Intermediate One both map to White Board Level 1.
+      dispatch(setWhiteboardLevel(Math.max(1, guidedLevel)))
+
       if (location.pathname !== '/') {
         
         history.push("/")

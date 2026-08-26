@@ -536,6 +536,19 @@ export const setSection = (section) => (dispatch) => {
   dispatch({ type: actionTypes.SET_SECTION, payload: { section } });
 };
 
+// Persist the White Board (AutoPilot) training level (1-4) and reflect it in Redux, so the
+// White Board "Generate" and the level shown under the user's name update immediately.
+export const setWhiteboardLevel = (level) => (dispatch, getState) => {
+  const lvl = Number(level);
+  if (!Number.isFinite(lvl) || lvl < 1 || lvl > 5) return;
+  const config = { headers: { "Content-Type": "application/json" } };
+  Axios.post(NEWAPI + '/api/user/workout/autopilot', {
+    userId: neonIdOf(getState()), op: 'set-level', level: lvl,
+  }, config).then(() => {
+    dispatch({ type: actionTypes.SET_USER_STANDING, payload: { apLevel: lvl } });
+  }).catch(() => {});
+};
+
 export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) => (dispatch, getState) => {
   const state = getState();
   const { webToken, timezone, userLevel } = state.login;
@@ -557,28 +570,11 @@ export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) =>
 }
 export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState) => {
   const state = getState();
-  let resLevelId
-  const { webToken, UserId, timezone, userLevel } = state.login;
-  const currentDate = moment().tz(timezone).format('YYYY-MM-DD');
-  let type = 'levelPath'
-  const config = {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }
-  let data = {
-    // See neonIdOf — legacy UserId is the AWS integer, not a Neon UUID.
-    userId: neonIdOf(state),
-    currentDate: currentDate,
-    type: type,
-    data: {
-      workoutOrPlanId: workoutOrPlanId,
-      leveld: leveld,
-    }
-  }
-  // Persist the guided level (0-4) to the standing row so it survives a reload — the
-  // standing row is what login reads. Sections (White Board=9, BYO=10) are excluded so
-  // they no longer overwrite the stored guided level with a section code.
+  const config = { headers: { "Content-Type": "application/json" } };
+
+  // Persist the guided level (0-4) to the standing row (workout_level) — the row login
+  // reads on reload. The legacy 'levelPath' setting write is retired: it duplicated this
+  // and was only read as a redundant activity signal / account-page fallback.
   if (Number.isInteger(leveld) && leveld >= 0 && leveld <= 4) {
     Axios.put(NEWAPI + '/api/user/workout/standing', {
       userId: neonIdOf(state),
@@ -586,24 +582,19 @@ export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState)
       lastViewedLevel: leveld,
     }, config).catch(() => {});
   }
-  Axios.post(NEWAPI + '/api/user/userStatus', data, config)
-    .then(res => {
-      let returnData = res.data[0]?.data;
-      resLevelId = JSON.parse(returnData).leveld;
-      dispatch({
-        type: actionTypes.SET_USER_LEVEL,
-        payload: {
-          ...levelObj[resLevelId],
-          showAllOpen: between(resLevelId, 1, 4),
-        }
-      })
-    }).then(() => {
-      if (between(resLevelId, 1, 4)) {
-        dispatch(getLevelPLan(type));
-      }
-    }).catch(error => {
-      console.error('setLevelPathNew failure')
-    });
+
+  // Update Redux immediately from the chosen level — no round-trip through the retired
+  // 'levelPath' setting.
+  dispatch({
+    type: actionTypes.SET_USER_LEVEL,
+    payload: {
+      ...levelObj[leveld],
+      showAllOpen: between(leveld, 1, 4),
+    }
+  });
+  if (between(leveld, 1, 4)) {
+    dispatch(getLevelPLan('levelPath'));
+  }
 }
 const processUserWorkout = workout => {
   if (workout.type === 'Class') {
