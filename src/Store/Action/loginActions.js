@@ -101,6 +101,10 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
     const lastGuided = asGuided(s.levelId) ?? asGuided(s.lastViewedLevel);
     if (lastGuided !== null) payload.lastGuidedLevel = lastGuided;
 
+    // White Board's own training level (1-4, or 5 = "All") — shown under the user's name
+    // when they're in White Board, instead of the redundant word "White Board".
+    if (s.apLevel !== null && s.apLevel !== undefined) payload.apLevel = Number(s.apLevel);
+
     // Last place in the app. When the user last sat on the home screen ('/'), land them
     // back in that section (Guided 0-4 / White Board 9 / BYO 10) instead of the default.
     // This is the single authority for the '/' landing levelId, so it can't race the

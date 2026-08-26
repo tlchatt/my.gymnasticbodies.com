@@ -171,6 +171,7 @@ export default function MiniDrawer(props) {
   const userNameFullName = useSelector(state => state.login.name)
   const levelId = useSelector(state => state.login.levelId)
   const lastGuidedLevel = useSelector(state => state.login.lastGuidedLevel)
+  const apLevel = useSelector(state => state.login.apLevel)
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -453,7 +454,10 @@ export default function MiniDrawer(props) {
         <Collapse in={open}>
           <div className={classes.toolbar}>
             <Typography variant="body2" className={classes.title} style={{ fontSize: 16 }}>
-              {props.userChoosenLevel}
+              {levelId === 9
+                ? (apLevel === 5 ? 'White Board · All Levels'
+                  : (apLevel >= 1 && apLevel <= 4 ? `White Board · Level ${apLevel}` : 'White Board'))
+                : props.userChoosenLevel}
             </Typography>
           </div>
         </Collapse>

@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 
 import { deleteCategory, addNewCategory, fetchFreeMember } from '../../../Store/Action/FreeMemberActions'
+import * as actionTypes from '../../../Store/Action/actionTypes'
 import { AxiosConfigNeon } from '../../../Store/util';
 
 import GymfitSlider from './GymfitSlider';
@@ -139,6 +140,8 @@ export default function ResponsiveDialog(props) {
       }
       Axios(AxiosConfigNeon('post', `/api/user/workout/autopilot`, webToken, { data: { userId: UserId, op: 'set-level', level: value } })).then(res => {
         dispatch(fetchFreeMember());
+        // Keep the White Board level shown under the user's name in sync immediately.
+        dispatch({ type: actionTypes.SET_USER_STANDING, payload: { apLevel: Number(value) } });
         setCurrentLevel(value);
       }).catch(err => console.log(err));
     }
