@@ -18,21 +18,24 @@
 //   legacy JW signed-feed ref: "3bac3y3F.json?exp=...&sig=..."
 // cleanMediaId strips the "." / "?" suffix so both resolve to the bare id.
 import playlistMap from '../data/playlistMap.json';
+import optimizedManifest from '../data/optimized-manifest.json';
 
 export const BLOB_BASE = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com';
 
 // ---- optimized-rendition manifest ----
-// { videos: { id: ['1080','720','480'] } } — the tiers that ACTUALLY exist per video
-// (a low-res source may only have ['480'], or none). Fetched once at module load,
-// cached in memory. Until it resolves, getVideoSources returns the original .mp4 only —
-// safe. Video modals open well after app init, so the manifest is loaded before first play.
-let optimizedVideos = {};   // id -> array of available tier names
+// { videos: { id: ['1080','720','480'] } } — the tiers that ACTUALLY exist per video.
+// SEEDED SYNCHRONOUSLY from a bundled snapshot so the FIRST play already selects the
+// optimized rendition. (Previously this was populated only by the async fetch below, so a
+// video modal opened before the fetch resolved got an mp4-only playlist that never
+// upgraded — the reason production served 0 webm.) The fetch stays as a freshness update
+// in case the batch worker adds more ids after this build.
+let optimizedVideos = (optimizedManifest && optimizedManifest.videos) || {};
 try {
   fetch(`${BLOB_BASE}/optimized-manifest.json`, { cache: 'no-cache' })
     .then((r) => (r.ok ? r.json() : null))
     .then((m) => { if (m && m.videos) optimizedVideos = m.videos; })
     .catch(() => {});
-} catch (_) { /* no fetch (very old env) — stay on originals */ }
+} catch (_) { /* no fetch — bundled snapshot still applies */ }
 
 const TIER_ORDER = ['480', '720', '1080'];
 // Best available tier <= the wanted size; if none that small exists, the smallest available.
