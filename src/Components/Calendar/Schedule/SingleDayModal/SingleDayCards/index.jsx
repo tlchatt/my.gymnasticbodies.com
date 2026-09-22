@@ -84,7 +84,7 @@ const SingleDayCard = props => {
           classes={{action: classes.actionOverrid}}
           disableTypography={true}
           avatar={
-            <Avatar src={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.imageId}`}/>
+            <Avatar src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.imageId}`}/>
           }
           title={
             <Typography variant='h6' className={classes.cardTitle} onClick={()=>setNonLegacy(true)}>

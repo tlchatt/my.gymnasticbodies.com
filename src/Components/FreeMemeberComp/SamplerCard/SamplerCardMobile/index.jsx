@@ -125,7 +125,7 @@ export default function MediaCardMobile(props) {
               <img
                 className={classes.media}
                 alt={props.type}
-                src={`https://gymfit-images.s3.amazonaws.com/exercises/${props.imageUrl.split('.')[0].toUpperCase()}.jpg`}
+                src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${props.imageUrl.split('.')[0].toUpperCase()}.jpg`}
               />
               <div className={`${classes.overLay}`}>
                 <PlayCircleOutlineIcon className={classes.playButtonIcon} />

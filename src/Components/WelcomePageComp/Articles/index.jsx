@@ -41,28 +41,28 @@ const Articles = () => {
       <Grid item className={classes.paddingS} xs={6} sm={6} md={3} lg={3}>
         <Cards
           link='https://www.gymnasticbodies.com/hips-101-loosen-1-critical-area-before-stretching-hip-flexors/'
-          img='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/icon-GymnasticBodies-quad-Stretch.jpg'
+          img='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/icon-GymnasticBodies-quad-Stretch.jpg'
           snippet='Hips 101: Loosen This 1 Critical Area BEFORE Stretching Hip Flexors'
         />
       </Grid>
       <Grid item className={classes.paddingS} xs={6} sm={6} md={3} lg={3}>
         <Cards
           link='https://www.gymnasticbodies.com/quick-easy-fix-tight-adductors/'
-          img='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/icon-GymnasticBodies-Adductors.jpg '
+          img='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/icon-GymnasticBodies-Adductors.jpg '
           snippet='A Quick and Easy Fix For Tight Adductors'
         />
       </Grid>
       <Grid item className={classes.paddingS} xs={6} sm={6} md={3} lg={3}>
         <Cards
           link='https://www.gymnasticbodies.com/forget-every-fitness-challenge-youve-tried-complete-4-movements/'
-          img='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/icon-gymnasticbodies-crab-walk.jpg'
+          img='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/icon-gymnasticbodies-crab-walk.jpg'
           snippet='Forget Every Fitness Challenge You’ve Tried: Complete These 4 Movements'
         />
       </Grid>
       <Grid item className={classes.paddingS} xs={6} sm={6} md={3} lg={3}>
         <Cards
           link='https://www.gymnasticbodies.com/hang-on-for-your-health-simple-drills/'
-          img='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/icon-GymnasticBodies-couple-bar-hang.jpg'
+          img='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/icon-GymnasticBodies-couple-bar-hang.jpg'
           snippet='Hang on For Your Health With These Simple Drills'
         />
       </Grid>

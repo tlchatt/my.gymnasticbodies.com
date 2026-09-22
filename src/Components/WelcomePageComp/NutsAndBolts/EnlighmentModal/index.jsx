@@ -83,7 +83,7 @@ function EnlighmentModal(props) {
               <Grid item xs={12} sm={6} md={4} lg={4} style={{ padding: 8 }}>
                 <Link href="https://www.gymnasticbodies.com/blog" color="inherit" target='_blank'>
                   <Card className={classes.root} square={true} elevation={0}>
-                    <img src='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/rear_delts2.jpg' className={classes.media} alt="" />
+                    <img src='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/rear_delts2.jpg' className={classes.media} alt="" />
                   </Card>
                   <Typography variant='h4' align='center'>BLOGS</Typography>
                 </Link>
@@ -91,7 +91,7 @@ function EnlighmentModal(props) {
               <Grid item xs={12} sm={6} md={4} lg={4} style={{ padding: 8 }}>
                 <Link component={LinkRef} to='/advocates' color="inherit" target='_blank'>
                   <Card className={classes.root} square={true} elevation={0}>
-                    <img src='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GFAdv-functional.jpg' className={classes.media} alt="" />
+                    <img src='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GFAdv-functional.jpg' className={classes.media} alt="" />
                   </Card>
                   <Typography variant='h4' align='center'>ADVOCATES</Typography>
                 </Link>

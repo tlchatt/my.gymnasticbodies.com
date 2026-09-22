@@ -166,7 +166,7 @@ export default function MediaCard(props) {
       >
         <CardMedia
           className={classes.media}
-          image={`https://gymfit-images.s3.amazonaws.com/exercises/${props.imageUrl.split('.')[0].toUpperCase()}.jpg`}
+          image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${props.imageUrl.split('.')[0].toUpperCase()}.jpg`}
           title="Contemplative Reptile"
         />
         <div className={`${classes.overLay}`}>

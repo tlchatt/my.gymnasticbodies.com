@@ -17,7 +17,7 @@ const AllAccessList = (props) => {
     <Aux>
       <BluePrintsListItem listText="Equipment List" to="/eqiupment-list" iconUrl="dumbbell.svg" alt="Dumbbell Icon" classes={props.classes} />
       <PlanAccessList classes={props.classes} />
-      <DropDownList title="All Access" icon='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/allaccess.svg' classes={props.classes}>
+      <DropDownList title="All Access" icon='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/allaccess.svg' classes={props.classes}>
         <List
           aria-labelledby="nested-list-subheader"
           component="div"
@@ -27,7 +27,7 @@ const AllAccessList = (props) => {
           <ListItem className={props.classes.listItem}>
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/rehab.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/rehab.svg"
                 className={props.classes.icon}
                 alt="Calendar Icon"
               />
@@ -46,7 +46,7 @@ const AllAccessList = (props) => {
           <ListItem className={props.classes.listItem} >
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/strengthen.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/strengthen.svg"
                 className={props.classes.icon}
                 alt="Levels Icon"
               />
@@ -65,7 +65,7 @@ const AllAccessList = (props) => {
           <ListItem className={props.classes.listItem} >
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/mobilize.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/mobilize.svg"
                 className={props.classes.icon}
                 alt="Key icon"
               />

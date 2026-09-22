@@ -25,7 +25,7 @@ const PlanAccessList = (props) => {
       <ListItem className={props.classes.listItem}>
         <ListItemIcon className={props.classes.iconsRoot}>
           <img
-            src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/levels.svg"
+            src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/levels.svg"
             className={props.classes.icon}
             alt="Key icon"
           />
@@ -41,7 +41,7 @@ const PlanAccessList = (props) => {
             <ListItem className={`${props.classes.subList} ${props.classes.listItem}`}>
               <ListItemIcon className={props.classes.iconsRoot}>
                 <img
-                  src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/questionmark.svg"
+                  src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/questionmark.svg"
                   className={props.classes.icon}
                   alt="questionmark Icon"
                 />
@@ -60,7 +60,7 @@ const PlanAccessList = (props) => {
             <ListItem className={`${props.classes.subList} ${props.classes.listItem}`}>
               <ListItemIcon className={props.classes.iconsRoot}>
                 <img
-                  src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/add.svg"
+                  src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/add.svg"
                   className={props.classes.icon}
                   alt="add Icon"
                 />
@@ -79,7 +79,7 @@ const PlanAccessList = (props) => {
             <ListItem className={`${props.classes.subList} ${props.classes.listItem}`}>
               <ListItemIcon className={props.classes.iconsRoot}>
                 <img
-                  src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/info-whitesquare.svg"
+                  src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/info-whitesquare.svg"
                   className={props.classes.icon}
                   alt="questionmark Icon"
                 />

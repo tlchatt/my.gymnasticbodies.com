@@ -81,7 +81,7 @@ export default function CourseCards(props) {
   return (
     <Grid className={`${classes.classFinderGrid} ${hiddenClass} ${props.addClass}`} item sm={4} xs={6}>
       <Card className={classes.root}>
-        <img onClick={() => setOpen(true)} src={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${CourseInfo.image_url}`} className={classes.media} alt="" />
+        <img onClick={() => setOpen(true)} src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${CourseInfo.image_url}`} className={classes.media} alt="" />
         {
           CourseInfo.wp_postid === 59257
             ? null
@@ -102,7 +102,7 @@ export default function CourseCards(props) {
               open={edit}
               handleClose={()=> setEdit(false)}
               title={CourseInfo.classInfo.title}
-              img={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${CourseInfo.image_url}`}
+              img={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${CourseInfo.image_url}`}
               wpId={CourseInfo.wp_postid}
             />
           : <OhNoModal open={edit} handleClose={()=> setEdit(false)}/>

@@ -42,7 +42,7 @@ const ThriveLessonsRow = props => {
           <Grid item xs={6} sm={6} md={3} lg={3}>
             <Link className={classes.link} onClick={() => props.handleOpenModal(props.description, props.detailedDesc,props.detailsVideo)}>
               <img
-                src={`https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/book.svg`}
+                src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/book.svg`}
                 className={classes.icon}
                 alt='Book'
               />
@@ -52,7 +52,7 @@ const ThriveLessonsRow = props => {
           <Grid item xs={6} sm={6} md={3} lg={3}>
             <Link className={classes.link} onClick={() => props.handleOpenModal(props.lessonName, props.lesson,props.lessonVideo)}>
               <img
-                src={`https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/note-book.svg`}
+                src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/note-book.svg`}
                 className={classes.icon}
                 alt='Note Book'
               />

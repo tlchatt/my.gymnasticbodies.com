@@ -82,35 +82,35 @@ const FormSix = (props) => {
           <Grid item xs={6} sm={6} md={6} lg={6} className={classes.padding}>
             <Paper elevation={4}>
               <CardActionArea  onClick={( e ) => props.handleClick(e, 1)}>
-                <img alt="" src="https://gymfit-images.s3.amazonaws.com/Get+Started/GluteBridge.jpg" width="100%"/>
+                <img alt="" src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Get+Started/GluteBridge.jpg" width="100%"/>
               </CardActionArea>
             </Paper>
           </Grid>
           <Grid item xs={6} sm={6} md={6} lg={6} className={classes.padding}>
             <Paper elevation={4}>
               <CardActionArea onClick={(e) => props.handleClick(e, 2)}>
-                <img src="https://gymfit-images.s3.amazonaws.com/Get+Started/new-bridge-2.jpg" alt="" width="100%"/>
+                <img src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Get+Started/new-bridge-2.jpg" alt="" width="100%"/>
               </CardActionArea>
             </Paper>
           </Grid>
           <Grid item xs={6} sm={6} md={6} lg={6} className={classes.padding}>
             <Paper elevation={4}>
               <CardActionArea onClick={(e) => props.handleClick(e, 3)}>
-                <img alt="" src="https://gymfit-images.s3.amazonaws.com/Get+Started/new-bridge-3.jpg" width="100%"/>
+                <img alt="" src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Get+Started/new-bridge-3.jpg" width="100%"/>
               </CardActionArea>
             </Paper>
           </Grid>
           <Grid item xs={6} sm={6} md={6} lg={6} className={classes.padding}>
             <Paper elevation={4}>
               <CardActionArea  onClick={(e) => props.handleClick(e, 4)}>
-                <img alt="" src="https://gymfit-images.s3.amazonaws.com/Get+Started/new-bridge-3.jpg" width="100%"/>
+                <img alt="" src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Get+Started/new-bridge-3.jpg" width="100%"/>
               </CardActionArea>
             </Paper>
           </Grid>
           <Grid item xs={6} sm={6} md={6} lg={6} className={classes.padding}>
             <Paper elevation={4}>
               <CardActionArea  onClick={(e) => props.handleClick(e, 5)}>
-                <img alt="" src="https://gymfit-images.s3.amazonaws.com/Get+Started/new-bridge-5.jpg" width="100%"/>
+                <img alt="" src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Get+Started/new-bridge-5.jpg" width="100%"/>
               </CardActionArea>
             </Paper>
           </Grid>

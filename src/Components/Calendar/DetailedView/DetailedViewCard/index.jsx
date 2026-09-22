@@ -116,7 +116,7 @@ const DetiledCard = props => {
               classes={{action: classes.actionOverrid, content:classes.contentOverride}}
               disableTypography={true}
               avatar={
-                <Avatar src={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.imgUrl}`} />
+                <Avatar src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.imgUrl}`} />
               }
               title={
                 <Typography variant='h6' className={classes.cardTitle} onClick={()=>setNonLegacy(true)}>

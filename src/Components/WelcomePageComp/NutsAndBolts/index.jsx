@@ -95,7 +95,7 @@ const NutsAndbolts = (props) => {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/controlcenter.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/controlcenter.svg"
                 className={classes.icon}
                 alt="Calendar Icon"
               />
@@ -109,7 +109,7 @@ const NutsAndbolts = (props) => {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/firststeps.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/firststeps.svg"
                 className={classes.icon}
                 alt="Key icon"
               />
@@ -123,7 +123,7 @@ const NutsAndbolts = (props) => {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/customize.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/customize.svg"
                 className={classes.icon}
                 alt="Key icon"
               />
@@ -137,7 +137,7 @@ const NutsAndbolts = (props) => {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/intensity.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/intensity.svg"
                 className={classes.icon}
                 alt="Key icon"
               />
@@ -151,7 +151,7 @@ const NutsAndbolts = (props) => {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/pacing.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/pacing.svg"
                 className={classes.icon}
                 alt="Calendar Icon"
               />
@@ -165,7 +165,7 @@ const NutsAndbolts = (props) => {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/Footprints.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/Footprints.svg"
                 className={classes.icon}
                 alt="Key icon"
               />
@@ -179,7 +179,7 @@ const NutsAndbolts = (props) => {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/learn.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/learn.svg"
                 className={classes.icon}
                 alt="Key icon"
               />
@@ -193,7 +193,7 @@ const NutsAndbolts = (props) => {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/spiceitup.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/spiceitup.svg"
                 className={classes.icon}
                 alt="Key icon"
               />

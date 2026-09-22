@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     height: '100%'
   },
 }));
-const imageUrl = 'https://gymfit-images.s3.amazonaws.com/CourseLibraryImages/'
+const imageUrl = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseLibraryImages/'
 
 
 // contains sub string
@@ -50,19 +50,19 @@ export default function CourseCard(props) {
     }
 
     if (contains(title, 'Middle Split')) {
-      return 'https://gymfit-images.s3.amazonaws.com/CourseLibraryImages/stretchseriesmiddlesplit.jpg';
+      return 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseLibraryImages/stretchseriesmiddlesplit.jpg';
     }
 
     if (contains(title, 'Front Split')) {
-      return 'https://gymfit-images.s3.amazonaws.com/CourseLibraryImages/stretchseriesfrontsplit.jpg';
+      return 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseLibraryImages/stretchseriesfrontsplit.jpg';
     }
 
     if (contains(title, 'Thoracic Bridge')) {
-      return 'https://gymfit-images.s3.amazonaws.com/CourseLibraryImages/stretchseriesthoracicbridge.jpg';
+      return 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseLibraryImages/stretchseriesthoracicbridge.jpg';
     }
 
     if (contains(title, 'Wrist stretches #1-4')) {
-      return 'https://gymfit-images.s3.amazonaws.com/CourseLibraryImages/handstand1-wriststretches14.jpg';
+      return 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseLibraryImages/handstand1-wriststretches14.jpg';
     }
 
     return imageUrl + image;

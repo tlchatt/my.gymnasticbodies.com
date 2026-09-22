@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme=>({
 
 const LearnMoreLevels = (props) => {
   const classes = useStyles();
-  const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
+  const gfImage = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GF-orangelogo.svg';
   return (
     <Container addedClasses={classes.background}>
       <GridContainer elevation={2} addbackground={true} center={true}>

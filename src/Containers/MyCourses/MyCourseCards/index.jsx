@@ -43,7 +43,7 @@ export default function MyCourseCards(props) {
       <Card className={classes.root} square>
         <CardActionArea onClick={props.previrewCourse}>
           <CardMedia
-            image={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.image}`}
+            image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.image}`}
             className={classes.media}
             alt=""
           />

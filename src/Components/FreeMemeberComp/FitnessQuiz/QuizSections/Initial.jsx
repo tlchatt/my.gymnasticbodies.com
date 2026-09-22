@@ -40,7 +40,7 @@ const FitnessQuiz = (props) => {
   return (
     <Box m={1}>
       <Box mb={2} mt={4} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <img src="https://gymfit-images.s3.amazonaws.com/General/Initial-GuidedPlans.png" alt="" />
+        <img src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/General/Initial-GuidedPlans.png" alt="" />
       </Box>
       <Box mb={2} style={{ width: '100%' }}>
         <Typography variant='h4' className={classes.title} id="responsive-dialog-title" align='center'>Let’s see which guided workout is best for you.</Typography>

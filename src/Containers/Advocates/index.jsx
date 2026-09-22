@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme=>({
 
 const Advocates = (props) => {
   const classes = useStyles();
-  const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
+  const gfImage = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GF-orangelogo.svg';
   return (
     <Wrapper {...props}>
       <Box m={1} style={{ width: '100%' }}>

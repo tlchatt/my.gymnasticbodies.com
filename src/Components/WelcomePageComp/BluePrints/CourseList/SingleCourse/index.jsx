@@ -25,7 +25,7 @@ const SingleCourse = (props) => {
     <Aux>
       <ListItem className={props.classes.listItem}>
         <ListItemIcon className={props.classes.iconsRoot}>
-          <img src={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.icon}`} className={props.classes.icon} alt={props.title} />
+          <img src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.icon}`} className={props.classes.icon} alt={props.title} />
         </ListItemIcon>
         <ListItemText disableTypography={true} onClick={handleClick}>
           <Link
@@ -50,7 +50,7 @@ const SingleCourse = (props) => {
           <ListItem className={props.classes.listItem}>
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/strengthen.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/strengthen.svg"
                 className={props.classes.icon}
                 alt="questionmark Icon"
               />
@@ -69,7 +69,7 @@ const SingleCourse = (props) => {
           <ListItem className={props.classes.listItem}>
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/add.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/add.svg"
                 className={props.classes.icon}
                 alt="add Icon"
               />
@@ -81,7 +81,7 @@ const SingleCourse = (props) => {
                 component="h4"
                 onClick={
                   !courseIds.includes(props.wpId)
-                    ? () => props.handleEdit(`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.icon}`, props.title, props.wpId)
+                    ? () => props.handleEdit(`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.icon}`, props.title, props.wpId)
                     : ()=> setCourseModal(true)
                   }
               >

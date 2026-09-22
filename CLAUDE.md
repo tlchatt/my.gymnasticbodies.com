@@ -87,11 +87,65 @@ Login POSTs to `/api/authentication` (new) or `/auth` (legacy). Response contain
 
 `AxiosConfig` (in `util.js`) builds the `Authorization: Bearer <token>` header — always use this for authenticated requests rather than building headers manually.
 
-**Renewal / paywall flow:** The `LoginNew` thunk calls `GET /api/user/renewalStatus?email=...` after credentials are verified. If `needsRenewal: true` (user's `migration_type` is `active_expired`), the browser is redirected to `https://app.gymnasticbodies.com/renew?email=...` before login is dispatched. On successful re-subscription the user is sent back with an auth token.
+**Two auth rails.** `Login` POSTs to AWS `/auth` FIRST; its `.catch` falls through to
+`LoginNew`, which POSTs to Neon `/api/authentication`. So AWS is still the primary
+authenticator and Neon is the fallback — inverting that order is the single change that
+makes the AWS shutoff safe. `postAWS` records which rail won: `false` = legacy (AWS),
+`true` = Neon. On reload, `authCheckState` rebuilds the session from `localStorage`;
+for the legacy rail it recovers the AWS integer id by `jwt.decode`-ing the stored token
+(`cid`), because `localStorage.userId` may hold the Neon UUID.
 
-**User migration types** (`migration_type` field on the server-side `user` table): `stripe`, `auth_net_subscriber`, `active_current`, `active_expired`, `inactive`.
+**Renewal / paywall flow:** The `LoginNew` thunk calls `GET /api/user/renewalStatus?email=...` after credentials are verified. If `needsRenewal: true`, the browser is redirected to `https://app.gymnasticbodies.com/renew?email=...` before login is dispatched. On successful re-subscription the user is sent back with an auth token.
 
-The renewal redirect in `LoginNew` is live — `needsRenewal: true` redirects to `https://app.gymnasticbodies.com/renew?email=...` before dispatching login.
+**User classification** (server-side `user` table): `migration_type` is binary —
+`current` / `noncurrent` — and drives the paywall. Granularity lives in a separate
+`customer_segment` column (`stripe`, `auth_net`, `subscriber`, `purchased`, `lapsed`,
+`inactive`). The older five-value `migration_type` scheme (`active_current`,
+`active_expired`, …) was replaced in June 2026 and no longer exists.
+
+### Browser testing as a specific user
+
+Testing member screens requires a live session on a specific rail. Use
+`claudeTools/testSession.js` — it builds the `localStorage` state `authCheckState`
+rehydrates from, so any test account can be assumed instantly and repeatably.
+
+```bash
+node claudeTools/testSession.js --list                            # test accounts + rails
+node claudeTools/testSession.js --email=lukesearra@icloud.com     # prints a JS snippet
+node claudeTools/testSession.js --email=gwtest@tlchatt.com --rail=neon
+```
+
+Run the printed snippet in the browser console on `https://my.gymnasticbodies.com` (or
+via the Chrome javascript tool), then reload. The sidebar should greet that user.
+
+It handles **no passwords** — everything is derived from Neon plus a locally-built JWT.
+`authCheckState` calls `jwt.decode()`, which base64-decodes without verifying a
+signature, so a local token is enough to make the app behave as that user.
+
+**Limitation, and it is a useful one:** the token is not signed by AWS, so anything AWS
+still authenticates will 401. Every screen migrated to Neon works, because those routes
+ignore the bearer token by design. **A 401 from `api.gymnasticbodies.com` under a test
+session therefore means that screen has not been migrated yet — treat it as a finding,
+not a broken tool.**
+
+Always test a change on **both rails** — legacy and neon — since the entire point of the
+cutover is that they converge on one code path.
+
+| account | rail | segment | notes |
+|---|---|---|---|
+| `lukesearra@icloud.com` | **legacy** (awsId 411847) | subscriber | the only legacy-rail account; 225 workout logs, real Guided Plans + BYO + Thrive history |
+| `gwtest@tlchatt.com` | neon | stripe | all-access Neon user, light data |
+| `test-acct-history@…` | neon | subscriber | seeded support emails + 24 workout logs |
+| `test-acct-subscriber@…` | neon | subscriber | manual grant — no cancel, no renew |
+| `test-acct-stripe@…` | neon | inactive | Stripe sub added per test run |
+| `test-acct-trial@…` | neon | inactive | trial sub added per test run |
+| `test-acct-authnet@…` | neon | auth_net | must NOT show the Stripe cancel button |
+| `test-acct-lapsed@…` | neon | inactive | paywall / renew path |
+| `test-acct-purchased@…` | neon | inactive | renew path, no price history |
+
+Passwords for the `test-acct-*` accounts are in `app.gymnasticbodies.com/CLAUDE.md`;
+canonical account credentials are in `claudePlans/test-users.json`. `testSession.js`
+needs neither.
 
 ### API endpoints
 
@@ -102,7 +156,19 @@ Two concurrent base URLs are in use during an ongoing migration:
 | `REACT_APP_API` | `https://api.gymnasticbodies.com` | Legacy AWS — auth, schedule, BYO |
 | `REACT_APP_API_NEW` | `https://gymnasticbodies-com.vercel.app` | Neon/app.gymnasticbodies.com — new endpoints |
 
-New feature work should target `REACT_APP_API_NEW`. The legacy API remains for schedule, BYO workouts, and token refresh.
+New feature work should target `REACT_APP_API_NEW`.
+
+> **Workout features migrated to Neon (2026-07 — `sessions/OffAWSWorkoutMigration.md`).**
+> White Board (AutoPilot), Build Your Own (+ program curriculum), Workout History, and
+> Thrive now call **Neon** routes at `${REACT_APP_API_NEW}/api/user/workout/*` for ALL
+> users (was AWS `/auto-pilot`, `/byo`, `/workout-history`, `/thrive`). Storage:
+> per-day JSON docs in `user_logs` (new `section` column) + `user_setting` typed rows +
+> static catalogs in `app.gymnasticbodies.com/data/workout/*.json`. **Guided Plans**
+> (`/myschedule/*`) is split: **legacy users (`state.login.awsUserId` set) stay on AWS**;
+> **non-legacy users use Neon** (`/api/user/workout/levels` + `/byo/program`). The AWS
+> legacy API still serves **auth (`/auth`, delegated to Keap), token refresh**, and the
+> **schedule-editing / Beginner(level-0)** guided-plan edge features (not yet migrated).
+> Only 1 test user (luke) is seeded — the full ~16k-user seed awaits a Keap email→userId map.
 
 ### Routing
 
@@ -125,21 +191,38 @@ Notable routes (both trees): `/course-library`, `/class-finder`, `/class-finder/
 
 Firebase Realtime DB is used exclusively for maintenance-mode flags and force-refresh signals. It is **not** used for auth or user data storage in this app (auth is JWT-based).
 
-## Deployment
+## Deployment — MOVED OFF AWS TO VERCEL (2026-09-22)
 
-**Manual deploy (preferred):** `bash claudeTools/deploy.sh` — builds production, syncs to S3, invalidates CloudFront in one shot.
+**`my.` is now hosted on Vercel**, project `my-gymnasticbodies` (team `technologicdigitalservices`).
+It is served as a **pre-built static bundle**. The Vercel project is **NOT git-linked** — a push does
+NOT auto-deploy; deploys are a manual CLI step.
 
-Bitbucket Pipelines → S3 + CloudFront (legacy pipeline, still wired up).
+**Deploy:**
+```bash
+export NVM_DIR="$HOME/.config/nvm"; . "$NVM_DIR/nvm.sh"; nvm use 16   # Node 16 — Node 22 breaks the CRA build
+yarn build                                                          # produces build/
+cd build && npx vercel deploy --prod --yes --scope technologicdigitalservices
+```
+The `build/` dir has a `vercel.json` (`{routes:[{handle:filesystem},{src:/.*,dest:/index.html}]}`) for
+SPA-fallback routing. Since the bundle is pre-built and uploaded, a host/string change can also be
+patched directly in `build/static/js/*.js` and redeployed without a full rebuild.
 
-| Branch | S3 bucket | CloudFront |
+- **DNS:** `my.gymnasticbodies.com` CNAME → `cname.vercel-dns.com` (Vercel-managed `gymnasticbodies.com` zone).
+- **Images:** served from **Vercel Blob** `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/`,
+  mirrored 1:1 from the old `gymfit-images` S3 bucket (identical paths). The image base-URL was swapped
+  from `gymfit-images.s3.amazonaws.com` → the Blob host across source + bundle. Videos already on Blob.
+- **Why:** AWS account `390008123206` was **suspended** (billing / `AllAccessDisabled`) on 2026-09-21,
+  taking down CloudFront + S3 + `api.` at once. `my.` was migrated fully off AWS so it survives a future
+  AWS suspension. Data/auth already run on Neon (`app.gymnasticbodies.com`).
+
+**SUPERSEDED — do NOT use:** `bash claudeTools/deploy.sh` (S3 sync + CloudFront invalidate) and the
+Bitbucket Pipelines path. Legacy AWS targets, kept only for reference / rollback:
+
+| Branch | S3 bucket (legacy) | CloudFront (legacy) |
 |---|---|---|
-| `master` | `my.react2026` | `E2TAHYRIUSC1ZN` (`my.gymnasticbodies.com`) |
+| `master` | `my.react2026` | `E2TAHYRIUSC1ZN` |
 | `Develop` | `my.react-testing` | `E1KQMIVMY2A66G` |
 | `Staging` | `my.internal-testing` | `E2NDG89QP09SYX` |
-
-**Important — `my.react2026` bucket:** ACLs are disabled on this bucket (Object Ownership = Bucket owner enforced). Do **not** use `--acl public-read` when syncing — it will fail with `AccessControlListNotSupported`. Public access is granted via bucket policy, not ACLs. The deploy script already handles this correctly.
-
-**`my2026.gymnasticbodies.com`** is a separate subdomain (CloudFront `E19ULFELANCZSE`) also pointing to `my.react2026` — used for internal testing. Not the live site.
 
 ## Environment variables
 

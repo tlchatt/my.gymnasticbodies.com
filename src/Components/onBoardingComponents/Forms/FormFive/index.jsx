@@ -110,7 +110,7 @@ const FormFive = (props) => {
           <Grid item xs={6} sm={6} md={6} lg={6} className={classes.padding}>
             <Paper elevation={4}>
               <CardActionArea  onClick={(e) => props.handleClick(e, 5)}>
-                <img alt="" src="https://gymfit-images.s3.amazonaws.com/Get+Started/new-pike.jpg" width="100%"/>
+                <img alt="" src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Get+Started/new-pike.jpg" width="100%"/>
               </CardActionArea>
             </Paper>
           </Grid>

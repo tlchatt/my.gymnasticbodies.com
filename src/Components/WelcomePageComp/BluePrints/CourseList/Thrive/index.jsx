@@ -64,7 +64,7 @@ const Thrive = (props) => {
       <ResetThrive open={open} handleClose={() => setOpen(false)} handleReset={handleReset}/>
       <DropDownList
         title="Thrive"
-        icon="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/330x220-thrive.jpg"
+        icon="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/330x220-thrive.jpg"
         classes={props.classes}
       >
         <List
@@ -75,7 +75,7 @@ const Thrive = (props) => {
           <ListItem className={props.classes.listItem}>
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/Directions.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/Directions.svg"
                 className={props.classes.icon}
                 alt="questionmark Icon"
               />
@@ -95,7 +95,7 @@ const Thrive = (props) => {
           <ListItem className={props.classes.listItem}>
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/myprofile.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/myprofile.svg"
                 className={props.classes.icon}
                 alt="questionmark Icon"
               />
@@ -114,7 +114,7 @@ const Thrive = (props) => {
           <ListItem className={props.classes.listItem}>
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/nutrition-white.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/nutrition-white.svg"
                 className={props.classes.icon}
                 alt="questionmark Icon"
               />
@@ -133,7 +133,7 @@ const Thrive = (props) => {
           <ListItem className={props.classes.listItem}>
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/add.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/add.svg"
                 className={props.classes.icon}
                 alt="add Icon"
               />
@@ -152,7 +152,7 @@ const Thrive = (props) => {
           <ListItem className={props.classes.listItem}>
             <ListItemIcon className={props.classes.iconsRoot}>
               <img
-                src="https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/Refresh-1.svg"
+                src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/Refresh-1.svg"
                 className={props.classes.icon}
                 alt="add Icon"
               />

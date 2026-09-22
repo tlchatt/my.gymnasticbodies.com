@@ -31,7 +31,7 @@ export default function Advocates(props) {
             component="img"
             height="100%"
             width='100%'
-            image={`https://gymfit-images.s3.amazonaws.com/AdvocatesImages/${props.image}`}
+            image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/AdvocatesImages/${props.image}`}
           />
         </CardActionArea>
       </Card>

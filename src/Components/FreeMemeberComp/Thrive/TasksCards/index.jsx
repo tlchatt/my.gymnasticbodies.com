@@ -33,7 +33,7 @@ export default function ImgMediaCard(props) {
       <img
         component="img"
         alt={props.description}
-        src={`https://gymfit-images.s3.amazonaws.com/nutrition/${props.image}`}
+        src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/nutrition/${props.image}`}
         className={clsx(classes.image, {[classes.complete]: props.isCompleted})}
       />
       <Typography variant='overline' style={{color: '#6C6C6C'}}>

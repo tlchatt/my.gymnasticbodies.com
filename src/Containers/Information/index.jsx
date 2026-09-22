@@ -15,31 +15,31 @@ import {LinkRef} from '../../Components/UtilComponents/LinkOverride'
 const infoLinks = [
   {
     title: 'Advocates',
-    imageUrl: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GFAdv-functional.jpg',
+    imageUrl: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GFAdv-functional.jpg',
     link: '/advocates',
     isExternalLink: false
   },
   {
     title: 'Blogs',
-    imageUrl: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/rear_delts2.jpg',
+    imageUrl: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/rear_delts2.jpg',
     link: "https://www.gymnasticbodies.com/blog",
     isExternalLink: true
   },
   {
     title: 'Equipment Lists',
-    imageUrl: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/rings.jpg',
+    imageUrl: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/rings.jpg',
     link: "/eqiupment-list",
     isExternalLink: false
   },
   {
     title: 'Podcasts',
-    imageUrl: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/coachcast.jpg',
+    imageUrl: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/coachcast.jpg',
     link: "https://www.gymnasticbodies.com/podcasts/",
     isExternalLink: true
   },
   {
     title: 'Courses',
-    imageUrl: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/rings.jpg',
+    imageUrl: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/rings.jpg',
     link: "/my-courses",
     isExternalLink: false
   }
@@ -80,7 +80,7 @@ const useStyles = makeStyles(theme=>({
 
 const Advocates = (props) => {
   const classes = useStyles();
-  const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
+  const gfImage = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GF-orangelogo.svg';
   return (
     <Wrapper {...props}>
       <Box m={1} style={{ width: '100%' }}>

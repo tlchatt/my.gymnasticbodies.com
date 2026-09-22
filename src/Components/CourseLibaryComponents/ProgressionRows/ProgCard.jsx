@@ -30,7 +30,7 @@ export default function ProgCard(props) {
     <Card className={classes.root} elevation={4}>
       <CardMedia
         component="img"
-        image={`https://gymfit-images.s3.amazonaws.com/exercises/${handleImage().split('.').join('').toUpperCase()}.jpg`}
+        image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${handleImage().split('.').join('').toUpperCase()}.jpg`}
       />
       <CardContent className={classes.cardContent}>
         <Typography variant="h5" component="h2" align='center'>

@@ -544,7 +544,7 @@ export default function MobileDrawer(props) {
                       }
                     )
                   }
-                  src={`https://gymfit-images.s3.amazonaws.com/General/SPP.svg`}
+                  src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/General/SPP.svg`}
                   alt={'My Courses'}
                   style={{maxWidth: 45}}
                 />
@@ -573,7 +573,7 @@ export default function MobileDrawer(props) {
                       }
                     )
                   }
-                  src={`https://gymfit-images.s3.amazonaws.com/General/${section.imageName}`}
+                  src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/General/${section.imageName}`}
                   alt={section.text}
                 />
               </ListItemIcon>

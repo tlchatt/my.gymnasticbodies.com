@@ -44,7 +44,7 @@ const useSytles = makeStyles(theme => ({
 
 const PickLevel = (obj) => [
   {
-    levelImg: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/onboard-level-intro.jpg',
+    levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level-intro.jpg',
     levelName: 'intro',
     levelTagAccess: 1235,
     levelId: 0,
@@ -54,7 +54,7 @@ const PickLevel = (obj) => [
 
   },
   {
-    levelImg: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/onboard-level1.jpg',
+    levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level1.jpg',
     levelName: 'levelOne',
     levelTagAccess: 1215,
     levelId: 1,
@@ -62,7 +62,7 @@ const PickLevel = (obj) => [
     selectedIndex: 1
   },
   {
-    levelImg: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/onboard-level2.jpg',
+    levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level2.jpg',
     levelName: 'levelTwo',
     levelTagAccess: 1219,
     levelId: 2,
@@ -70,7 +70,7 @@ const PickLevel = (obj) => [
     selectedIndex: 1
   },
   {
-    levelImg: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/onboard-level3.jpg',
+    levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level3.jpg',
     levelName: 'levelThree',
     levelTagAccess: 1223,
     levelId: 3,
@@ -78,7 +78,7 @@ const PickLevel = (obj) => [
     selectedIndex: 1
   },
   {
-    levelImg: 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/onboard-level4.jpg',
+    levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level4.jpg',
     levelName: 'levelFour',
     levelTagAccess: 1227,
     levelId: 4,

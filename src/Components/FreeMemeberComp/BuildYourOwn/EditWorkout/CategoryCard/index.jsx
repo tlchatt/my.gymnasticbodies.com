@@ -147,8 +147,8 @@ export default function CategoryCard(props) {
                     className={classes.media}
                     alt={courseData.trainingType}
                     src={props.sectionType === 'individualWorkouts'
-                      ? `https://gymfit-images.s3.amazonaws.com/exercises/${courseData.image.split('.')[0].toUpperCase()}.jpg`
-                      : `https://gymfit-images.s3.amazonaws.com/CourseIcons/${courseData.image}`
+                      ? `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${courseData.image.split('.')[0].toUpperCase()}.jpg`
+                      : `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${courseData.image}`
                     }
                   />
                   {

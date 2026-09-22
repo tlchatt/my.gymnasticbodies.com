@@ -158,7 +158,7 @@ export default function CourseCardContent(props) {
                       </div>
                       <CardMedia
                         className={classes.media}
-                        image={`https://gymfit-images.s3.amazonaws.com/exercises/${workoutInfo[key].imageName.split('.').join('').toUpperCase()}.jpg`}
+                        image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${workoutInfo[key].imageName.split('.').join('').toUpperCase()}.jpg`}
                         title={workoutInfo[key].name}
                       />
                       <div className={`${classes.overLay}`}>

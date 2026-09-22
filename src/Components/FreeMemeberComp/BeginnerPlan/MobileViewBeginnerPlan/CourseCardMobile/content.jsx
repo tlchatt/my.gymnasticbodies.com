@@ -108,7 +108,7 @@ export default function CourseCardContent(props) {
               <img
                 className={classes.media}
                 alt={props.title}
-                src={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.image}`}
+                src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.image}`}
               />
               <div className={`${classes.overLay}`}>
                 <PlayCircleOutlineIcon className={classes.playButtonIcon} />

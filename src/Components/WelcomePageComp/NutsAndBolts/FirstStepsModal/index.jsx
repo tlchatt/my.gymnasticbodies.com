@@ -84,7 +84,7 @@ function FirstStepsModal(props) {
               <Grid item xs={12} sm={6} md={4} lg={4} style={{ padding: 8 }}>
                 <Link component={LinkRef} to='/get-started' color="inherit">
                   <Card className={classes.root} square={true} elevation={0}>
-                    <img src='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/prog-select.jpg' className={classes.media} alt="" />
+                    <img src='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/prog-select.jpg' className={classes.media} alt="" />
                   </Card>
                   <Typography variant='h4' align='center'>PROGRAM SELECTOR</Typography>
                 </Link>
@@ -92,7 +92,7 @@ function FirstStepsModal(props) {
               <Grid item xs={12} sm={6} md={4} lg={4} style={{ padding: 8 }}>
                 <Link component={LinkRef} to='/eqiupment-list' color="inherit">
                   <Card className={classes.root} square={true} elevation={0}>
-                    <img src='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/rings.jpg' className={classes.media} alt="" />
+                    <img src='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/rings.jpg' className={classes.media} alt="" />
                   </Card>
                   <Typography variant='h4' align='center'>EQUIPMENT LISTS</Typography>
                 </Link>
@@ -100,7 +100,7 @@ function FirstStepsModal(props) {
               <Grid item xs={12} sm={6} md={4} lg={4} style={{ padding: 8 }}>
                 <Link href="https://www.gymnasticbodies.com/media/where-to-begin.pdf" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>
                   <Card className={classes.root} square={true} elevation={0}>
-                    <img src='https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/where-to-begin.jpg' className={classes.media} alt="" />
+                    <img src='https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/where-to-begin.jpg' className={classes.media} alt="" />
                   </Card>
                   <Typography variant='h4' align='center'>WHERE TO BEGIN</Typography>
                 </Link>

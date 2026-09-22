@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 const WelcomeHeader = props => {
   const classes = useStyles();
-  const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg'
+  const gfImage = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GF-orangelogo.svg'
   return (
     <Box m={1} style={{width: '100%'}}>
       <Grid item xs={12} sm={12} md={12} lg={12} style={{ margin:'auto', textAlign:'center'}} >

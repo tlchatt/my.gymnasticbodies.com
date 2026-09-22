@@ -31,8 +31,8 @@ export default function MobileConent(props) {
             className={classes.media}
             alt={props.title}
             src={props.sectionType === 'individualWorkouts'
-              ? `https://gymfit-images.s3.amazonaws.com/exercises/${props.image.split('.')[0].toUpperCase()}.jpg`
-              : `https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.image}`
+              ? `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${props.image.split('.')[0].toUpperCase()}.jpg`
+              : `https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.image}`
             }
           />
         </Card>

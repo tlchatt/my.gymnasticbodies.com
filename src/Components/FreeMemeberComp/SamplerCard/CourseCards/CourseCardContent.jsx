@@ -70,7 +70,7 @@ export default function CourseCardContent(props) {
         <CardActionArea className={classes.cardImageAction} onClick={props.playVideo} disabled={false}>
           <CardMedia
             className={classes.media}
-            image={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.image}`}
+            image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.image}`}
             title={props.title}
           />
           <div className={`${classes.overLay}`}>

@@ -39,7 +39,7 @@ export default function ImgMediaCard(props) {
             alt=""
             height='auto'
             width={330}
-            image={`https://gymfit-images.s3.amazonaws.com/nutrition/${props.image}`}
+            image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/nutrition/${props.image}`}
             title="Contemplative Reptile"
           />
           <CardContent className={classes.cardContent}>

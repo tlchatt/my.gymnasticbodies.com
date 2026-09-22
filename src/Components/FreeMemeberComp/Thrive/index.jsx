@@ -80,7 +80,7 @@ function Thrive(props) {
      <Box>
       <Box style={{ marginBottom: -6 }}>
         <img
-          src="https://gymfit-images.s3.amazonaws.com/General/THRIVE.png"
+          src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/General/THRIVE.png"
           alt="Thrive header"
           className={classes.thriveImageHeader}
         />

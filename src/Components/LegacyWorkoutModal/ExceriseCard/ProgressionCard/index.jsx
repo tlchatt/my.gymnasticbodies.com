@@ -105,7 +105,7 @@ const  ExceriseCard = props=> {
           </div>
           <img
             className={classes.img}
-            src={`https://gymfit-images.s3.amazonaws.com/exercises/${props.imageName.split('.').join('').toUpperCase()}.jpg`}
+            src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${props.imageName.split('.').join('').toUpperCase()}.jpg`}
             alt="Something"
           />
         </Paper>

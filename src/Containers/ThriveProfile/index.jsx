@@ -116,7 +116,7 @@ const ThriveProfile = props => {
   const dispatch = useDispatch()
 
   const classes = useStyles();
-  const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
+  const gfImage = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GF-orangelogo.svg';
 
   const onChange = (e, type) => {
     const re = /^[0-9\d]+$/;

@@ -82,7 +82,7 @@ const useStyles = makeStyles(theme=>({
 
 const EditUser = props => {
   const classes = useStyles();
-  const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
+  const gfImage = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GF-orangelogo.svg';
   const isAdmin = useSelector(state => state.login.isAdmin ? true : false);
   const webToken = useSelector(state => state.login.webToken);
   const { location } = props;

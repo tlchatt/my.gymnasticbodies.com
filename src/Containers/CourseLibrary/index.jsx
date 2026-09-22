@@ -3420,7 +3420,7 @@ const CourseLibrary = (props) => {
   const { webToken, UserId } = useSelector(state => state.login);
   const dispatch = useDispatch();
   const history = useHistory();
-  const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
+  const gfImage = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GF-orangelogo.svg';
   const secondRowRef = useRef();
   const thirdRowRef = useRef();
   const allProgsRef = useRef();

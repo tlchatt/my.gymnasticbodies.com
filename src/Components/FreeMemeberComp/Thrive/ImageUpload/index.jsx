@@ -98,7 +98,7 @@ const ImageUpload = props => {
       />
       <CardMedia
         className={classes.media}
-        image={selectedFile ? preview : userImage ? userImage : "https://gymfit-images.s3.amazonaws.com/nutrition/uploadPhoto.svg"}
+        image={selectedFile ? preview : userImage ? userImage : "https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/nutrition/uploadPhoto.svg"}
         alt='Upload Image'
       />
     </Card>

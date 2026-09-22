@@ -171,7 +171,7 @@ const EditCard = props => {
       />
       <CardMedia
         className={classes.media}
-        image={`https://gymfit-images.s3.amazonaws.com/exercises/${progression.image.split('.').join('').toUpperCase()}.jpg`}
+        image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${progression.image.split('.').join('').toUpperCase()}.jpg`}
       />
       <CheckCircleIcon className={`${classes.checkMark} ${progression.selected ? classes.selected : null}`} />
       <Menu

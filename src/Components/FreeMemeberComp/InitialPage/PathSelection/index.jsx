@@ -79,7 +79,7 @@ const PathSelection = (props) => {
         <CardMedia
           component="img"
           alt={props.selctionTitle}
-          image={`https://gymfit-images.s3.amazonaws.com/General/${props.image}`}
+          image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/General/${props.image}`}
           title={props.selctionTitle}
           className={clsx(classes.media, { [classes.autoPilot]: props.selctionTitle === "Autopilot" })}
         />

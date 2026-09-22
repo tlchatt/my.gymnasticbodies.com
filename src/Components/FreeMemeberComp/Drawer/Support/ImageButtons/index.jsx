@@ -28,7 +28,7 @@ const ImageButtons = (props) => {
         <CardMedia
           component="img"
           alt="Contemplative Reptile"
-          image={'https://gymfit-images.s3.amazonaws.com/General/' + props.image}
+          image={'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/General/' + props.image}
           title="Contemplative Reptile"
         />
       </CardActionArea>

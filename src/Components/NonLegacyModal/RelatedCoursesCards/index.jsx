@@ -57,7 +57,7 @@ export default function CourseCards(props) {
               ? () => props.handleSuggestedCourse(CourseInfo)
               : () => setEdit(true)
           }
-          src={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${CourseInfo.image_url}`}
+          src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${CourseInfo.image_url}`}
           className={classes.media}
           alt=""
         />
@@ -84,7 +84,7 @@ export default function CourseCards(props) {
             open={edit}
             handleClose={()=> setEdit(false)}
             title={CourseInfo.classInfo.title}
-            img={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${CourseInfo.image_url}`}
+            img={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${CourseInfo.image_url}`}
             wpId={CourseInfo.wp_postid}
           />
           : <OhNoModal open={edit} handleClose={()=> setEdit(false)}/>

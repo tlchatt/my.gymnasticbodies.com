@@ -11,7 +11,7 @@ const BluePrintsListItem = (props) => {
     <ListItem className={props.classes.listItem}>
         <ListItemIcon className={props.classes.iconsRoot}>
           <img
-            src={`https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/${props.iconUrl}`}
+            src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/${props.iconUrl}`}
             className={props.classes.icon}
             alt={props.alt}
           />

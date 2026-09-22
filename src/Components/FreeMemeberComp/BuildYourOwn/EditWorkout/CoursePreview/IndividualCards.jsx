@@ -68,7 +68,7 @@ export default function IndividualCards(props) {
       <Card className={classes.root} square>
         <CardActionArea onClick={handleAddToRow}>
           <CardMedia
-            image={`https://gymfit-images.s3.amazonaws.com/exercises/${props.image.split('.')[0].toUpperCase()}.jpg`}
+            image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${props.image.split('.')[0].toUpperCase()}.jpg`}
             className={classes.media}
             alt=""
           />

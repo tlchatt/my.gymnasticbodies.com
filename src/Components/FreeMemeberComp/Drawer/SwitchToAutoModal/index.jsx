@@ -70,7 +70,7 @@ export default function SwitchToAutoModal(props) {
       <Box m={1} mt={2}>
         <Grid container>
           <Grid item xs={12} sm={12} md={12} lg={12} className={classes.gridItem} style={{alignItems: 'center'}}>
-            <img src="https://gymfit-images.s3.amazonaws.com/General/WhiteBoard-start.png" alt="White Board Logo" className={classes.media} />
+            <img src="https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/General/WhiteBoard-start.png" alt="White Board Logo" className={classes.media} />
           </Grid>
         </Grid>
       </Box>

@@ -70,7 +70,7 @@ export default function CoursePreviewCards(props) {
             : props.showPreview
         }>
           <CardMedia
-            image={`https://gymfit-images.s3.amazonaws.com/CourseIcons/${props.image}`}
+            image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${props.image}`}
             className={classes.media}
             alt=""
           />

@@ -91,7 +91,7 @@ const ThriveTasks = props => {
   // const [missedDays, setMissedDays] = useState(false);
 
   const classes = useStyles();
-  const gfImage = 'https://gymfit-images.s3.amazonaws.com/Welcome+Page+assets/GF-orangelogo.svg';
+  const gfImage = 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/GF-orangelogo.svg';
 
   const getUserData = useCallback( () => {
     if (!userId) return;

@@ -44,7 +44,7 @@ const PlayerPreview = props => {
     <Card className={classes.root}>
       <CardMedia
         className={classes.cover}
-        image={`https://gymfit-images.s3.amazonaws.com/exercises/${props.imageName.split('.').join('').toUpperCase()}.jpg`}
+        image={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/exercises/${props.imageName.split('.').join('').toUpperCase()}.jpg`}
         title={props.videoTitle}
       />
       <div className={classes.details}>
