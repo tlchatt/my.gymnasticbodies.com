@@ -34,20 +34,17 @@ const useStyles = makeStyles(theme => ({
 const MissedDays = props => {
   const classes = useStyles();
   const webToken = useSelector(state => state.login.webToken);
-  const userId = useSelector(state => state.login.UserId);
+  const userId = useSelector(state => state.login.neonUserId || state.login.UserId);
   const [missedDays, setMissedDays] = useState([]);
   const [initialMissedDays, setInitailMissedDays] = useState([])
   const dispatch = useDispatch();
   const { open } = props
-  const API = process.env.REACT_APP_API;
+  const NEWAPI = process.env.REACT_APP_API_NEW;
   useEffect(() => {
     const getUserData = () => {
       var config = {
         method: 'get',
-        url: `${API}/thrive/tasks/missedlog/users/${userId}`,
-        headers: {
-          'Authorization': `Bearer ${webToken}`
-        }
+        url: `${NEWAPI}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=missedlog`,
       };
       axios(config).then(res => {
         let obj = res.data
@@ -58,7 +55,7 @@ const MissedDays = props => {
       }).catch(err => Sentry.captureException(err))
     }
     getUserData();
-  }, [webToken, userId, open, API]);
+  }, [userId, open, NEWAPI]);
 
   const handleSwitches = (e,day) => {
     let newArray = _.cloneDeep(missedDays);
@@ -83,10 +80,8 @@ const MissedDays = props => {
 
     var config = {
       method: 'post',
-      url: `${API}/thrive/tasks/missedlog/users/${userId}?days=${days.join(',')}`,
-      headers: {
-        'Authorization': `Bearer ${webToken}`
-      }
+      url: `${NEWAPI}/api/user/workout/thrive`,
+      data: { userId, op: 'log-missed', days },
     };
 
     axios(config).then(res => {
