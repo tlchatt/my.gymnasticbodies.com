@@ -52,8 +52,13 @@ const VideoPlayer = props => {
 
     function getBeginnerFollowAlong() {
 
+      // Guided levels 1-4 hold a day as an array of items; the Beginner plan holds it as
+      // { workoutId, classesList: [...] }. Read either shape, and never write back into the
+      // Redux schedule (this used to replace the day's classesList with bare mediaIds).
+      const day = beginnerVideos && beginnerVideos[dateKey];
+      const dayItems = Array.isArray(day) ? day : ((day && day.classesList) || []);
       let classesList = []
-      beginnerVideos[dateKey].map((item) => {
+      dayItems.forEach((item) => {
         if (item.mediaId) {
           classesList.push({ mediaId: item.mediaId })
         } else {
@@ -71,9 +76,7 @@ const VideoPlayer = props => {
           }
         }
       })
-      beginnerVideos[dateKey].classesList = classesList
-
-      let data = utilFunctions.generateBeginnerFollowAlong(beginnerVideos[dateKey].classesList)
+      let data = utilFunctions.generateBeginnerFollowAlong(classesList)
 
       setFollowAlongArray(data ? data : []);
     }
