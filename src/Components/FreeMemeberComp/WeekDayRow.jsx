@@ -51,8 +51,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function between(x, min, max) {
-  return x >= min && x <= max;
+// Guided training levels are 0-4 (Beginner, Intermediate One, Intermediate Two,
+// Advanced One, Advanced Two). White Board members carry 9 and never get the player here.
+function isGuidedLevel(level) {
+  if (level === null || level === undefined || level === '') return false;
+  const n = Number(level);
+  return n >= 0 && n <= 4;
 }
 
 const WeekRow = props => {
@@ -127,7 +131,7 @@ const WeekRow = props => {
                   {
                     isBuildYourOwn
                       ? null
-                      : between(userLevel, 2, 4) ? <Button
+                      : isGuidedLevel(userLevel) ? <Button
                         startIcon={
                           openPlayer
                             ? <CloseIcon />
