@@ -74,12 +74,12 @@ const PassWordReset = (props) => {
   );
 
   const handlePasswordOne = (e) => {
-    if (e.target.value.match(/^[a-zA-Z0-9!$#]*$/i) && e.target.value.length <= 20) {
+    if (e.target.value.length <= 128) {
       setPassWordOne(e.target.value);
     }
   }
   const handlePasswordTwo = (e) => {
-    if (e.target.value.match(/^[a-zA-Z0-9!$#]*$/i) && e.target.value.length <= 20) {
+    if (e.target.value.length <= 128) {
       setPassWordTwo(e.target.value);
     }
   }
@@ -99,6 +99,10 @@ const PassWordReset = (props) => {
         message: '',
         variation: 'error'
       }), 2500);
+    }
+    else if (PassWordOne.length < 8) {
+      setFail({ isFaield: true, message: 'Password must be at least 8 characters.', variation: 'error' });
+      setTimeout(() => setFail({ isFaield: false, message: '', variation: 'error' }), 2500);
     }
     else if (PassWordOne === PassWordTwo && !(PassWordOne === '' || PassWordTwo === '')) {
       const config = {
@@ -140,7 +144,13 @@ const PassWordReset = (props) => {
             },
           });
           Sentry.captureException(err);
-          setFail({ isFaield: true, message: 'Failed to Save Password', variation: 'error' });
+          const reason = err?.response?.data?.error;
+          const message = reason === 'token_already_used'
+            ? 'This link was already used — sign in with your new password'
+            : reason === 'invalid_or_expired_token'
+              ? 'This link expired or was replaced — request a new one'
+              : 'Failed to Save Password';
+          setFail({ isFaield: true, message, variation: 'error' });
           setTimeout(() => {
             setFail({ isFaield: false, message: '', variation: 'error' })
           }, 2500);
@@ -163,7 +173,7 @@ const PassWordReset = (props) => {
               Please enter and confirm your new password below.
             </Typography>
             <Typography variant="body1" align="center">
-              Min 9 characters, Up to 20 characters, A-Z, a-z, 0-9 and allowed special characters are: !$#
+              Minimum 8 characters.
             </Typography>
           </Box>
         </Box>

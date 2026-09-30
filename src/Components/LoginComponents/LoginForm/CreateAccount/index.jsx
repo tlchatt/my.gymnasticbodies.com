@@ -120,12 +120,12 @@ const CreateAccount = () => {
   }
 
   const handlePasswordOne = (e) => {
-    if ( e.target.value.match(/^[a-zA-Z0-9!$#]*$/i) && e.target.value.length <= 20 ) {
+    if ( e.target.value.length <= 128 ) {
       setPassWordOne(e.target.value);
     }
   }
   const handlePasswordTwo = (e) => {
-    if ( e.target.value.match(/^[a-zA-Z0-9!$#]*$/i) && e.target.value.length <= 20 ) {
+    if ( e.target.value.length <= 128 ) {
       setPassWordTwo(e.target.value);
     }
   }
@@ -159,7 +159,8 @@ const CreateAccount = () => {
           autoComplete="new-password"
           onChange={(event) => handlePasswordOne(event)}
           value={PassWordOne}
-          error={PassWordOne.length < 6 && PassWordOne.length ? true : false}
+          error={PassWordOne.length < 8 && PassWordOne.length ? true : false}
+          helperText={PassWordOne.length < 8 && PassWordOne.length ? 'Password must be at least 8 characters.' : ''}
         />
         <TextField
           variant="outlined"
@@ -172,7 +173,7 @@ const CreateAccount = () => {
           id="confirm-password"
           autoComplete="new-password"
           onChange={(event) => handlePasswordTwo(event)}
-          error={PassWordOne !== PassWordTwo || (PassWordTwo.length < 6 && PassWordTwo.length) ? true : false}
+          error={PassWordOne !== PassWordTwo || (PassWordTwo.length < 8 && PassWordTwo.length) ? true : false}
           helperText={PassWordOne !== PassWordTwo ? 'Password Does Not Match' : ''}
         />
         <Button
@@ -182,7 +183,7 @@ const CreateAccount = () => {
           color="primary"
           className={classes.submit}
           onClick={(event) => handleClick(event)}
-          disabled={!email.valid || wait || PassWordOne !== PassWordTwo || PassWordOne.length < 6 || PassWordTwo.length < 6}
+          disabled={!email.valid || wait || PassWordOne !== PassWordTwo || PassWordOne.length < 8 || PassWordTwo.length < 8}
         >
           Create Your Free Account!
         </Button>
@@ -219,7 +220,7 @@ const CreateAccount = () => {
         </Box>
         <Box mt={1}>
           <Typography variant="body1" align="center">
-            Min of 6 and Max to 20 charactars, A-Z, a-z, 0-9 and allowed special charactars are: !$#
+            Minimum 8 characters.
           </Typography>
         </Box>
       </Box>

@@ -57,6 +57,9 @@ const EmailForm = () => {
   const [email, setEmail] = useState({ email: '', valid: true });
   const [fail, setFail] = useState({ isFaield: false, message: '', variation: 'error' });
   const [wait, setWait] = useState(false);
+  // Once a link is sent, stay on the "check your email" state. Re-showing the form
+  // after a few seconds invited a second submit, which emailed a second link.
+  const [sent, setSent] = useState(false);
   let form;
   const LinkRef = React.forwardRef((props, ref) => <div style={{ display: 'contents' }} ref={ref}><NavLink {...props} /></div>);
   const NEWAPI = process.env.REACT_APP_API_NEW
@@ -84,10 +87,10 @@ const EmailForm = () => {
           // which always failed token validation. We can't fix it by putting the token in
           // the response body without letting anyone mint a reset token with no inbox
           // access — so the member uses the emailed link instead.
+          setSent(true);
           setFail({ isFaield: true, message: 'Check your email for a link to reset your password.', variation: 'success' });
           setTimeout(() => {
             setFail({ isFaield: false, message: '', variation: 'success' });
-            setWait(false);
           }, 4000);
         }).catch(err => {
           // resetLink returns 400 with this body when the email has no Neon account.
@@ -151,7 +154,28 @@ const EmailForm = () => {
     }
   }
 
-  if (!wait) {
+  if (sent) {
+    form = (
+      <Aux>
+        <Box mt={3} mb={2}>
+          <Typography variant="body1" align="center">
+            Check your email for a link to reset your password.
+          </Typography>
+        </Box>
+        <Grid container>
+          <Grid item xs style={{ textAlign: "left" }}>
+            <Link component={LinkRef} to="/" exact variant="body1">
+              Return To Login
+            </Link>
+          </Grid>
+        </Grid>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Aux>
+    )
+  }
+  else if (!wait) {
     form = (
       <Aux>
         <TextField
