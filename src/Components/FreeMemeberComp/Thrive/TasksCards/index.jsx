@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
+import { splitTaskDescription } from '../../../../util/taskText';
 
 const useStyles = makeStyles({
   cardContent: {
@@ -27,17 +28,22 @@ const useStyles = makeStyles({
 
 export default function ImgMediaCard(props) {
   const classes = useStyles();
+  const { label, note } = splitTaskDescription(props.description);
 
   return (
     <div className={classes.root}>
-      <img
-        component="img"
-        alt={props.description}
-        src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/nutrition/${props.image}`}
-        className={clsx(classes.image, {[classes.complete]: props.isCompleted})}
-      />
+      {/* Some catalog tasks (Workout, feeling/sleep/soreness ratings) have no image. */}
+      {props.image &&
+        <img
+          component="img"
+          alt={label}
+          src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/nutrition/${props.image}`}
+          className={clsx(classes.image, {[classes.complete]: props.isCompleted})}
+        />
+      }
       <Typography variant='overline' style={{color: '#6C6C6C'}}>
-        {props.description}
+        {label}
+        {note && <small style={{ display: 'block' }}>{note}</small>}
       </Typography>
     </div>
   );
