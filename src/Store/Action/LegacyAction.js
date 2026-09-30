@@ -356,7 +356,6 @@ export const handleLegacyLog = (date, exerciseId, mobilityStatus, autoProg, step
 
 export const handleDeleteProgression = (exerciseId, isLevels = false, masterySet, date) => (dispatch, getState) => {
   const state = getState();
-  const postAWS = state.login.postAWS
   const userData = state.login;
   const legacyPage = state.legacyCourse;
   const allProgressions = _.cloneDeep(legacyPage.allProgressions);
@@ -381,12 +380,8 @@ export const handleDeleteProgression = (exerciseId, isLevels = false, masterySet
       dispatch(showToast('Something went wrong.', 'error'))
       Sentry.captureException(err);
     });
-  } else if (postAWS) {
-
-    dispatch(handleProgression(exerciseId, masterySet, date, isLevels, purpose))
-    dispatch(showToast('Successfully updated ' + legacyPage.name, 'success'))
-
   } else {
+    // Guided plans: always persist through the Neon deselect op (see handleAddProgression).
     {
       // All guided-plan users: Neon deselect (shared byo_settings).
       config = {
@@ -455,7 +450,6 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
   });
   let newData = data ? _.cloneDeep(data) : {};
 
-  const postAWS = state.login.postAWS
   const userData = state.login;
   const { userSchedule } = state.levels;
   let UserId = userData?.UserId
@@ -481,182 +475,10 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
       dispatch(showToast('Something went wrong.', 'error'))
       Sentry.captureException(err);
     });
-  } else if (postAWS) {
-
-    dispatch(handleProgression(exerciseId, masterySet, date, isLevels, purpose))
-
-    /*let allOrderedData = state.legacyCourse.allProgressions
-    let levelClicked, typeClicked
-    let userChosenProgressions = _.cloneDeep(allOrderedData);
-
-    for (const level in allOrderedData) {
-      for (const type in allOrderedData[level]) {
-        //to update the selected at that index for the clicked program
-
-        const exerciseIndex = allOrderedData[level][type].findIndex((exercise) => exercise.exerciseId === exerciseId);
-        console.log("exerciseIndex,", exerciseIndex)
-        if (exerciseIndex !== -1) {//FOUND MATCHING EXERCISEiD
-          allOrderedData[level][type][exerciseIndex].selected = true;
-        }
-        const exercise = allOrderedData[level][type].find((exercise) => exercise.exerciseId === exerciseId);
-        if (exercise) {
-          levelClicked = level
-          typeClicked = type
-          // console.log(`Level: ${level}, Type: ${type}`);
-          // Level: LEVEL 1, Type: Hollow Back Press
-          break;
-        }
-      }
-    }
-    console.log("allOrderedData:", allOrderedData)
-    console.log("dateKey:", dateKey)
-
-    const exerciseClicked = allOrderedData[levelClicked][typeClicked].find((exercise) => exercise.exerciseId === exerciseId);
-
-    for (const key in exerciseClicked.workoutInfo) {
-      console.log("key:", key)
-
-      if (key == "Strength") {
-        exerciseClicked.workoutInfo[key].setsAndReps = `${masterySet?.sets}x${masterySet?.repsOrSecs}`
-      }
-      if (key == "Mobility") {
-        exerciseClicked.workoutInfo[key].setsAndReps = `${masterySet?.sets}x10s`
-      }
-      console.log("masterySet?.step:", masterySet?.step)
-      exerciseClicked.stepNo = masterySet?.step
-    }
-
-    let exerciseGroup = exerciseClicked.group
-    let courseName = exerciseGroup.includes("Core") ? "Core" : exerciseGroup.includes("Upper Body") ? "Upper Body" : "Lower Body"
-    let programId = exerciseGroup.includes("Core") ? "59207" : exerciseGroup.includes("Upper Body") ? "59219" : "59213"
-
-    let allOrderedDataCopy = _.cloneDeep(allOrderedData);
-    let progressionsData = {
-      progressions: allOrderedDataCopy,
-      courseName: courseName
-    }
-
-    // dispatch({
-    //   type: actionTypes.SET_ALL_PROGRAMSDATA,
-    //   progressions: { progressionData: test, courseName: courseName }
-    // })
-
-
-    console.log("exerciseClicked:", exerciseClicked)
-    console.log("programId:", programId)
-    console.log("levelClicked:", levelClicked)
-    console.log("typeClicked:", typeClicked)
-
-    exerciseClicked.selected = true
-
-    // update original data here
-    newData[dateKey].forEach(item => {
-      if (item?.type == "Program" && item?.classId == programId) {
-        console.log("Program item is:", item)
-        console.log("item.workout Level 1??", item.workout)
-        const levelKey = Object.keys(item.workout).find(key => key.includes("LEVEL 1"));
-        console.log("levelKey:", levelKey)
-        if (levelKey) {
-          const levelValue = item.workout[levelKey];
-          console.log("levelValue:", levelValue)
-        }
-        console.log("item.workout LEVEL1", item.workout[" LEVEL 1"])
-        console.log("item.workout LEVEL2", item.workout["LEVEL 2"])
-        console.log("item.workout LEVEL3", item.workout["LEVEL 3"])
-        console.log("item.workout LEVEL4", item.workout["LEVEL 4"])
-        // console.log("item.workout[levelClicked]:", item.workout[levelClicked])
-        // console.log("levelClicked:", levelClicked, "\ntypeClicked:", typeClicked)
-        console.log("item.workout[levelClicked][typeClicked]:", item.workout[levelClicked][typeClicked])
-        // console.log("userChosenProgressions[levelClicked]", userChosenProgressions[levelClicked])
-        // console.log("exerciseClicked:", exerciseClicked)
-        if (!item.workout[levelClicked][typeClicked]) {
-          item.workout[levelClicked][typeClicked] = [];
-        }
-        item.workout[levelClicked][typeClicked].push(exerciseClicked);
-
-      }
-    })
-    console.log("newData later:", newData)//all the days data
-
-
-
-    let LevelKeys = Object.keys(allOrderedData);
-
-    let newArray = [];
-    let index = 0;
-    LevelKeys.forEach(lvlKey => {
-
-      const section = allOrderedData[lvlKey];
-
-      let sectionKeys = Object.keys(section);
-
-      sectionKeys.forEach(sctKey => {
-
-        userChosenProgressions[lvlKey][sctKey] = section[sctKey].filter(progression => progression.selected);
-
-        if (userChosenProgressions[lvlKey][sctKey].length) {
-
-          userChosenProgressions[lvlKey][sctKey].forEach(item => {
-            newArray = [...newArray, { ...item, section: sctKey, levelKey: lvlKey, index: index }];
-            index++;
-          })
-        }
-      })
-    })
-    // newArray.push(exerciseClicked)
-    console.log("newArray else:", newArray)//only program data
-
-    // update userSchedule data here
-    let programData
-    console.log("userSchedule top:", userSchedule)
-    userSchedule[dateKey].map((schedule) => {
-
-      if (schedule.type != "Class") {
-        schedule.chosenProgs = newArray
-        // programData = userSchedule[dateKey].filter(newData => newData.type === "Program");
-      }
-
-    })
-
-    console.log("userSchedule later:", userSchedule)
-    console.log("newData[dateKey] later:", newData[dateKey])
-
-    dispatch({
-      type: actionTypes.GET_WORKOUT,
-      payload: {
-        userSchedule: userSchedule
-      }
-    })
-
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }
-    let dataToPost = {
-      userId: UserId,
-      userScheduleDate: dateKey,
-      updatedData: newData[dateKey],
-      progressions: progressionsData
-    }
-    localStorage.setItem('progressions', JSON.stringify(progressionsData.progressions))//store in localstorage and db
-    Axios.post(NEWAPI + '/api/user/log', dataToPost, config)
-      .then(res => {
-        if (isLevels) {
-          dispatch(getLevelPlanNew())
-          dispatch(GetUserPorgressions(legacyPage.name, date, exerciseId))
-        } else {
-          dispatch(getUpdatedUserSchedule());
-          dispatch(GetUserPorgressions(legacyPage.name, date))
-        }
-
-      }).catch(error => {
-        Sentry.captureException(error);
-      });*/
-
-    dispatch(showToast('Successfully updated ' + legacyPage.name, 'success'))
   } else {
+    // Guided plans: always persist through the Neon select op. The old postAWS branch
+    // only patched local UI state (and still toasted "Successfully updated"), so since the
+    // AWS cutover — which sets postAWS for every login — every guided swap reverted on reload.
     {
       // Unreachable BYO branch removed: the outer `if (isBuildYourOwn)` above already
       // handles BYO, so this inner one could never run. It was the last AWS call here.

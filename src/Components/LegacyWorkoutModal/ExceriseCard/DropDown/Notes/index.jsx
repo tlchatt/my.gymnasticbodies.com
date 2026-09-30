@@ -3,10 +3,10 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { handleNotes } from '../../../../../Store/Action/LegacyAction'
-import { SaveNotesLevels, SaveNotesLevelsNew } from '../../../../../Store/Action/LevelsActions'
+import { SaveNotesLevels } from '../../../../../Store/Action/LevelsActions'
 
 const useStyles = makeStyles({
   textArea: {
@@ -28,7 +28,6 @@ const Notes = props => {
   const [note, setNote] = useState('');
   const { notes } = props.data;
   const dispatch = useDispatch();
-  const postAWS = useSelector(state => state.login.postAWS)
   useEffect(() => {
     if (notes) {
       setNote(notes)
@@ -37,16 +36,12 @@ const Notes = props => {
 
   const handleSaveNotes = () => {
     if (props.isLevels) {
-      if (postAWS) {
-        dispatch(SaveNotesLevelsNew(note, props?.data?.dateKey,props?.data?.workoutIndex, props?.data?.section))
-      } else {
-        if (props?.data?.masterySteps) {
-          dispatch(SaveNotesLevels(note, props?.data?.exerciseId, props?.data?.masterySteps[props?.data?.stepNo], props?.dateKeyIndex, props?.data?.dateKey, props?.data?.section))
-        }
+      // Guided plans: always save through the Neon program-notes op. The old postAWS
+      // branch wrote to the legacy /api/user/log route, so notes never persisted.
+      const masterySteps = props?.data?.masterySteps
+      if (masterySteps) {
+        dispatch(SaveNotesLevels(note, props?.data?.exerciseId, masterySteps[props?.data?.stepNo] || masterySteps[1], props?.dateKeyIndex, props?.data?.dateKey, props?.data?.workoutIndex, props?.data?.section))
       }
-
-
-
     }
     else {
       dispatch(
