@@ -51,7 +51,12 @@ const ImageUpload = props => {
 
   useEffect(() => {
     if (img) {
-      if (process.env.REACT_APP_IS_PRODUCTION === 'production') {
+      // Photos saved since the move off AWS are full Vercel Blob URLs; only legacy
+      // bare filenames need the old S3 prefix.
+      if (/^https?:\/\//i.test(img)) {
+        setUserImage(img);
+      }
+      else if (process.env.REACT_APP_IS_PRODUCTION === 'production') {
         setUserImage(`https://gymfit-user-images.s3.amazonaws.com/photos/${img}`);
       }
       else {
