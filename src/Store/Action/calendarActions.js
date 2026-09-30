@@ -2,7 +2,7 @@ import * as actionTypes from './actionTypes';
 import axios from 'axios';
 import { SetAllClassesInitial } from './actionsSetAllClasses';
 import { SetAllSubClassesInitial } from './actionsSetAllSubClasses';
-import { getCurrentWeek } from '../util';
+import { getCurrentWeek, validId } from '../util';
 import _ from 'lodash'
 import * as Sentry from "@sentry/react";
 import { logEvent } from '../../util/clientLogger';
@@ -38,7 +38,7 @@ export const DragAndDrop = ({ postId, oldDay, newDay }, updatedData) => (dispatc
     'SUNDAY' : 7,
   }
   axios.post(`${NEWAPI}/api/user/workout/levels`, {
-    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))),
     op: 'move-item',
     level: state.login.levelId,
     classId: Number(postId),
@@ -67,7 +67,7 @@ export const DeleteClass = ({ dayIndex, postId }, newState) => (dispatch, getSta
     }
   }
   axios.post(`${NEWAPI}/api/user/workout/levels`, {
-    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))),
     op: 'remove-item',
     level: state.login.levelId,
     dayIndex: dayIndex + 1,
@@ -148,7 +148,7 @@ export const ChooseLevel = (planData) => (dispatch, getState) => {
   // myCourses, which no longer comes from AWS.
   const level = planData.planId - 1;
   axios.post(`${NEWAPI}/api/user/workout/levels`, {
-    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))),
     op: 'choose-level',
     level,
     workoutOrPlanId: planData.planId,
@@ -181,7 +181,7 @@ export const UpdateSchedule = (data) => (dispatch, getState) => {
     }
   }
   axios.post(`${NEWAPI}/api/user/workout/levels`, {
-    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))),
     op: 'add-class-days',
     level: state.login.levelId,
     classId: Number(data.courseId),
@@ -208,7 +208,7 @@ export const LogNonLegacyCourse = (courseId, day, taskId) => (dispatch, getState
   }
 
   axios.post(`${NEWAPI}/api/user/workout/levels`, {
-    userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+    userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))),
     op: 'log-class',
     date: currentDay,
     classIds: [Number(courseId)],

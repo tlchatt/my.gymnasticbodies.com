@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
+import { validId } from '../../Store/util';
 
 const NEWAPI = process.env.REACT_APP_API_NEW;
 
@@ -19,8 +20,8 @@ export default function CurrentLocationTracker() {
   const reduxNeonId = useSelector((s) => s.login.neonUserId);
   const section = useSelector((s) => s.login.section);
 
-  const neonUserId = reduxNeonId
-    || (typeof localStorage !== 'undefined' ? localStorage.getItem('neonUserId') : null)
+  const neonUserId = validId(reduxNeonId)
+    || (typeof localStorage !== 'undefined' ? validId(localStorage.getItem('neonUserId')) : null)
     || null;
 
   const restoreStartedRef = useRef(false);

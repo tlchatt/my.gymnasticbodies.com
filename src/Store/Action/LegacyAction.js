@@ -4,7 +4,7 @@ import _ from "lodash"
 import { SetCaladner, showToast } from './calendarActions';
 import { getLevelPLan, getLevelPlanNew } from './LevelsActions';
 import * as Sentry from "@sentry/react";
-import { AxiosConfig } from '../util'
+import { AxiosConfig, validId } from '../util'
 
 import { getLegacyDataBYO, openEditLegacyModalBYO, handleLegacyLogCheck } from './WorkoutBuilderActions'
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import * as actionTypes from '../Action/actionTypes';
 
 // Guided-plan Program editing shares the Foundation curriculum with BYO — same Neon
 // route, keyed on the shared course-global byo_settings. courseName -> program id.
-const neonId = userData => userData.neonUserId || localStorage.getItem('neonUserId');
+const neonId = userData => validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'));
 
 export const SET_PROGRESSION = 'SET_PROGRESSION';
 export const UPDATE_PROGRESSIONS = 'UPDATE_PROGRESSIONS'
@@ -165,7 +165,7 @@ export const ManageDiffculty = (type, exerciseId, date) => (dispatch, getState) 
   let config;
   if (isBuildYourOwn) {
     // BYO: Neon program route (curriculum sub-phase) — same {body, message} response shape.
-    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    const neonUserId = validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'));
     config = {
       method: 'put',
       url: `${NEWAPI}/api/user/workout/byo/program`,
@@ -241,7 +241,7 @@ export const handleNotes = (notes, progressionId, masterySteps, date, sectionKey
   let config;
   if (isBuildYourOwn) {
     // BYO: Neon program-notes op (curriculum sub-phase).
-    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    const neonUserId = validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'));
     config = {
       method: 'post',
       url: `${NEWAPI}/api/user/workout/byo`,
@@ -292,7 +292,7 @@ export const handleLegacyLog = (date, exerciseId, mobilityStatus, autoProg, step
 
   if (isBuildYourOwn) {
     // BYO: Neon program-log op (curriculum sub-phase).
-    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    const neonUserId = validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'));
     let body = {
       userId: neonUserId,
       op: 'program-log',
@@ -366,7 +366,7 @@ export const handleDeleteProgression = (exerciseId, isLevels = false, masterySet
   let purpose = "Delete"
   if (isBuildYourOwn) {
     // BYO: Neon program route, single path for every user type (curriculum sub-phase).
-    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    const neonUserId = validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'));
     Axios({
       method: 'put',
       url: `${NEWAPI}/api/user/workout/byo/program`,
@@ -461,7 +461,7 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
   //all data: legacyPage?.allProgressions
   if (isBuildYourOwn) {
     // BYO: Neon program route, single path for every user type (curriculum sub-phase).
-    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    const neonUserId = validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'));
     Axios({
       method: 'put',
       url: `${NEWAPI}/api/user/workout/byo/program`,
@@ -525,7 +525,7 @@ export const handleAddProgression = (exerciseId, masterySetId, date, isLevels = 
 export const getUpdatedUserSchedule = () => (dispatch, getState) => {
   const state = getState();
   const userData = state.login;
-  const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+  const neonUserId = validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'));
   if (!neonUserId) return;
 
   const weekStart = getCalanderDate(userData.timezone)[0];

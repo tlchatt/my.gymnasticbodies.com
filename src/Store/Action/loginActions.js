@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import * as Sentry from "@sentry/react";
 import moment from 'moment-timezone'
 import { showToast } from './calendarActions'
-import { AxiosConfig } from '../util'
+import { AxiosConfig, validId } from '../util'
 import { logEvent } from '../../util/clientLogger'
 
 const NEWAPI = process.env.REACT_APP_API_NEW
@@ -135,7 +135,7 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
 // per page load (the resolver is retried by every thunk, so an unguarded log would spam).
 let neonIdMissLogged = false;
 export const ensureNeonUserId = () => async (dispatch, getState) => {
-  const current = getState().login.neonUserId;
+  const current = validId(getState().login.neonUserId);
   if (current) return current;
 
   const stored = localStorage.getItem('neonUserId');
@@ -282,7 +282,7 @@ export const LoginNew = (username, password) => dispatch => {
       const timezone = moment.tz.guess();
 
       localStorage.setItem('name', res.data.user.name);
-      localStorage.setItem('userId', res.data.user.id);
+      if (res.data.user.id) localStorage.setItem('userId', res.data.user.id);
       localStorage.setItem('username', username);
       localStorage.setItem('authToken', authToken);
       localStorage.setItem('AuthExpirationDate', expirationDate);
@@ -598,7 +598,7 @@ export const authCheckState = (props) => (dispatch, getState) => {
       if (postAWS == "true") {
         decodedGoal.postAWS = true
         // Neon-authed: whatever id we stored IS the Neon UUID.
-        decodedGoal.neonUserId = localStorage.getItem('neonUserId') || userId
+        decodedGoal.neonUserId = validId(localStorage.getItem('neonUserId')) || validId(userId)
       } else {
         // Legacy reload: localStorage.userId may hold the Neon UUID (registerWPass
         // overwrote it), which AWS endpoints reject. Recover the AWS integer id from
@@ -608,7 +608,7 @@ export const authCheckState = (props) => (dispatch, getState) => {
           decodedGoal.cid = decodedTok.cid
           decodedGoal.awsUserId = decodedTok.cid
         }
-        const storedNeon = localStorage.getItem('neonUserId')
+        const storedNeon = validId(localStorage.getItem('neonUserId'))
         // A non-numeric stored userId is a Neon UUID — usable as neonUserId fallback.
         decodedGoal.neonUserId = storedNeon || (/\D/.test(String(userId)) ? userId : null)
       }

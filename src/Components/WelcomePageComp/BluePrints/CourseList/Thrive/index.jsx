@@ -13,6 +13,7 @@ import { LinkRef } from '../../../../UtilComponents/LinkOverride';
 import ResetThrive from '../../../../Thrive/ResetThrive.jsx';
 
 import { showToast } from '../../../../../Store/Action/calendarActions';
+import { validId } from '../../../../../Store/util';
 
 const NEWAPI = process.env.REACT_APP_API_NEW;
 
@@ -20,7 +21,7 @@ const Thrive = (props) => {
   const [open, setOpen] = useState(false);
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
-  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
+  const userId = validId(useSelector(state => state.login.neonUserId)) || validId(localStorage.getItem('neonUserId'));
   const dispatch = useDispatch();
 
   const handleReset = () => {

@@ -10,6 +10,7 @@ import clsx from 'clsx'
 import PathSelection from '../InitialPage/PathSelection'
 import { setLevelPath, continutePreviosLevel } from '../../../Store/Action/LevelsActions';
 import { openOhNo } from '../../../Store/Reducers/OhNoReducer';
+import { validId } from '../../../Store/util';
 
 import { LinkRef } from '../../UtilComponents/LinkOverride';
 
@@ -107,7 +108,7 @@ export default function GuidedPlans(props) {
   const levelId = useSelector(state => state.login.levelId);
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
-  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
+  const userId = validId(useSelector(state => state.login.neonUserId)) || validId(localStorage.getItem('neonUserId'));
   const guidedPlanAccessLevels = useSelector(state => state.login.guidedPlanAccessLevels);
 
 

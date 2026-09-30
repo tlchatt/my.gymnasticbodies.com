@@ -1,6 +1,10 @@
 import _ from "lodash"
 import moment from 'moment-timezone';
 
+// A usable member id, or null. localStorage stores missing ids as the strings
+// "undefined" / "null" — both truthy — so plain `||` fallbacks sent them to the API.
+export const validId = v => (v && v !== 'undefined' && v !== 'null') ? v : null;
+
 export const updateObject = (oldObject, updatedProperties) => {
   return {
       ...oldObject,

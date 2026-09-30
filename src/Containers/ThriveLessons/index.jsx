@@ -20,6 +20,7 @@ import ThriveModal from '../../Components/Thrive/ThriveModal.jsx'
 import UnlockAll from '../../Components/Thrive/UnlockAll.jsx'
 
 import { showToast } from '../../Store/Action/calendarActions'
+import { validId } from '../../Store/util';
 import { logEvent } from '../../util/clientLogger'
 
 
@@ -86,7 +87,7 @@ const ThriveLessons = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser)
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
-  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
+  const userId = validId(useSelector(state => state.login.neonUserId)) || validId(localStorage.getItem('neonUserId'));
 
   const [loading, setLoading] = useState(true);
   const [lessons, setLessons] = useState([]);

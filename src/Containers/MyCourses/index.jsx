@@ -14,7 +14,7 @@ import { openLegacyWorkoutModal } from '../../Store/Action/WorkoutBuilderActions
 import PathSelection from '../../Components/FreeMemeberComp/InitialPage/PathSelection';
 import LegacyWorkoutModal from '../../Components/LegacyWorkoutModal';
 
-import { AxiosConfig } from '../../Store/util';
+import { AxiosConfig, validId } from '../../Store/util';
 import { logEvent } from '../../util/clientLogger';
 import { openDrawer } from '../../Store/Reducers/OpenDrawerReducer'
 import { UpdateUserLevelId } from '../../Store/Action/loginActions';
@@ -116,7 +116,7 @@ export default function MyCourses(props) {
 
   // Get Data useEffect
   useEffect(() => {
-    const neonUserId = userData.neonUserId || localStorage.getItem('neonUserId');
+    const neonUserId = validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'));
     if (!neonUserId) { setIsLoading(false); return; }
     axios({
       method: 'get',
@@ -206,7 +206,7 @@ export default function MyCourses(props) {
     }
     if (selectedIndex === 2) {
       axios.post(`${NEWAPI}/api/user/workout/courses`, {
-        userId: (userData.neonUserId || localStorage.getItem('neonUserId')),
+        userId: (validId(userData.neonUserId) || validId(localStorage.getItem('neonUserId'))),
         op: 'choose-my-courses',
       }, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userData.webToken}` } })
         .then(res => {

@@ -18,6 +18,7 @@ import Container from '../../Components/UtilComponents/Container'
 // import MissedDays from '../../Components/Thrive/MissedDays.jsx'
 
 import { showToast } from '../../Store/Action/calendarActions'
+import { validId } from '../../Store/util';
 import { logEvent } from '../../util/clientLogger'
 
 const useStyles = makeStyles(theme=>({
@@ -84,7 +85,7 @@ const ThriveTasks = props => {
   const isThriveUser = useSelector(state => state.login.isThriveUser);
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
-  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
+  const userId = validId(useSelector(state => state.login.neonUserId)) || validId(localStorage.getItem('neonUserId'));
   const dispatch = useDispatch();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);

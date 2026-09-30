@@ -7,7 +7,7 @@ import * as Sentry from "@sentry/react";
 
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek'
 import * as actionTypes from '../Action/actionTypes';
-import { AxiosConfig, legacyNameToId } from '../util'
+import { AxiosConfig, legacyNameToId, validId } from '../util'
 import { showToast } from './calendarActions';
 import { SET_PROGRESSION } from './LegacyAction';
 import { getData, updateData } from './dataManipulation';
@@ -21,7 +21,7 @@ const NEWAPI = process.env.REACT_APP_API_NEW
 // Neon UUID for ${NEWAPI} requests. state.login.UserId is the AWS integer id (decoded
 // token `cid`) for legacy sessions and only happens to equal the UUID for Neon-authed
 // ones — so anything writing to Neon must resolve the id through here.
-const neonIdOf = state => state.login.neonUserId || localStorage.getItem('neonUserId') || state.login.UserId;
+const neonIdOf = state => validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId')) || validId(state.login.UserId);
 
 export const getBeginnerLevel = () => (dispatch, getState) => {/* incomplete, has failover directly to lukeData */
   const state = getState();
@@ -195,7 +195,7 @@ export const getBeginnerLevel = () => (dispatch, getState) => {/* incomplete, ha
       "classesList": null
     }
   }
-  Axios({ method: 'get', url: `${NEWAPI}/api/user/workout/levels?userId=${encodeURIComponent((state.login.neonUserId || localStorage.getItem('neonUserId')))}&view=beginner&weekStart=${getCalanderDate(timezone)[0]}`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` } }).then(res => {
+  Axios({ method: 'get', url: `${NEWAPI}/api/user/workout/levels?userId=${encodeURIComponent((validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))))}&view=beginner&weekStart=${getCalanderDate(timezone)[0]}`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` } }).then(res => {
     console.log('  res', res)
     dispatch({
       type: actionTypes.SET_LEVELS,
@@ -221,7 +221,7 @@ export const selectBeginenrWorkout = (dateIndex, dateKey, workoutId) => (dispatc
   const date = getCalanderDate(timezone)[dateIndex];
 
 
-  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'select-beginner-workout', dayIndex: dateIndex + 1, workoutId, date } }).then(res => {
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))), op: 'select-beginner-workout', dayIndex: dateIndex + 1, workoutId, date } }).then(res => {
     dispatch({
       type: actionTypes.GET_WORKOUT,
       payload: {
@@ -249,7 +249,7 @@ export const logAllBeginnerWorkout = (dateIndex, dateKey, courseIds = []) => (di
     ? courseIds
     : newWorkoutData.filter(w => w.isLogged === false).map(w => w.classId);
 
-  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'log-beginner', date, classIds: courseIdArray } })
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))), op: 'log-beginner', date, classIds: courseIdArray } })
     .then(res => {
       console.log('Axios response:', res);
 
@@ -367,7 +367,7 @@ export const removeBeginnerWorkoutLog = (dateIndex, dateKey, courseId) => (dispa
 
   let newWorkoutData = levelsOneToFour ? userSchedule[dateKey] : userSchedule[dateKey].classesList;
 
-  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'unlog-beginner', date, classIds: [courseId] } }).then(res => {
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))), op: 'unlog-beginner', date, classIds: [courseId] } }).then(res => {
     const index = newWorkoutData.findIndex(w => w.classId === courseId);
     newWorkoutData[index].isLogged = false;
     let action = levelsOneToFour
@@ -570,7 +570,7 @@ export const setLevelPath = (leveld, isCallback = false, workoutOrPlanId = 0) =>
 }
 export const setLevelPathNew = (leveld, workoutOrPlanId) => (dispatch, getState) => {
   const state = getState();
-  const config = { headers: { "Content-Type": "application/json" } };
+  const config = { headers: { "Content-Type": "application/json", "Authorization": `Bearer ${state.login.webToken}` } };
 
   // Persist the guided level (0-4) to the standing row (workout_level) — the row login
   // reads on reload. The legacy 'levelPath' setting write is retired: it duplicated this
@@ -3311,7 +3311,7 @@ export const clearOutDay = (dayIndex, isBeginner = false) => (dispatch, getState
     ? `/myschedule/beginner/users/${UserId}/dayIndex/${dayIndex + 1}`
     : `/myschedule/levels/users/${UserId}/dayIndex/${dayIndex + 1}`;
 
-  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: isBeginner ? 'clear-beginner-day' : 'clear-day', level: state.login.levelId, dayIndex: dayIndex + 1 } })
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))), op: isBeginner ? 'clear-beginner-day' : 'clear-day', level: state.login.levelId, dayIndex: dayIndex + 1 } })
     .then(res => {
       let newUserSchedule = _.cloneDeep(userSchedule);
       newUserSchedule[userScheduleKey] = [];
@@ -3331,7 +3331,7 @@ export const clearOutDayBeginner = (dayIndex) => (dispatch, getState) => {
 
   const userScheduleKey = Object.keys(userSchedule)[dayIndex];
 
-  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'clear-beginner-day', dayIndex: dayIndex + 1 } })
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))), op: 'clear-beginner-day', dayIndex: dayIndex + 1 } })
     .then(res => {
       let newUserSchedule = _.cloneDeep(userSchedule);
 
@@ -3359,7 +3359,7 @@ export const generateWorkoutLevels = (workoutId, dateIndex, dateKey) => (dispatc
   // The old path sent a positional dropdown index (1-4) as classId, which the server rightly
   // rejected as an unknown classId -> the day stayed blank ("Generate Workout does nothing").
   // workoutId is no longer used.
-  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (state.login.neonUserId || localStorage.getItem('neonUserId')), op: 'fill-day-from-template', level: levelId, dayIndex: dateIndex + 1, date } }).then(res => {
+  Axios({ method: 'post', url: `${NEWAPI}/api/user/workout/levels`, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` }, data: { userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))), op: 'fill-day-from-template', level: levelId, dayIndex: dateIndex + 1, date } }).then(res => {
     let workoutSchedule = res.data ? res.data : [];
     let newUserSchedule = _.cloneDeep(userSchedule);
 
@@ -3396,7 +3396,7 @@ export const refreshWMS = (scheduleId, trainingType, dateIndex, dateKey) => (dis
     url: `${NEWAPI}/api/user/workout/levels`,
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` },
     data: {
-      userId: (state.login.neonUserId || localStorage.getItem('neonUserId')),
+      userId: (validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))),
       op: 'refresh-item',
       level: levelId,
       dayIndex: dateIndex + 1,
@@ -3609,7 +3609,7 @@ export const LogLegacy = (exerciseId, mobilityStatus, autoProg, steps, logList, 
   const legacyWorkout = userSchedule[dateKey][workoutIndex];
   const courseName = legacyWorkout.category.replace('Foundation ', '');
 
-  Axios({method:'post',url:`${NEWAPI}/api/user/workout/byo`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:(state.login.neonUserId||localStorage.getItem('neonUserId')),op:'program-log',section:'levels',date,courseId:legacyNameToId[courseName],exerciseId,imStatus:mobilityStatus,autoProgress:autoProg,masterySets:steps,setsAndRepsDTOList:logList}})
+  Axios({method:'post',url:`${NEWAPI}/api/user/workout/byo`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:(validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))),op:'program-log',section:'levels',date,courseId:legacyNameToId[courseName],exerciseId,imStatus:mobilityStatus,autoProgress:autoProg,masterySets:steps,setsAndRepsDTOList:logList}})
     .then(res => {
       console.log("res is:", res)
       dispatch(getLevelPLan())
@@ -3701,7 +3701,7 @@ export const SaveNotesLevels = (notes, exerciseId, masterySteps, dateKeyIndex, d
   }
 
   const courseName = (state.levels.userSchedule[dateKey]?.[workoutIndex]?.category || '').replace('Foundation ', '');
-  Axios({method:'post',url:`${NEWAPI}/api/user/workout/byo`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:(state.login.neonUserId||localStorage.getItem('neonUserId')),op:'program-notes',section:'levels',date,courseId:legacyNameToId[courseName],exerciseId,notes,masterySets:{masterySetId:masterySteps.masterySetId,sets:masterySteps.sets,repsOrSecs:masterySteps.repsOrSecs}}})
+  Axios({method:'post',url:`${NEWAPI}/api/user/workout/byo`,headers:{'Content-Type':'application/json','Authorization':`Bearer ${webToken}`},data:{userId:(validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))),op:'program-notes',section:'levels',date,courseId:legacyNameToId[courseName],exerciseId,notes,masterySets:{masterySetId:masterySteps.masterySetId,sets:masterySteps.sets,repsOrSecs:masterySteps.repsOrSecs}}})
     .then(res => {
       console.log("res in notes:", res)
       dispatch(showToast('Your notes have been saved.', 'success'))
@@ -3777,7 +3777,7 @@ export const GetAllWorkoutInfo = (dateKey, workoutIndex, dateKeyIndex) => (dispa
   console.log("dateKey:", dateKey)
   console.log("::state.progressions:", state)
 
-  Axios({method:'get',url:`${NEWAPI}/api/user/workout/byo/program?userId=${encodeURIComponent((state.login.neonUserId||localStorage.getItem('neonUserId')))}&courseId=${legacyNameToId[courseName]}&view=edit`,headers:{'Authorization':`Bearer ${webToken}`}})
+  Axios({method:'get',url:`${NEWAPI}/api/user/workout/byo/program?userId=${encodeURIComponent((validId(state.login.neonUserId) || validId(localStorage.getItem('neonUserId'))))}&courseId=${legacyNameToId[courseName]}&view=edit`,headers:{'Authorization':`Bearer ${webToken}`}})
     .then(res => {
       dispatch({
         type: SET_PROGRESSION,

@@ -22,6 +22,7 @@ import ImageUpload from '../../Components/UtilComponents/ImageUpload';
 import GridContainer from '../../Components/UtilComponents/Mui-GridContainer'
 import Container from '../../Components/UtilComponents/Container'
 import { showToast } from '../../Store/Action/calendarActions'
+import { validId } from '../../Store/util';
 import { logEvent } from '../../util/clientLogger'
 
 const useStyles = makeStyles(theme=>({
@@ -102,7 +103,7 @@ const ThriveProfile = props => {
   const firstName = useSelector(state => state.login.firstName);
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
-  const userId = useSelector(state => state.login.neonUserId) || localStorage.getItem('neonUserId');
+  const userId = validId(useSelector(state => state.login.neonUserId)) || validId(localStorage.getItem('neonUserId'));
   const [heightType, setHeightType] = useState(0)
   const [weightType, setWeightType] = useState(0)
   const [weight, setWeight] = useState('')
