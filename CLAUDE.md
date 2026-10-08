@@ -366,3 +366,9 @@ That audit found and fixed **3 instances** of the same bug class: a JW *playlist
 **Important gotcha discovered in the same audit:** `app.gymnasticbodies.com/data/Media/allMedia.json` is **not** a complete media catalog despite its name — it's playlist-scoped (same shape as `eachPlaylistData.json`) and misses anything never added to a JW playlist. `mediaData.json`/`mediaDataBackup.json` (identical to each other) are the real flat, complete-ish exports — use those for "does this video exist" checks, not `allMedia.json`.
 
 **Course-library (`CourseLibraryPlayer`) is fully migrated off JW** — see "Course Library video pipeline" above. **`VideoPlayer` (MyCourses/BuildYourOwn/Guided Plans) and `CoursePreivewData` are not** — they still use `ReactJWPlayer` and the same broken login-flow signed-URL mechanism. The `/api/mediaBlob` endpoint already exists in `app.gymnasticbodies.com` if a `POST`-based lookup is ever needed instead of constructing the Blob URL directly by mediaId.
+
+## Sessions
+
+**Manager session:** not started yet — when one runs (skill `project-review-manage`), its state lives in `sessions/MANAGER.md`; read it first.
+
+Session log: `sessions/INDEX.md` (create it with the first session row)
