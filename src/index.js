@@ -24,7 +24,6 @@ import { DemoModalReducer } from './Store/Reducers/DemoModalReducer'
 import { FreeMemberReducer } from './Store/Reducers/FreeMemberReducer'
 import { LevelsReducer } from './Store/Reducers/LevelsReducer'
 import { WorkoutBuilderReducer } from './Store/Reducers/WorkoutBuilderReducer'
-import { OhNoReducer } from './Store/Reducers/OhNoReducer'
 import { OpenDrawerReducer } from './Store/Reducers/OpenDrawerReducer'
 
 // TODO: Change this line beofre pushing to prod
@@ -63,7 +62,6 @@ const rootReducer = combineReducers({
   freeMember: FreeMemberReducer,
   levels: LevelsReducer,
   buildYourOwn: WorkoutBuilderReducer,
-  OhNo: OhNoReducer,
   OpenDrawer:OpenDrawerReducer
 })
 

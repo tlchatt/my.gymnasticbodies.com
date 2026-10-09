@@ -99,7 +99,6 @@ const NEWAPI = process.env.REACT_APP_API_NEW;
 const THRIVE_URL = `${NEWAPI}/api/user/workout/thrive`;
 
 const ThriveTasks = props => {
-  const isThriveUser = useSelector(state => state.login.isThriveUser);
   const webToken = useSelector(state => state.login.webToken);
   const userId = useSelector(state => state.login.neonUserId);
   // const dispatch = useDispatch();
@@ -210,13 +209,11 @@ const ThriveTasks = props => {
         storeData(userData)
       }).catch(err => Sentry.captureException(err))
     }
-    if (isThriveUser) {
-      getUserData();
-    }
+    getUserData();
 
     // imperial-0 is (feet,inches,lbs) metric-1 is (m,cm,kg)
 
-  }, [webToken, userId, isThriveUser]);
+  }, [webToken, userId]);
 
   const handleSaveData = () => {
     let formData = new FormData();

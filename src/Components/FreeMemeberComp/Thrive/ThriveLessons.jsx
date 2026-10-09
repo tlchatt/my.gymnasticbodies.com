@@ -52,7 +52,6 @@ const THRIVE_URL = `${NEWAPI}/api/user/workout/thrive`;
 
 export default function ThriveLessons(props) {
   const classes = useStyles();
-  const isThriveUser = useSelector(state => state.login.isThriveUser)
   const webToken = useSelector(state => state.login.webToken);
   const userId = useSelector(state => state.login.neonUserId);
 
@@ -122,10 +121,8 @@ export default function ThriveLessons(props) {
   }, [webToken, userId])
 
   useEffect(() => {
-    if (isThriveUser) {
-      getUserData();
-    }
-  }, [isThriveUser, getUserData]);
+    getUserData();
+  }, [getUserData]);
 
 
   const secondCall = () => {

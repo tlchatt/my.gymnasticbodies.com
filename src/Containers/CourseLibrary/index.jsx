@@ -20,7 +20,6 @@ import CourseCards from '../../Components/CourseLibaryComponents/CourseCard'
 import ProgressionRows from '../../Components/CourseLibaryComponents/ProgressionRows'
 import PlaylistRow from '../../Components/CourseLibaryComponents/PlaylistRow'
 import CourseLibraryPlayer from '../../Components/CourseLibaryComponents/CourseLibraryPlayer'
-import OhNoModal from '../../Components/OhNoModal';
 import { logEvent } from '../../util/clientLogger';
 
 import { mainCourses } from './data';
@@ -3444,8 +3443,6 @@ const CourseLibrary = (props) => {
 
   const [allProgs, setAllProgs] = useState([]);
 
-  const [ohNoModal, setOhNoModal] = useState(false);
-
   const [hideReps, setHideReps] = useState(false);
 
   useEffect(() => {
@@ -3540,12 +3537,6 @@ const CourseLibrary = (props) => {
           status: response.status,
           sample: typeof data === 'string' ? data.slice(0, 120) : typeof data,
         });
-        if (data === "YOU AREN'T ENROLLED IN THIS COURSE.") {
-          // Genuine entitlement gate — the legit purchase prompt.
-          setThirdRow({ show: false, data: [], loading: false });
-          setOhNoModal(true);
-          return;
-        }
         // AWS doesn't recognize this course — the newer non-legacy courses (Foundation
         // Intro / Restore / Elements / Fundamentals) return "Please pass in Valid
         // parameters." Render them from the local embedded course data (the SAME source
@@ -23471,16 +23462,7 @@ const CourseLibrary = (props) => {
         }
       }
       const keys = Object.keys(responseData);
-      if (responseData === "YOU AREN'T ENROLLED IN THIS COURSE.") {
-        console.log('YOU AREN\'T ENROLLED IN THIS COURSE');
-        setThirdRow({
-          show: false,
-          data: [],
-          loading: false
-        })
-        setOhNoModal(true);
-      }
-      else if (keys.length === 1) {
+      if (keys.length === 1) {
         setThirdRow({
           show: false,
           data: [],
@@ -23623,7 +23605,6 @@ const CourseLibrary = (props) => {
           : null
       }
       <CourseLibraryPlayer CloseModal={closeModal} {...playerState} />
-      <OhNoModal open={ohNoModal} handleClose={() => setOhNoModal(false)} />
     </Wrapper>
   );
 }

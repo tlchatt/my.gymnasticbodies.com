@@ -28,7 +28,6 @@ const NEWAPI = process.env.REACT_APP_API_NEW;
 const THRIVE_URL = `${NEWAPI}/api/user/workout/thrive`;
 
 const ThriveTasks = props => {
-  const isThriveUser = useSelector(state => state.login.isThriveUser);
   const webToken = useSelector(state => state.login.webToken);
   const userId = useSelector(state => state.login.neonUserId);
   const [tasks, setTasks] = useState([]);
@@ -54,11 +53,8 @@ const ThriveTasks = props => {
   }, [webToken, userId])
 
   useEffect(() => {
-    if (isThriveUser) {
-      getUserData();
-    }
-
-  }, [isThriveUser, getUserData]);
+    getUserData();
+  }, [getUserData]);
 
   const handleCompleteAll = () => {
     let taskIds = tasks.map(task => task.usersTaskId).join(',')

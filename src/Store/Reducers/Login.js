@@ -31,17 +31,15 @@ const LoginSuccess = (state, action) => {
     fail: false,
     integratedPlans: action.userState.integratedPlans,
     isAllAccessUser: action.userState.isAllAccessUser,
-    isThriveUser: action.userState.isThriveUser,
     UserId: action.userData.cid,
     timezone: action.timezone,
     isAdmin: action.userState.isAdmin ? action.userState.isAdmin : null,
     detailedView: action.userState.detailedView,
-    userLevel: action.userState.isFreeMember ? 'Free Member' : action.userState.userLevel,
-    levelId: action.userState.isFreeMember ? 9 : action.userState.levelId,
-    section: action.userState.isFreeMember ? 'whiteboard' : sectionFromCode(action.userState.levelId),
+    userLevel: action.userState.userLevel,
+    levelId: action.userState.levelId,
+    section: sectionFromCode(action.userState.levelId),
     lastName: action.userState.lname,
     showAllAccessSite: action.userState.showAllAccessSite,
-    isFreeMember: action.userState.isFreeMember,
     guidedPlanAccessLevels: action.userState.guidedPlanAccessLevels,
     postAWS: action.userData.postAWS,
     // Neon UUID for ${REACT_APP_API_NEW} requests. For postAWS users this equals UserId;
@@ -55,14 +53,12 @@ const LoginSuccess = (state, action) => {
 const WelcomeSuccess = (state, action) => {
   return updateObject(state, {
     isAllAccessUser: action.paylod.isAllAccessUser,
-    isThriveUser: action.paylod.isThriveUser,
     isAdmin: action.paylod.isAdmin ? action.paylod.isAdmin : null,
-    userLevel: action.paylod.isFreeMember ? 'Free Member' : action.paylod.userLevel,
-    levelId: action.paylod.isFreeMember ? 9 : action.paylod.levelId,
-    section: action.paylod.isFreeMember ? 'whiteboard' : sectionFromCode(action.paylod.levelId),
+    userLevel: action.paylod.userLevel,
+    levelId: action.paylod.levelId,
+    section: sectionFromCode(action.paylod.levelId),
     lastName: action.paylod.lname,
     showAllAccessSite: action.paylod.showAllAccessSite,
-    isFreeMember: action.paylod.isFreeMember,
     guidedPlanAccessLevels: action.payload.guidedPlanAccessLevels,
   });
 }
@@ -110,7 +106,7 @@ const SetUserLevel = (state, action) => {
   const isGuided = typeof nextLevelId === 'number' && nextLevelId >= 0 && nextLevelId <= 4;
   return updateObject(state, {
     ...action.payload,
-    userLevel: state.isFreeMember ? 'Free Member' : action.payload.userLevel,
+    userLevel: action.payload.userLevel,
     lastGuidedLevel: isGuided ? nextLevelId : state.lastGuidedLevel,
     // Choosing a guided level means the Guided section is now showing.
     section: isGuided ? 'guided' : state.section,
@@ -130,11 +126,10 @@ export const LoginReducer = (state = initailState, action) => {
     case actionTypes.SET_NEON_USER_ID: return updateObject(state, { neonUserId: action.neonUserId });
     case actionTypes.SET_USER_STANDING: return updateObject(state, {
       ...action.payload,
-      // Free members are always pinned to White Board regardless of seeded standing.
-      userLevel: state.isFreeMember ? 'Free Member' : (action.payload.userLevel ?? state.userLevel),
-      levelId: state.isFreeMember ? 9 : (action.payload.levelId ?? state.levelId),
+      userLevel: action.payload.userLevel ?? state.userLevel,
+      levelId: action.payload.levelId ?? state.levelId,
       lastGuidedLevel: action.payload.lastGuidedLevel ?? state.lastGuidedLevel,
-      section: state.isFreeMember ? 'whiteboard' : (action.payload.section ?? state.section),
+      section: action.payload.section ?? state.section,
     });
     case actionTypes.SET_SECTION: return updateObject(state, { section: action.payload.section });
     case actionTypes.SET_USER_LEVEL: return SetUserLevel(state, action)

@@ -9,7 +9,6 @@ import clsx from 'clsx'
 
 import PathSelection from '../InitialPage/PathSelection'
 import { setLevelPath, continutePreviosLevel } from '../../../Store/Action/LevelsActions';
-import { openOhNo } from '../../../Store/Reducers/OhNoReducer';
 import { validId } from '../../../Store/util';
 
 import { LinkRef } from '../../UtilComponents/LinkOverride';
@@ -71,31 +70,26 @@ const Seelctions = [
     selctionTitle: 'Beginner Plan',
     description: 'AutoPilot gives you a quick, randomized workout.',
     image: 'Initial-Beginner.png',
-    disabledImage: 'beg-disabled.svg',
   },
   {
     selctionTitle: 'Intermediate One',
     description: 'Guided Plans gives you a pre-built workout from beginner to advanced.',
     image: 'Initial-Intermediate1.png',
-    disabledImage: 'Int-1-disabled.svg',
   },
   {
     selctionTitle: 'Intermediate Two',
     description: 'Create your own workouts using our exercise library and follow alongs.',
     image: 'Initial-Intermediate2.png',
-    disabledImage: 'Int-2-disabled.svg',
   },
   {
     selctionTitle: 'Advanced One',
     description: 'Take our quiz to know which guided plan to use.',
     image: 'Initial-Advanced1.png',
-    disabledImage: 'Adv-1-disabled.svg',
   },
   {
     selctionTitle: 'Advanced Two',
     description: 'Take our quiz to know which guided plan to use.',
     image: 'Initial-Advanced2.png',
-    disabledImage: 'Adv-2-disabled.svg',
   },
 ]
 
@@ -109,7 +103,6 @@ export default function GuidedPlans(props) {
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
   const userId = validId(useSelector(state => state.login.neonUserId)) || validId(localStorage.getItem('neonUserId'));
-  const guidedPlanAccessLevels = useSelector(state => state.login.guidedPlanAccessLevels);
 
 
   const { handleClose, title, fullWidth, isInDrawer, open } = props;
@@ -120,7 +113,7 @@ export default function GuidedPlans(props) {
   const history = useHistory();
 
   const handleChoosePath = () => {
-    if (selectedPath > -1 && isAccessible(selectedPath)) {
+    if (selectedPath > -1) {
       if (selectedPath === lastLoginLevel && isInDrawer && selectedPath !== 0) {
         dispatch(continutePreviosLevel(lastLoginLevel));
       }
@@ -135,10 +128,6 @@ export default function GuidedPlans(props) {
       if (location.pathname !== '/') {
         history.push("/")
       }
-    }
-    else {
-      // TODO: Toast message
-      dispatch(openOhNo());
     }
   }
 
@@ -159,21 +148,8 @@ export default function GuidedPlans(props) {
     }
   }, [isInDrawer, webToken, userId, open, levelId])
 
-  // check if index is in guidedPlanAccessLevels
-  const isAccessible = (index) => {
-    if (guidedPlanAccessLevels.length > 0) {
-      return guidedPlanAccessLevels.indexOf(index) >= 0;
-    }
-    return false;
-  }
-
   const handleSelection = (index) => {
-    if (isAccessible(index)) {
-      setSelectedPath(index)
-    }
-    else {
-      dispatch(openOhNo());
-    }
+    setSelectedPath(index)
   }
 
 
@@ -205,7 +181,6 @@ export default function GuidedPlans(props) {
                             : false
                         }
                         {...selection}
-                        image={!isAccessible(index) ? selection.disabledImage : selection.image}
                       />
                     </Grid>
                   )

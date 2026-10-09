@@ -15,7 +15,6 @@ import TestingDrawer from './TestingDrawer';
 
 import { GbWhite, GBWhiteHero } from '../../GymFitIcons/gbIcons';
 
-import { openOhNo } from '../../../Store/Reducers/OhNoReducer';
 import { closeDrawer } from '../../../Store/Reducers/OpenDrawerReducer'
 import { continutePreviosLevel, setSection } from '../../../Store/Action/LevelsActions';
 
@@ -177,12 +176,9 @@ export default function MiniDrawer(props) {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { isFreeMember } = props
-
   const [openDrawer, setOpenDrawer] = useState({ open: false, componentId: '' });
 
   const isSinnglePoint = useSelector(state => !state.login.isAllAccessUser);
-  const isThriveUser = useSelector(state => state.login.isThriveUser);
 
   const OpenDrawerRedux = useSelector(state => state.OpenDrawer);
   console.log('OpenDrawerRedux', OpenDrawerRedux)
@@ -257,22 +253,12 @@ export default function MiniDrawer(props) {
     setOpen(!open);
   };
 
-  const handleCallBackFunction = (id, showAllAccess = true) => {
-    if (isFreeMember || !showAllAccess) {
-      dispatch(openOhNo());
-    }
-    else {
-      handleOpenDrawer(id)
-    }
-  }
-
   // Unified drawer (2026-07): every user type sees the same feature set — the
   // postAWS reduced list is gone now that all sections run on the Neon workout API.
-  // Free-member gating (openOhNo) and the isThriveUser gate are unchanged.
   const firstSection = [
       {
         text: 'White Board',
-        cb: () => isSinnglePoint && !isFreeMember ? dispatch(openOhNo()) : goToSection('whiteboard'),
+        cb: () => goToSection('whiteboard'),
         imageName: 'bluewhiteboard.png',
         extraWidth: true,
         ids: [9],
@@ -298,7 +284,7 @@ export default function MiniDrawer(props) {
       },
       {
         text: 'Guided Plans',
-        cb: () => handleCallBackFunction('GuidedPlans'),
+        cb: () => handleOpenDrawer('GuidedPlans'),
         imageName: 'GuidedPlans.png',
         ids: [0, 1, 2, 3, 4],
         isActive: () => {
@@ -323,7 +309,7 @@ export default function MiniDrawer(props) {
       },
       {
         text: 'Build Your Own Workout',
-        cb: () => isFreeMember ? dispatch(openOhNo()) : goToSection('byo'),
+        cb: () => goToSection('byo'),
         imageName: 'BYO.png',
         ids: [10],
         drawerId: 'BuildYourOwn',
@@ -349,11 +335,11 @@ export default function MiniDrawer(props) {
       },
       {
         text: 'Thrive Nutrition',
-        cb: () => handleCallBackFunction('Thrive', isThriveUser),
+        cb: () => handleOpenDrawer('Thrive'),
         imageName: 'nutrition.png',
         ids: [],
         isActive: () => {
-          if (openDrawer.componentId === 'Thrive' && isThriveUser) {
+          if (openDrawer.componentId === 'Thrive') {
             return true;
           }
           return false;
@@ -361,7 +347,7 @@ export default function MiniDrawer(props) {
       },
       {
         text: 'Workout History',
-        cb: () => handleCallBackFunction('History'),
+        cb: () => handleOpenDrawer('History'),
         imageName: 'history.png',
         ids: [],
         isActive: () => {
@@ -373,7 +359,7 @@ export default function MiniDrawer(props) {
       },
       {
         text: 'Fitness Placement Quiz',
-        cb: () => handleCallBackFunction('FitnessQuiz'),
+        cb: () => handleOpenDrawer('FitnessQuiz'),
         imageName: 'Quiz.png',
         ids: [],
         isActive: () => {
@@ -400,7 +386,7 @@ export default function MiniDrawer(props) {
       },
       {
         text: 'Contact Us',
-        cb: () => handleCallBackFunction('ContactUs'),
+        cb: () => handleOpenDrawer('ContactUs'),
         imageName: 'FocusGroups.png',
         ids: [],
         isActive: () => {
@@ -412,7 +398,7 @@ export default function MiniDrawer(props) {
       },
       {
         text: 'Courses',
-        cb: () => handleCallBackFunction('Courses'),
+        cb: () => handleOpenDrawer('Courses'),
         imageName: 'Courses.png',
         ids: [],
         isActive: () => {

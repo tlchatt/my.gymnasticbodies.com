@@ -3,7 +3,6 @@ import { makeStyles, IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import Card from '@material-ui/core/Card';
-import OhNoModal from '../../OhNoModal';
 import EditModal from '../../Calendar/DetailedView/AddToScheduleModal'
 
 
@@ -52,11 +51,7 @@ export default function CourseCards(props) {
     <Grid className={`${classes.classFinderGrid}`} item sm={4} xs={6}>
       <Card className={classes.root}>
         <img
-          onClick={
-            CourseInfo.classInfo
-              ? () => props.handleSuggestedCourse(CourseInfo)
-              : () => setEdit(true)
-          }
+          onClick={() => props.handleSuggestedCourse(CourseInfo)}
           src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${CourseInfo.image_url}`}
           className={classes.media}
           alt=""
@@ -87,7 +82,7 @@ export default function CourseCards(props) {
             img={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${CourseInfo.image_url}`}
             wpId={CourseInfo.wp_postid}
           />
-          : <OhNoModal open={edit} handleClose={()=> setEdit(false)}/>
+          : null
       }
 
     </Grid>

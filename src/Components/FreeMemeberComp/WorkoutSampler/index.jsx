@@ -69,7 +69,6 @@ const WorkoutPlanner = (props) => {
   } = props;
 
   const byoRounds = useSelector(state => isBuildYourOwn ? state.buildYourOwn.userSchedule[dateKey].rounds : 0);
-  const isAllAccessUser = useSelector(state => state.login.isAllAccessUser);
   let postAWS = useSelector(state => state.login.postAWS);
   console.log("postAWS is:", postAWS)
   const openPlayerModal = (prog, isIndividualVideo = false) => {
@@ -143,7 +142,7 @@ const WorkoutPlanner = (props) => {
           : 'loading'
       }
       {
-        hasIdividualWokrouts && isAllAccessUser
+        hasIdividualWokrouts
           ? <Rounds
             checkForFirstLogged={individiualWorkouts.find(item => item.isLogged)?.isLogged}
             hideSettings
@@ -155,7 +154,7 @@ const WorkoutPlanner = (props) => {
           : null
       }
       {
-        hasIdividualWokrouts && isAllAccessUser ? individiualWorkouts.map((data, index) => {
+        hasIdividualWokrouts ? individiualWorkouts.map((data, index) => {
           return <div className={classes.gridItem} key={index} >
             <SamplerCard
               {...data}

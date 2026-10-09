@@ -7,7 +7,6 @@ import {
   Button
 } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
-import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import * as Sentry from "@sentry/react";
@@ -84,7 +83,6 @@ const useStyles = makeStyles(theme=>({
 const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const ThriveLessons = props => {
-  const isThriveUser = useSelector(state => state.login.isThriveUser)
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
   const userId = validId(useSelector(state => state.login.neonUserId)) || validId(localStorage.getItem('neonUserId'));
@@ -147,11 +145,8 @@ const ThriveLessons = props => {
   }, [webToken, userId])
 
   useEffect(() => {
-    if (isThriveUser) {
-      getUserData();
-    }
-
-  }, [webToken, userId, isThriveUser, getUserData]);
+    getUserData();
+  }, [getUserData]);
 
   const handleOpenModal = (title, subText, mediaId) => {
     setModalData({
@@ -205,7 +200,7 @@ const ThriveLessons = props => {
     </Container>
   )
 
-  return  isThriveUser ? thriveLessonsComp : <Redirect to="/" />
+  return thriveLessonsComp
 
 }
 

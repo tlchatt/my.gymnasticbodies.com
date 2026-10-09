@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { Typography, makeStyles, Grid, Box } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { suggestedSecondary } from './secondaryText'
 import { setLevelPath } from '../../../../../Store/Action/LevelsActions';
-import { openOhNo } from '../../../../../Store/Reducers/OhNoReducer';
 
 
 const useStyles = makeStyles(theme => ({
@@ -80,7 +79,6 @@ const Suggestion = (props) => {
 
   // Redux
   const dispatch = useDispatch();
-  const guidedPlanAccessLevels = useSelector(state => state.login.guidedPlanAccessLevels);
 
   // Useeffects
   useEffect(() => {
@@ -147,19 +145,12 @@ const Suggestion = (props) => {
 
   // Event Handlers
   const handleChooseLevel = () => {
-    if (guidedPlanAccessLevels.length > 0 && guidedPlanAccessLevels.indexOf(suggestedLevel.index - 1) >= 0) {
-      
-      dispatch(setLevelPath(suggestedLevel.index - 1, props.handleClose))
-      
-      if (location.pathname !== '/') {
-        
-        history.push("/")
-      }else{
-        dispatch(props.handleClose)
-      }
-    }
-    else {
-      dispatch(openOhNo());
+    dispatch(setLevelPath(suggestedLevel.index - 1, props.handleClose))
+
+    if (location.pathname !== '/') {
+      history.push("/")
+    }else{
+      dispatch(props.handleClose)
     }
   }
 

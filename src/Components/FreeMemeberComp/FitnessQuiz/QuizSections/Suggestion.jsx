@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { Typography, makeStyles, Grid, Box } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { suggestedSecondary } from './secondaryText'
 
 import { setLevelPath, setWhiteboardLevel } from '../../../../Store/Action/LevelsActions';
-import { openOhNo } from '../../../../Store/Reducers/OhNoReducer'
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -80,7 +79,6 @@ const Suggestion = (props) => {
 
   // Redux
   const dispatch = useDispatch();
-  const guidedPlanAccessLevels = useSelector(state => state.login.guidedPlanAccessLevels);
 
   // Useeffects
   useEffect(() => {
@@ -147,23 +145,16 @@ const Suggestion = (props) => {
 
   // Event Handlers
   const handleChooseLevel = () => {
-    if (guidedPlanAccessLevels.length > 0 && guidedPlanAccessLevels.indexOf(suggestedLevel.index - 1) >= 0) {
+    const guidedLevel = suggestedLevel.index - 1;
+    dispatch(setLevelPath(guidedLevel, props.handleClose))
+    // The quiz also sets the White Board level: map the guided level (0-4) to a White
+    // Board level (1-4); Beginner and Intermediate One both map to White Board Level 1.
+    dispatch(setWhiteboardLevel(Math.max(1, guidedLevel)))
 
-      const guidedLevel = suggestedLevel.index - 1;
-      dispatch(setLevelPath(guidedLevel, props.handleClose))
-      // The quiz also sets the White Board level: map the guided level (0-4) to a White
-      // Board level (1-4); Beginner and Intermediate One both map to White Board Level 1.
-      dispatch(setWhiteboardLevel(Math.max(1, guidedLevel)))
-
-      if (location.pathname !== '/') {
-        
-        history.push("/")
-      }else{
-        dispatch(props.handleClose)
-      }
-    }
-    else {
-      dispatch(openOhNo());
+    if (location.pathname !== '/') {
+      history.push("/")
+    }else{
+      dispatch(props.handleClose)
     }
   }
 

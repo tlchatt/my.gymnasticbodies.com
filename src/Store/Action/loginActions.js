@@ -71,8 +71,8 @@ export const setNeonUserId = (neonUserId) => {
 }
 
 // Real workout standing from Neon (seeded from AWS): replaces the hardcoded
-// 'Advanced One'/levelId 3 and isThriveUser:true defaults in the LoginNew/authCheckState
-// paths. Precedence: server value -> existing state; free members stay pinned in the reducer.
+// 'Advanced One'/levelId 3 defaults in the LoginNew/authCheckState paths.
+// Precedence: server value -> existing state.
 export const fetchUserStanding = () => async (dispatch, getState) => {
   const neonUserId = await dispatch(ensureNeonUserId());
   if (!neonUserId) return;
@@ -84,7 +84,7 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
       return;
     }
     const s = await res.json();
-    const payload = { isThriveUser: !!s.isThriveUser };
+    const payload = {};
 
     // levelId is ONLY a guided training level (0-4) now — never a section code. Prefer a
     // guided levelId; otherwise fall back to lastViewedLevel (recovers the guided level for

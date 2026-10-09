@@ -29,7 +29,6 @@ import Information from '../Information';
 import HowTo from '../HowTo';
 import MyCourses from '../MyCourses';
 
-import OhNoModal from '../../Components/OhNoModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,7 +121,6 @@ export default function FreeMembers() {
   const hasGuidedLevel = Number.isInteger(levelId) && levelId >= 0 && levelId <= 4;
   // The InitialPage chooser shows when the user is in Guided but hasn't picked a level yet.
   const showingChooser = (section || 'guided') === 'guided' && !hasGuidedLevel;
-  const isFreeMember = useSelector(state => state.login.isFreeMember);
   const isAllAccessUser = useSelector(state => state.login.isAllAccessUser)
 
   const firstAndLast = [getCalanderDate(timeZone, 'MMMM DD')[0], getCalanderDate(timeZone, 'MMMM DD')[6]];
@@ -130,8 +128,6 @@ export default function FreeMembers() {
   const [state, setState] = useState({
     view: 'Week View',
   });
-
-  const [ohNoModal, setOhNoModal] = useState(false);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -158,10 +154,6 @@ export default function FreeMembers() {
     }
   }
 
-  const handleOhNoModal = () => {
-    setOhNoModal(true);
-  }
-
   // Warm the Neon UUID before any drawer feature opens — the ${NEWAPI} workout
   // routes are keyed on it (resolves via localStorage or /api/user/id if the
   // login-time registerWPass call failed).
@@ -176,14 +168,14 @@ export default function FreeMembers() {
     <>
       {
         isMobile
-          ? <MobileDrawer isMobile={isMobile} userChoosenLevel={userLevel} isFreeMember={isFreeMember} handleOhNoModal={handleOhNoModal} />
-          : isTablet ? <Drawer isMobile={isTablet} userChoosenLevel={userLevel} isFreeMember={isFreeMember} handleOhNoModal={handleOhNoModal} /> : null
+          ? <MobileDrawer isMobile={isMobile} userChoosenLevel={userLevel} />
+          : isTablet ? <Drawer isMobile={isTablet} userChoosenLevel={userLevel} /> : null
       }
       <div className={clsx(classes.root, { [classes.isMobileStyles]: isTablet || isMobile })}>
         <CssBaseline />
         {
           !isMobile && !isTablet
-            ? <Drawer userChoosenLevel={userLevel} isFreeMember={isFreeMember} handleOhNoModal={handleOhNoModal} />
+            ? <Drawer userChoosenLevel={userLevel} />
             : null
         }
         <main className={classes.content}>
@@ -232,25 +224,16 @@ export default function FreeMembers() {
               <Route path="/class-finder/:category" exact component={ClassFinder} />
               <Route path="/class-finder" exact component={ClassFinder} />
               <Route path="/course-library" exact >
-                {
-                  isFreeMember
-                    ? <Redirect to="/" />
-                    : <CourseLibrary basicLayout />
-                }
+                <CourseLibrary basicLayout />
               </Route>
               <Route path="/" exact>
-                {
-                  isFreeMember
-                    ? <AutoPilot state={state} />
-                    : <HandleRender />
-                }
+                <HandleRender />
               </Route>
               <Route render={() => <Redirect to="/" />} />
             </Switch>
           </Grid>
         </main>
       </div>
-      <OhNoModal open={ohNoModal} handleClose={() => setOhNoModal(false)} allAccess />
     </>
   );
 }

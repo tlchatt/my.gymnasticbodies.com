@@ -39,8 +39,6 @@ const EditWorkout = (props) => {
 
   const buildYourOwn = useSelector(state => state.buildYourOwn);
   const webToken = useSelector(state => state.login.webToken);
-  // Will need to add some kinda check to see if the user is single point
-  const isSinnglePoint = useSelector(state => !state.login.isAllAccessUser);
 
   const {
     // hasWorkouts,
@@ -126,37 +124,31 @@ const EditWorkout = (props) => {
             />
           })
         }
+        <div className={clsx({
+          [classes.dividerSection]: !props.isMobileMode,
+          [classes.dividerSectionMobile]: props.isMobileMode
+        })}
+        >
+          <VerticalText text='Individual exercises' isMobileMode={isMobileMode} />
+        </div>
         {
-          isSinnglePoint
-            ? null
-            : <>
-              <div className={clsx({
-                [classes.dividerSection]: !props.isMobileMode,
-                [classes.dividerSectionMobile]: props.isMobileMode
-              })}
-              >
-                <VerticalText text='Individual exercises' isMobileMode={isMobileMode} />
-              </div>
-              {
-                buildYourOwn.individualWorkouts.map((section, index) => {
-                  return <CategoryCard
-                    key={index}
-                    isSelected={index === openCollapse.sectionIndex && openCollapse.cardType === 'individualWorkouts'}
-                    category={section.category}
-                    size={section.hasWorkout ? '' : 'sm'}
-                    isMobileMode={isMobileMode}
-                    handleOpenCollaps={() => handleOpenCollapse(section.category, 'individualWorkouts', index, section.categoryId)}
-                    openCollapse={openCollapse}
-                    sectionIndex={index}
-                    sectionType='individualWorkouts'
-                    count={section.count}
-                    hasData={section.hasWorkout}
-                    courseData={section.hasWorkout ? section.courseData : {}}
-                    maxCount={section.maxCount}
-                  />
-                })
-              }
-            </>
+          buildYourOwn.individualWorkouts.map((section, index) => {
+            return <CategoryCard
+              key={index}
+              isSelected={index === openCollapse.sectionIndex && openCollapse.cardType === 'individualWorkouts'}
+              category={section.category}
+              size={section.hasWorkout ? '' : 'sm'}
+              isMobileMode={isMobileMode}
+              handleOpenCollaps={() => handleOpenCollapse(section.category, 'individualWorkouts', index, section.categoryId)}
+              openCollapse={openCollapse}
+              sectionIndex={index}
+              sectionType='individualWorkouts'
+              count={section.count}
+              hasData={section.hasWorkout}
+              courseData={section.hasWorkout ? section.courseData : {}}
+              maxCount={section.maxCount}
+            />
+          })
         }
 
 

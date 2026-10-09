@@ -13,7 +13,6 @@ import {
   CircularProgress
 } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
-import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import FormData from 'form-data'
 import * as Sentry from "@sentry/react";
@@ -99,7 +98,6 @@ const useStyles = makeStyles(theme=>({
 const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const ThriveProfile = props => {
-  const isThriveUser = useSelector(state => state.login.isThriveUser);
   const firstName = useSelector(state => state.login.firstName);
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
@@ -213,13 +211,11 @@ const ThriveProfile = props => {
         Sentry.captureException(err);
       })
     }
-    if (isThriveUser) {
-      getUserData();
-    }
+    getUserData();
 
     // imperial-0 is (feet,inches,lbs) metric-1 is (m,cm,kg)
 
-  }, [webToken, userId, isThriveUser]);
+  }, [webToken, userId]);
 
   const handleSaveData = () => {
     let formData = new FormData();
@@ -374,7 +370,7 @@ const ThriveProfile = props => {
     </Container>
   )
 
-  return  isThriveUser ? thriveProfileComp : <Redirect to="/" />
+  return thriveProfileComp
 
 }
 

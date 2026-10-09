@@ -9,7 +9,6 @@ import CompleteButton from './completeButton'
 
 import { logAllBeginnerWorkout,removeBeginnerWorkoutLog, refreshWMS } from '../../../../../Store/Action/LevelsActions'
 import { logMainCourses,removeMainCourseLog, openLegacyWorkoutModal } from '../../../../../Store/Action/WorkoutBuilderActions'
-import { openOhNo } from '../../../../../Store/Reducers/OhNoReducer'
 
 
 const useStyles = makeStyles(theme => ({
@@ -65,13 +64,8 @@ export default function CourseCardContent(props) {
 
   const handleLog = () => {
     if (props.isBuildYourOwn) {
-      if (props.isWorkoutAccessable) {
-        !props.isLogged ? dispatch(logMainCourses(props.dateKeyIndex, props.dateKey, props.classOrProgOrExId)) :
-        dispatch(removeMainCourseLog(props.dateKeyIndex, props.dateKey, props.classOrProgOrExId));
-      }
-      else {
-        dispatch(openOhNo());
-      }
+      !props.isLogged ? dispatch(logMainCourses(props.dateKeyIndex, props.dateKey, props.classOrProgOrExId)) :
+      dispatch(removeMainCourseLog(props.dateKeyIndex, props.dateKey, props.classOrProgOrExId));
     }
     else {
       if(!props.isLogged){
@@ -88,10 +82,6 @@ export default function CourseCardContent(props) {
   }
 
   const handlePlayButton = () => {
-    if (props.isBuildYourOwn && !props.isWorkoutAccessable) {
-      dispatch(openOhNo());
-      return;
-    }
     if (props.showInLegacyModal) {
       dispatch(openLegacyWorkoutModal(props.title, props.dateKeyIndex));
     } else {

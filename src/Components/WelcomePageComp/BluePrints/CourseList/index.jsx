@@ -59,7 +59,7 @@ const CourseList = (props) => {
     wpId: ''
   });
 
-  const { allClasses, isAllAccessUser, isThriveUser } = props;
+  const { allClasses, isAllAccessUser } = props;
 
   const handleModal = (img, title, wpId) => {
     setModalInfo({
@@ -108,7 +108,7 @@ const CourseList = (props) => {
           : null
       }
       {
-        isThriveUser && !isAllAccessUser
+        !isAllAccessUser
           ? <Thrive classes={classes} />
           : null
       }
@@ -131,7 +131,7 @@ const CourseList = (props) => {
           )
       }
       {
-        isThriveUser && isAllAccessUser
+        isAllAccessUser
           ? <Thrive classes={classes} />
           : null
       }
@@ -154,7 +154,6 @@ const mapStateToProps = state => {
   return {
     allClasses: state.classes,
     isAllAccessUser: state.login.isAllAccessUser,
-    isThriveUser: state.login.isThriveUser,
     hasPlansAccess: state.login.integratedPlans ? state.login.integratedPlans.userAccessLevels.length : false ,
     hasTasks: Object.keys(state.calendar.tasks).length
   }

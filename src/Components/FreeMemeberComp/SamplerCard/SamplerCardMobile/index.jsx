@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 
 import { resetSingleProg, logIndivdualDays } from '../../../../Store/Action/FreeMemberActions';
 import { logIndividualWorkouts,unlogIndividualWorkouts } from '../../../../Store/Action/WorkoutBuilderActions';
-import { openOhNo } from '../../../../Store/Reducers/OhNoReducer';
 import ButtonGroup from '../CustomButtonGroup'
 import {GreenComplete, CompleteIcon} from '../../Drawer/SvgIcons'
 
@@ -66,8 +65,7 @@ export default function MediaCardMobile(props) {
     isPreviousDay,
     hideRefresh,
     isBuildYourOwn,
-    isIndividualVideo,
-    isWorkoutAccessable
+    isIndividualVideo
   } = props;
 
   const resetSingle = () => {
@@ -77,14 +75,9 @@ export default function MediaCardMobile(props) {
 
   const logSingle = () => {
     if (isBuildYourOwn) {
-      if (isWorkoutAccessable) {
-        !isLogged ?
-        dispatch(logIndividualWorkouts(dateKeyIndex, dateKey, props.classOrProgOrExId, props.repsOrSecs)) :
-        dispatch(unlogIndividualWorkouts(dateKeyIndex, dateKey, props.classOrProgOrExId));
-      }
-      else {
-        dispatch(openOhNo());
-      }
+      !isLogged ?
+      dispatch(logIndividualWorkouts(dateKeyIndex, dateKey, props.classOrProgOrExId, props.repsOrSecs)) :
+      dispatch(unlogIndividualWorkouts(dateKeyIndex, dateKey, props.classOrProgOrExId));
     }
     else {
       dispatch(logIndivdualDays(props.autoPilotId , dateKey, props.repsOrSecs));
@@ -92,10 +85,6 @@ export default function MediaCardMobile(props) {
   };
 
   const playVideo = () => {
-    if (isBuildYourOwn && !isWorkoutAccessable) {
-      dispatch(openOhNo());
-      return;
-    }
     props.openPlayerModal(props, isIndividualVideo)
   };
 

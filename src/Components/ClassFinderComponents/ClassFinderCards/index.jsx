@@ -3,7 +3,6 @@ import { makeStyles, IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import Card from '@material-ui/core/Card';
-import OhNoModal from '../../OhNoModal';
 import EditModal from '../../Calendar/DetailedView/AddToScheduleModal'
 import ModalRender from '../../UtilComponents/RenderModal'
 import './styles.scss';
@@ -107,7 +106,7 @@ export default function CourseCards(props) {
               img={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${CourseInfo.image_url}`}
               wpId={CourseInfo.wp_postid}
             />
-          : <OhNoModal open={edit} handleClose={()=> setEdit(false)}/>
+          : null
       }
 
     </Grid>

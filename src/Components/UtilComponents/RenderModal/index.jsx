@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import NonLegacyModal from '../../NonLegacyModal';
 import LegacyModal from '../../LegacyWorkoutModal';
-import OhNoModal from '../../OhNoModal';
 import {getCalanderDate} from '../../UtilComponents/GetCurrentWeek'
 
 const ModalRender = (props) => {
   const [CourseInfo, setCourseInfo] = useState(props.CourseInfo);
   const orignalData = props.CourseInfo;
   const timeZone = useSelector(state => state.login.timezone);
-  let modal;
+  let modal = null;
   let RelatedCourses;
   let MainCourses;
   let RelatedSubCourses;
@@ -58,10 +57,7 @@ const ModalRender = (props) => {
     )
   }
 
-  if (CourseInfo === undefined || !CourseInfo.classInfo) {
-    modal = (<OhNoModal open={props.open} handleClose={props.close}/>);
-  }
-  else if (CourseInfo && CourseInfo.legacy_course === "false" && CourseInfo.classInfo) {
+  if (CourseInfo && CourseInfo.legacy_course === "false" && CourseInfo.classInfo) {
     modal = (
       <NonLegacyModal
         open={props.open}
@@ -91,7 +87,7 @@ const ModalRender = (props) => {
   }
   // for legacy courses
   // this is a test comment
-  else if (CourseInfo.legacy_course === "true" && CourseInfo.classInfo) {
+  else if (CourseInfo && CourseInfo.legacy_course === "true" && CourseInfo.classInfo) {
     modal = <LegacyModal courseName={CourseInfo.classInfo.title} open={props.open} close={props.close} date={ props.currentDayIndex + 1 ? getCalanderDate(timeZone)[props.currentDayIndex] : null }/>;
   }
   return modal;

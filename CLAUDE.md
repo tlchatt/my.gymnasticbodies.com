@@ -65,8 +65,7 @@ React 17 CRA single-page app. Redux + redux-thunk for all async state. Material-
 ```
 {
   login:        { auth, webToken, firstName, lastName, UserId, timezone,
-                  userLevel, levelId, isFreeMember, isAllAccessUser,
-                  isThriveUser, isAdmin, integratedPlans }
+                  userLevel, levelId, isAllAccessUser, isAdmin, integratedPlans }
   calendar:     { schedule, toasts, success/fail flags }
   classes:      { all available classes }
   data:         { allData }
@@ -76,10 +75,15 @@ React 17 CRA single-page app. Redux + redux-thunk for all async state. Material-
   freeMember:   { }
   levels:       { user progression }
   buildYourOwn: { BYO workout state }
-  OhNo:         { error modal state }
   OpenDrawer:   { drawer visibility }
 }
 ```
+
+**No in-app access gates (owner rule, 2026-10-09).** Nothing inside the member app is
+gated on entitlement: no "Oh No / not enrolled" popup (removed), no free-member, Thrive,
+all-access or guided-level checks that hide, lock or redirect content. The ONLY gate is
+the login subscription check (`LoginNew` → `/api/user/renewalStatus` → `/renew`). Do not
+add new per-feature or per-course access checks.
 
 ### Authentication
 

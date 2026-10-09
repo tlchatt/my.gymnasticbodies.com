@@ -150,7 +150,6 @@ export default function DailyView(props) {
   } = props;
 
   const byoRounds = useSelector(state => isBuildYourOwn ? state.buildYourOwn.userSchedule[dateKey].rounds : 0);
-  const isAllAccessUser = useSelector(state => state.login.isAllAccessUser);
 
   useEffect(() => {
     if (editMode) {
@@ -369,7 +368,7 @@ export default function DailyView(props) {
                 isBuildYourOwn={isBuildYourOwn}
                 showDivider={
                   isBuildYourOwn
-                    ? hasIdividualWokrouts && isAllAccessUser
+                    ? hasIdividualWokrouts
                       ? true
                       : i !== props.workoutData.length - 1
                     : true
@@ -379,7 +378,7 @@ export default function DailyView(props) {
               : null
           }
           {
-            hasIdividualWokrouts && isAllAccessUser && !(editMode && isBuildYourOwn)
+            hasIdividualWokrouts && !(editMode && isBuildYourOwn)
               ? <CardActions className={classes.cardAction}>
                 <ButtonGroup
                   isBuildYourOwn={isBuildYourOwn}
@@ -390,10 +389,7 @@ export default function DailyView(props) {
                   current={byoRounds}
                   largeText={true}
                   dateKey={dateKey}
-                  disabled={
-                    individiualWorkouts.find(item => item.isLogged)?.isLogged
-                    || individiualWorkouts.filter(item => !item.isWorkoutAccessable).length > 0
-                  }
+                  disabled={individiualWorkouts.find(item => item.isLogged)?.isLogged}
                 />
                 <Typography variant='h5' className={classes.rounds}>
                   ROUNDS
@@ -402,7 +398,7 @@ export default function DailyView(props) {
               : null
           }
           {
-            hasIdividualWokrouts && isAllAccessUser && !(editMode && isBuildYourOwn)
+            hasIdividualWokrouts && !(editMode && isBuildYourOwn)
               ? individiualWorkouts.map((x, i) => <SampleCardMobile
                 {...x}
                 key={i}

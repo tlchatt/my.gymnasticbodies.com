@@ -58,7 +58,6 @@ const useStyles = makeStyles(theme => ({
 function AvatarDropDown(props) {
   const classes = useStyles();
   const isAdmin = useSelector(state => state.login.isAdmin ? true : false);
-  const isFreeMember = useSelector(state => state.login.isFreeMember);
   const userInfo = useSelector(state => state);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -98,9 +97,7 @@ function AvatarDropDown(props) {
       {/* {
         isFreeMember ? null : postAWS != "true" ? <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem> : null
       } */}
-      {
-        isFreeMember ? null : <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem>
-      }
+      <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem>
       <Divider />
       <MenuItem className={classes.menuList} onClick={() => {
         if (isOpen) {

@@ -86,31 +86,26 @@ export default function ResponsiveDialog(props) {
   const dayView = useSelector(state => state.freeMember.dayView);
   const webToken = useSelector(state => state.login.webToken);
   const UserId = useSelector(state => state.login.neonUserId)
-  const isFreeMemberRedux = useSelector(state => !!state.login.isFreeMember)
 
   // State
   const [addMode, setAddMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentLevel, setCurrentLevel] = useState('');
-  const [isFreeMember, setIsFreeMember] = useState(false);
-  const [showFreeMemberMessage, setShowFreeMemberMessage] = useState(false);
 
   // Constants
   const categories = dayOfWeek && dayView[dayOfWeek].exerciseListForDay ? dayView[dayOfWeek].exerciseListForDay.map(item => {
     return { category: item.category, samplerId: item.autoPilotId }
   }) : [];
 
-  // useEffect — AP level from the Neon standing route; free-member flag from Redux
-  // (AWS /auto-pilot/level replaced 2026-07).
+  // useEffect — AP level from the Neon standing route (AWS /auto-pilot/level replaced 2026-07).
   useEffect(() => {
     if (open && UserId) {
       Axios(AxiosConfigNeon('get', `/api/user/workout/standing?userId=${encodeURIComponent(UserId)}`, webToken)).then(res => {
-        setIsFreeMember(isFreeMemberRedux);
         setCurrentLevel(res.data.apLevel || 1);
       }).then(() => setIsLoading(false))
         .catch(err => console.log(err));
     }
-  }, [open, UserId, webToken, isFreeMemberRedux])
+  }, [open, UserId, webToken])
 
   // Handlers
   const handleDelete = (samplerId) => {
@@ -123,7 +118,6 @@ export default function ResponsiveDialog(props) {
   }
 
   const handleCloseModal = () => {
-    setShowFreeMemberMessage(false);
     setAddMode(false);
     setCurrentLevel('')
     handleClose();
@@ -131,20 +125,12 @@ export default function ResponsiveDialog(props) {
 
   const onChangeCommitted = (e, value) => {
     console.log(value);
-    if (isFreeMember && 2 <= value) {
-      setShowFreeMemberMessage(true);
+    Axios(AxiosConfigNeon('post', `/api/user/workout/autopilot`, webToken, { data: { userId: UserId, op: 'set-level', level: value } })).then(res => {
+      dispatch(fetchFreeMember());
+      // Keep the White Board level shown under the user's name in sync immediately.
+      dispatch({ type: actionTypes.SET_USER_STANDING, payload: { apLevel: Number(value) } });
       setCurrentLevel(value);
-    } else {
-      if (showFreeMemberMessage) {
-        setShowFreeMemberMessage(false);
-      }
-      Axios(AxiosConfigNeon('post', `/api/user/workout/autopilot`, webToken, { data: { userId: UserId, op: 'set-level', level: value } })).then(res => {
-        dispatch(fetchFreeMember());
-        // Keep the White Board level shown under the user's name in sync immediately.
-        dispatch({ type: actionTypes.SET_USER_STANDING, payload: { apLevel: Number(value) } });
-        setCurrentLevel(value);
-      }).catch(err => console.log(err));
-    }
+    }).catch(err => console.log(err));
   }
 
   return (
@@ -172,15 +158,7 @@ export default function ResponsiveDialog(props) {
               addMode
                 ? null
                 : <DialogContent className={classes.sliderContainer}>
-                  <GymfitSlider currentLevel={currentLevel} onChangeCommitted={onChangeCommitted} isFreeMember={isFreeMember} />
-                  {
-                    showFreeMemberMessage
-                      ? <>
-                        <Box mt={2} />
-                        <Typography variant='h6' align='center' style={{ color: '#656464' }}>{currentLevel === 5 ? 'All Levels are' : `Level ${currentLevel} and higher is`}  available to Premium Subscribers.</Typography>
-                      </>
-                      : null
-                  }
+                  <GymfitSlider currentLevel={currentLevel} onChangeCommitted={onChangeCommitted} />
                 </DialogContent>
             }
 

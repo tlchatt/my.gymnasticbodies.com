@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useSelector, useDispatch } from 'react-redux'
-import { Redirect } from 'react-router-dom';
 import TasksCards from './TasksCards'
 import axios from 'axios';
 import * as Sentry from "@sentry/react";
@@ -82,7 +81,6 @@ const useStyles = makeStyles(theme=>({
 const NEWAPI = process.env.REACT_APP_API_NEW;
 
 const ThriveTasks = props => {
-  const isThriveUser = useSelector(state => state.login.isThriveUser);
   const webToken = useSelector(state => state.login.webToken);
   // Neon UUID — state.login.UserId is the AWS integer id for legacy sessions.
   const userId = validId(useSelector(state => state.login.neonUserId)) || validId(localStorage.getItem('neonUserId'));
@@ -116,11 +114,8 @@ const ThriveTasks = props => {
   }, [webToken, userId])
 
   useEffect(() => {
-    if (isThriveUser) {
-      getUserData();
-    }
-
-  }, [isThriveUser, getUserData]);
+    getUserData();
+  }, [getUserData]);
 
   const handleCompleteAll = () => {
     let taskIds = tasks.map(task => task.usersTaskId).join(',')
@@ -183,7 +178,7 @@ const ThriveTasks = props => {
     </Container>
   )
 
-  return  isThriveUser ? thriveTasksComp : <Redirect to="/" />
+  return thriveTasksComp
 
 }
 

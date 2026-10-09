@@ -69,7 +69,6 @@ const NEWAPI = process.env.REACT_APP_API_NEW;
 
 function PrimarySearchAppBar(props) {
   const classes = useStyles();
-  const isThriveUser = useSelector(state => state.login.isThriveUser)
   const isAdmin = useSelector(state => state.login.isAdmin ? true : false);
   const webToken = useSelector(state => state.login.webToken);
   const userId = useSelector(state => state.login.neonUserId);
@@ -141,21 +140,17 @@ function PrimarySearchAppBar(props) {
           <Button href="https://www.gymnasticbodies.com/shop" className={classes.button}>Shop</Button>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            {
-              isThriveUser
-                ? <SubMenu icon={true} handleOpen={handleOpenThrive} anchorEl={anchorElThrive} handleClose={handleCloseThrive} >
-                  <MenuItem to="/thrive-profile" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>My Profile</MenuItem>
-                  <Divider />
-                  <MenuItem to="/thrive-lessons" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>Thrive Lessons</MenuItem>
-                  <MenuItem to="/thrive-tasks" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>Thrive Tasks</MenuItem>
-                  <Divider />
-                  <MenuItem className={classes.menuList} onClick={() => {
-                    handleCloseThrive()
-                    setResetThrive(true)
-                  }}>Reset Thrive</MenuItem>
-                </SubMenu>
-                : null
-            }
+            <SubMenu icon={true} handleOpen={handleOpenThrive} anchorEl={anchorElThrive} handleClose={handleCloseThrive} >
+              <MenuItem to="/thrive-profile" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>My Profile</MenuItem>
+              <Divider />
+              <MenuItem to="/thrive-lessons" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>Thrive Lessons</MenuItem>
+              <MenuItem to="/thrive-tasks" component={LinkRef} className={classes.menuList} onClick={handleCloseThrive}>Thrive Tasks</MenuItem>
+              <Divider />
+              <MenuItem className={classes.menuList} onClick={() => {
+                handleCloseThrive()
+                setResetThrive(true)
+              }}>Reset Thrive</MenuItem>
+            </SubMenu>
             <SubMenu handleOpen={handleOpen} anchorEl={anchorEl} handleClose={handleClose}>
               <MenuItem component="a" href={`https://app.gymnasticbodies.com/accountDetails?userId=${userId}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}`} className={classes.menuList} onClick={handleClose}>Manage Subscription</MenuItem>
               <MenuItem component="a" href="/account" className={classes.menuList} onClick={handleClose}>My Account</MenuItem>
