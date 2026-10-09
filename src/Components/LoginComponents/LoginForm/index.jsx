@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Copyright from "./Copyright";
 import SnackBar from '../../SnakBar';
 import EmailForm from './EmailReset';
-import CreateAccount from './CreateAccount';
 import PasswordRest from './PasswordReset'
 import ContactUs from "../../FreeMemeberComp/Drawer/Support";
 
@@ -251,7 +250,6 @@ const LoginFrom = (props) => {
           props.isMaintenance && props.isMaintenance.maintenance
             ? <Typography variant='h5' align='center' style={{ marginTop: 8, letterSpacing: '0.2px', color: 'red' }} >{props.isMaintenance.note}</Typography>
             : <Switch>
-              <Route path="/create-account" exact component={CreateAccount} />
               <Route path="/reset" exact component={EmailForm} />
               <Route path="/reset-password/:id/:token" exact component={PasswordRest} />
               <Route path="/" exact>
