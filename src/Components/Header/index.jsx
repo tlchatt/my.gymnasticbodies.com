@@ -137,7 +137,6 @@ function PrimarySearchAppBar(props) {
           <Button to="/" component={LinkRef} className={classes.button}>Home</Button>
           <Button to="/class-finder" component={LinkRef} className={classes.button}>Class Finder</Button>
           <Button to="/history" component={LinkRef} className={classes.button}>History</Button>
-          <Button href="https://www.gymnasticbodies.com/shop" className={classes.button}>Shop</Button>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <SubMenu icon={true} handleOpen={handleOpenThrive} anchorEl={anchorElThrive} handleClose={handleCloseThrive} >
@@ -153,7 +152,6 @@ function PrimarySearchAppBar(props) {
             </SubMenu>
             <SubMenu handleOpen={handleOpen} anchorEl={anchorEl} handleClose={handleClose}>
               <MenuItem component="a" href={`https://app.gymnasticbodies.com/accountDetails?userId=${userId}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}`} className={classes.menuList} onClick={handleClose}>Manage Subscription</MenuItem>
-              <MenuItem component="a" href="/account" className={classes.menuList} onClick={handleClose}>My Account</MenuItem>
               {!postAWS &&
                   <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem>
               }

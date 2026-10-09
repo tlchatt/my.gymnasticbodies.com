@@ -29,7 +29,6 @@ import AdminDashboard from './Containers/AdminDashboard';
 import EditUser from './Containers/AdminDashboard/EditUser';
 import NewMemberSite from './Containers/NewMemberSite'
 import CourseLibrary from './Containers/CourseLibrary'
-import AccountPage from './Components/Account/AccountPage'
 
 import DemoModal from './Components/DemoModal/DemoModal'
 
@@ -53,7 +52,7 @@ function App(props) {
   const [isMaintenance, setIsMaintenance] = useState({})
   const [showAlertModal, setShowAlertModal] = useState(false);
 
-  useEffect(() => checkLogin(), [checkLogin])
+  useEffect(() => { checkLogin() }, [checkLogin])
 
   useEffect(() => {
     const ref = db.ref('isMaintenance/');
@@ -155,7 +154,6 @@ function App(props) {
           <Route path="/class-finder/:category" exact component={ClassFinder} />
           <Route path="/class-finder" exact component={ClassFinder} />
           <Route path="/get-started" exact component={GetStarted} />
-          <Route path="/account" exact component={AccountPage} />
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/" exact render={(props) => <WelcomePage isMaintenance={isMaintenance} {...props} />} />
           <Route render={() => <Redirect to="/" />} />
@@ -175,7 +173,6 @@ function App(props) {
     routes = (
       <Switch>
         <Route path="/" render={(props) => <Login isMaintenance={isMaintenance} {...props} />} />
-        <Route path="/paymentPortal" render={(props) => <paymentPortal {...props} />} />
         {/* <Route render={() => <Redirect to="/" />} /> */}
 
       </Switch>

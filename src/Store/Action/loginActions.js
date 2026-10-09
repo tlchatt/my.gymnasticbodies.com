@@ -226,14 +226,6 @@ export const LoginNew = (username, password) => dispatch => {
   axios.post(NEWAPI + '/api/authentication', { username, password, timezone: moment.tz.guess() }, config)
     .then(async res => {
       console.log("res in LoginNew", res.data)
-      let resGoal = {//auth Luke
-        "jwtAuthorizationToken": "eyJhbGciOiJIUzUxMiJ9.eyJmbmFtZSI6Ikx1a2UiLCJzdWIiOiJsdWtlc2VhcnJhQGljbG91ZC5jb20iLCJsbmFtZSI6IiIsInR6IjoiQW1lcmljYS9Ub3JvbnRvIiwidGFnaWRzIjpbMTAyLDEyMiwyMjQsMjI2LDIyOCwzMzAsNDQ2LDYxMiw2MTYsNjIwLDYzMiw2OTgsNzg4LDEwMzYsMTMwMV0sImV4cCI6MTc2NTkxMjAxNiwiaWF0IjoxNzY1ODI1NjE2LCJjaWQiOjQxMTg0N30.JLW9ezWmdkQX71VFGT2WOw5Eu1ucx1YSn6ePiRy84oTUhIpdVLJ27d37fBwtBZeKaHyR5LHOvcb7MEqPRDGoNw",
-        "jwtRefreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJhbGxhY2Nlc3MiOnRydWUsInN1YiI6Imx1a2VzZWFycmFAaWNsb3VkLmNvbSIsInR6IjoiQW1lcmljYS9Ub3JvbnRvIiwiZnJlZW1lbSI6dHJ1ZSwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3ODEzNzc2MTYsInNwIjp0cnVlLCJpYXQiOjE3NjU4MjU2MTYsImNpZCI6NDExODQ3fQ.Lpdq06b0wowjiV4WeYV9s0TCgtrPMGYn7hRgbxQKil4oh_P2MxSDk80hchDJEaUo6bUNQaVY928u-ntNeUcapQ",
-        "timezone": "America/Toronto",
-        "isAllAccessUser": true,
-        "isFreeMember": true,
-        "hasCourseProduct": true
-      }
       console.log("res.data '/api/authentication' in LoginNew", res.data)
       const authToken = res.data.token;
       const refreshToken = res.data.token;
@@ -245,23 +237,6 @@ export const LoginNew = (username, password) => dispatch => {
         "sub": username,
         "lname": "",
         "tz": moment.tz.guess(),
-        "tagids": [
-          102,
-          122,
-          224,
-          226,
-          228,
-          330,
-          446,
-          612,
-          616,
-          620,
-          632,
-          698,
-          788,
-          1036,
-          1301
-        ],
         "exp": 1765920038,
         "iat": 1765833638,
         "cid": 411847
@@ -298,44 +273,21 @@ export const LoginNew = (username, password) => dispatch => {
           "Authorization": `Bearer ${authToken}`
         }
       }
-      let freeMember = (res.data.isFreeMember && (!res.data.isAllAccessUser && !res.data.hasCourseProduct))
-
       let resGoal2 = { ///welcome/v1/users luke
         "fname": res?.data?.user?.name ? res?.data?.user?.name : "User",
         "lname": "",
         "contactId": 411847,
         "emailId": moment.tz.guess(),
-        "isAllAccessUser": true,
-        "isThriveUser": true,
         "isAdmin": false,
         "playerScript": "?exp=1765831927306&sig=2a54c1144b98adaf46b0fc66a0b5a5a5",
-        "guidedPlanAccessLevels": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ],
         "userLevel": levelObj[userLevelID]?.userLevel ? levelObj[userLevelID]?.userLevel : "Advanced One",
         "levelId": userLevelID ? userLevelID : 3
       }
       resGoal2.postAWS = true
 
-      try {
-        const renewalRes = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(username)}`);
-        if (renewalRes.ok) {
-          const { needsRenewal } = await renewalRes.json();
-          if (needsRenewal) {
-            logEvent('my.login.renewal_redirect', { email: username });
-            window.location.href = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(username)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
-            return;
-          }
-        } else {
-          // A failed check fails OPEN — a paywalled member walks straight in unnoticed.
-          logEvent('my.login.renewal_check_failed', { email: username, data: { status: renewalRes.status } });
-        }
-      } catch (err) {
-        logEvent('my.login.renewal_check_failed', { email: username, data: { error: err?.message || 'network' } });
+      if (await needsRenewal(username, 'my.login')) {
+        sendToRenewal(dispatch, username, 'my.login');
+        return;
       }
 
       // Record WHICH rail authenticated — previously this event only carried the email, so
@@ -347,8 +299,7 @@ export const LoginNew = (username, password) => dispatch => {
           decodedGoal,
           {
             ...resGoal2,
-            showAllAccessSite: true,
-            isFreeMember: freeMember
+            showAllAccessSite: true
           },
           timezone)
       )
@@ -380,6 +331,30 @@ export const LoginNew = (username, password) => dispatch => {
     });
 }//primary Neon login, postAWS = true
 
+// The only membership check my. makes. Resolves true when the member is noncurrent,
+// false when current, and false when the check itself fails: a failed check fails OPEN,
+// so a network error never logs a member out (a paywalled member walks in unnoticed).
+const needsRenewal = async (email, eventPrefix) => {
+  try {
+    const res = await fetch(`${NEWAPI}/api/user/renewalStatus?email=${encodeURIComponent(email)}`);
+    if (res.ok) return !!(await res.json()).needsRenewal;
+    logEvent(`${eventPrefix}.renewal_check_failed`, { email, data: { status: res.status } });
+  } catch (err) {
+    logEvent(`${eventPrefix}.renewal_check_failed`, { email, data: { error: err?.message || 'network' } });
+  }
+  return false;
+}
+
+// Send a noncurrent member to app./renew with NO session left behind in my.: the session
+// is cleared exactly as Logout does, and location.replace keeps the page they were sent
+// from out of history, so Back or reopening my. lands on the login screen.
+const sendToRenewal = (dispatch, email, eventPrefix) => {
+  const url = `https://app.gymnasticbodies.com/renew?email=${encodeURIComponent(email)}&token=${encodeURIComponent(localStorage.getItem('authToken') || '')}&userId=${encodeURIComponent(localStorage.getItem('userId') || '')}`;
+  logEvent(`${eventPrefix}.renewal_redirect`, { email });
+  dispatch(Logout());
+  window.location.replace(url);
+}
+
 const LoginAsync = (webToken, data, userState, timezone) => {
   /*
     if (process.env.REACT_APP_TESTING === 'true') {
@@ -404,49 +379,20 @@ const LoginAsync = (webToken, data, userState, timezone) => {
     // "lname": "",
     // "contactId": 411847,
     // "emailId": "lukesearra@icloud.com",
-    // "isAllAccessUser": true,
-    //"isThriveUser": true,
     //  "isAdmin": false,
     // "playerScript": "?exp=1764614684895&sig=767de1c799f2130f3515fe5a0e55da12",
-    /*
-    "guidedPlanAccessLevels": [
-      0,
-      1,
-      2,
-      3,
-      4
-    ],*/
     "userLevel": "White Board",
     "userLevel": "Intermediate Two",
     "levelId": 2
     //"levelId": 9,
     // "userLevel": "Beginner",
     // "levelId": 0,
-    //  "showAllAccessSite": true,
-    //"isFreeMember": false
   }
   let lukeData = {
     //"fname": "Luke", // Name on top left
     //  "sub": "lukesearra@icloud.com",
     // "lname": "",
     //"tz": "America/Toronto",
-    "tagids": [
-      102,
-      122,
-      224,
-      226,
-      228,
-      330,
-      446,
-      612,
-      616,
-      620,
-      632,
-      698,
-      788,
-      1036,
-      1301
-    ],
     // "exp": 1764701081,
     //"iat": 1764614681,
     //"cid": 411847
@@ -473,7 +419,7 @@ const LoginAsync = (webToken, data, userState, timezone) => {
 }
 
 
-export const authCheckState = (props) => (dispatch, getState) => {
+export const authCheckState = (props) => async (dispatch, getState) => {
   const state = getState();
   const config = {
     headers: {
@@ -572,23 +518,6 @@ export const authCheckState = (props) => (dispatch, getState) => {
         "sub": userName,
         "lname": "",
         "tz": moment.tz.guess(),
-        "tagids": [
-          102,
-          122,
-          224,
-          226,
-          228,
-          330,
-          446,
-          612,
-          616,
-          620,
-          632,
-          698,
-          788,
-          1036,
-          1301
-        ],
         "exp": 1765920038,
         "iat": 1765833638,
         "cid": 411847,
@@ -618,31 +547,27 @@ export const authCheckState = (props) => (dispatch, getState) => {
         "lname": "",
         "contactId": 411847,
         "emailId": moment.tz.guess(),
-        "isAllAccessUser": true,
-        "isThriveUser": true,
         "isAdmin": false,
         "playerScript": "?exp=1765831927306&sig=2a54c1144b98adaf46b0fc66a0b5a5a5",
-        "guidedPlanAccessLevels": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ],
         "userLevel": levelObj[userLevelID]?.userLevel ? levelObj[userLevelID]?.userLevel : "Advanced One",
         "levelId": userLevelID ? userLevelID : 3
       }
       resGoal2.fname = name
-      let freeMember = false
       console.log("resGoal2:", resGoal2)
+      // A stored session is re-checked on every app start (reload, new tab, Back into the
+      // SPA), so a noncurrent member can't keep using my. on an old session. Skipped only
+      // on the return from a completed renewal, which reclassifies the member as current.
+      if (userName && source !== 'renewal' && await needsRenewal(userName, 'my.session')) {
+        sendToRenewal(dispatch, userName, 'my.session');
+        return;
+      }
       dispatch(
         LoginAsync(
           authToken,
           decodedGoal,
           {
             ...resGoal2,
-            showAllAccessSite: true,
-            isFreeMember: freeMember
+            showAllAccessSite: true
           },
           timezone)
       )

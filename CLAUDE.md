@@ -79,11 +79,34 @@ React 17 CRA single-page app. Redux + redux-thunk for all async state. Material-
 }
 ```
 
-**No in-app access gates (owner rule, 2026-10-09).** Nothing inside the member app is
-gated on entitlement: no "Oh No / not enrolled" popup (removed), no free-member, Thrive,
-all-access or guided-level checks that hide, lock or redirect content. The ONLY gate is
-the login subscription check (`LoginNew` → `/api/user/renewalStatus` → `/renew`). Do not
-add new per-feature or per-course access checks.
+**No membership code in my. (owner rule, 2026-10-09).** In the owner's words: "The only
+membership items are handled on the app. react code not the my. Nothing subscription or
+membership is functional or should ever fire (except the status checks and redirects) in
+my. side." So the ONLY membership/subscription code allowed in my. is:
+- the renewal status check (`needsRenewal` in `src/Store/Action/loginActions.js` →
+  `GET /api/user/renewalStatus`) and its redirect of noncurrent members to
+  `app.gymnasticbodies.com/renew` (`sendToRenewal`);
+- plain links/redirects that send members to app. pages for account/billing
+  (`app.gymnasticbodies.com/accountDetails`, `/renew`).
+
+Nothing else: no access gates or locks, no upsells, no free/all-access/Thrive/entitlement
+flags in Redux, no purchase/checkout/payment UI or API calls (Stripe, Authorize.net, Keap),
+no in-app subscription display. Billing UI lives on app. only. Removed 2026-10-09: the "Oh
+No" popup, free-member/all-access/Thrive flags, My Courses ("Your purchases" page), the
+welcome-page ad, the legacy course-list and Calendar level-picker access branching,
+`isWorkoutAccessable`, the Authorize.net payment portal and the legacy `/account`
+subscription page. Static workout data fields like `accessibleTagIds` in `src/data` are
+inert; nothing may branch on them.
+
+**The renewal redirect is enforced (2026-10-09).** A noncurrent member never holds a
+session in my.: `sendToRenewal` clears the session (`Logout`) and uses
+`window.location.replace`, so Back can't return to a logged-in app. `authCheckState`
+re-runs the same check on every app start with a stored session (reload, new tab, Back
+into the SPA; a back/forward-cache restore is reloaded by a `pageshow` listener in
+`src/index.js`). A failed check (network/HTTP error) fails OPEN — it never logs a member
+out. The return from a completed renewal (`?source=renewal`) skips the check once, so a
+just-renewed member is never bounced. The API itself (e.g. `/api/user/log`) is still NOT
+gated server-side.
 
 ### Authentication
 
@@ -99,7 +122,7 @@ makes the AWS shutoff safe. `postAWS` records which rail won: `false` = legacy (
 for the legacy rail it recovers the AWS integer id by `jwt.decode`-ing the stored token
 (`cid`), because `localStorage.userId` may hold the Neon UUID.
 
-**Renewal / paywall flow:** The `LoginNew` thunk calls `GET /api/user/renewalStatus?email=...` after credentials are verified. If `needsRenewal: true`, the browser is redirected to `https://app.gymnasticbodies.com/renew?email=...` before login is dispatched. On successful re-subscription the user is sent back with an auth token.
+**Renewal / paywall flow:** The `LoginNew` thunk calls `GET /api/user/renewalStatus?email=...` after credentials are verified (and `authCheckState` repeats it on app start). If `needsRenewal: true`, the session is cleared and the browser is sent with `location.replace` to `https://app.gymnasticbodies.com/renew?email=...` before login is dispatched. On successful re-subscription the user is sent back with an auth token.
 
 **User classification** (server-side `user` table): `migration_type` is binary —
 `current` / `noncurrent` — and drives the paywall. Granularity lives in a separate

@@ -94,9 +94,6 @@ function AvatarDropDown(props) {
     <Component handleOpen={handleOpen} variant='contained' anchorEl={anchorEl} handleClose={handleClose} forceFreeStyles>
       {/* <MenuItem href="https://www.gymnasticbodies.com/my-account/" component={Link} className={classes.menuList}>Manage Subscription</MenuItem> */}
       <MenuItem onClick={(e) => manageSubscription(e)} component={Link} className={classes.menuList}>Manage Subscription</MenuItem>
-      {/* {
-        isFreeMember ? null : postAWS != "true" ? <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem> : null
-      } */}
       <MenuItem to="/course-library" component={LinkRef} className={classes.menuList} onClick={handleClose}>Course Library</MenuItem>
       <Divider />
       <MenuItem className={classes.menuList} onClick={() => {

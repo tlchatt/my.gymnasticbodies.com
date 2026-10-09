@@ -206,7 +206,6 @@ export const saveWorkout = (dateIndex, dateKey, hasCallBack, cb) => async (dispa
 const proccessWorkoutObj = w => {
   let newWokroutObj = { ...w };
 
-  let isWorkoutAccessable = newWokroutObj.workout ? true : false;
 
   if (newWokroutObj.type === 'Program') {
     newWokroutObj = {
@@ -214,12 +213,11 @@ const proccessWorkoutObj = w => {
       ...newWokroutObj.workout,
       trainingType: idToClass[newWokroutObj.classOrProgOrExId].trainingType,
       className: newWokroutObj.classOrProgOrExName,
-      showInLegacyModal: true,
-      isWorkoutAccessable
+      showInLegacyModal: true
     }
   }
   else if (newWokroutObj.type === 'Exercise') {
-    if (isWorkoutAccessable) {
+    if (newWokroutObj.workout) {
       newWokroutObj = {
         ...newWokroutObj,
         ...newWokroutObj.workout,
@@ -227,8 +225,7 @@ const proccessWorkoutObj = w => {
         mediaId: newWokroutObj.workout.videos?.length ? newWokroutObj.workout.videos[0].mediaId : '',
         repsOrSecs: newWokroutObj.workout.isLogged ? newWokroutObj.workout.numOfSecsOrRepsLogged : newWokroutObj.workout.repsOrSecs,
         imageUrl: newWokroutObj.image,
-        exerciseName: newWokroutObj.classOrProgOrExName,
-        isWorkoutAccessable
+        exerciseName: newWokroutObj.classOrProgOrExName
       }
     }
     else {
@@ -240,8 +237,7 @@ const proccessWorkoutObj = w => {
         repsOrSecs: '5',
         imageUrl: newWokroutObj.image,
         exerciseName: newWokroutObj.classOrProgOrExName,
-        rounds: 1,
-        isWorkoutAccessable
+        rounds: 1
       }
     }
     delete newWokroutObj.workout;
@@ -252,8 +248,7 @@ const proccessWorkoutObj = w => {
       ...newWokroutObj,
       ...newWokroutObj.workout,
       trainingType: newWokroutObj.category,
-      className: newWokroutObj.classOrProgOrExName,
-      isWorkoutAccessable
+      className: newWokroutObj.classOrProgOrExName
     }
 
     delete newWokroutObj.workout;

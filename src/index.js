@@ -100,6 +100,10 @@ const GymFit = (
 
 ReactDOM.render(GymFit , document.getElementById('root'));
 
+// A page restored from the back/forward cache skips app start, and with it the session's
+// renewal check (authCheckState). Reload it so the check runs again.
+window.addEventListener('pageshow', (e) => { if (e.persisted) window.location.reload(); });
+
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA

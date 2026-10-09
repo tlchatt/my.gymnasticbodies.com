@@ -207,16 +207,6 @@ const LoginFrom = (props) => {
 
           </Grid>
         </Grid>
-        {/* <Grid container>
-          <Grid item xs style={{ textAlign: "right" }}>
-            <Link component={Test} to="/paymentPortal" variant="body1">
-              Payment Portal
-            </Link>
-            
-
-
-          </Grid>
-        </Grid> */}
         <Box mt={5}>
           <Copyright />
           <div style={{ zIndex: "2", display: "grid", justifyItems: "center" }}>
@@ -250,7 +240,6 @@ const LoginFrom = (props) => {
 
   return (
     <>
-      <script type="text/javascript" src="https://jstest.authorize.net/v1/Accept.js" charSet="utf-8"></script>
       <div className={classes.paper} id="loginFormDiv">
         <NavLink to="/" exact className={classes.logo} />
         {/* {
@@ -268,7 +257,6 @@ const LoginFrom = (props) => {
               <Route path="/" exact>
                 {loginForm}
               </Route>
-              {/* <Route path="/paymentPortal" exact component={paymentPortal} /> */}
               <Route render={() => <Redirect to="/" />} />
             </Switch>
         }

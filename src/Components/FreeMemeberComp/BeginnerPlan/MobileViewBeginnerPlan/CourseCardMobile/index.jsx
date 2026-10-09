@@ -165,7 +165,6 @@ export default function MediaCardMobile(props) {
               isBuildYourOwn={props.isBuildYourOwn}
               classOrProgOrExId={props.classOrProgOrExId}
               showInLegacyModal={props.showInLegacyModal}
-              isWorkoutAccessable={props.isWorkoutAccessable}
             />
         }
       </Box>

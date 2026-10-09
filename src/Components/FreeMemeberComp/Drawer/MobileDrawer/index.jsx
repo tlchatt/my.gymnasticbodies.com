@@ -217,7 +217,6 @@ export default function MobileDrawer(props) {
   const lastGuidedLevel = useSelector(state => state.login.lastGuidedLevel)
   const apLevel = useSelector(state => state.login.apLevel)
   const section = useSelector(state => state.login.section)
-  const isSinnglePoint = useSelector(state => !state.login.isAllAccessUser);
 
   const [openDrawer, setOpenDrawer] = useState({ open: false, componentId: '' });
 
@@ -516,49 +515,6 @@ export default function MobileDrawer(props) {
           </div>
         </Collapse>
         <List>
-          {
-            isSinnglePoint ? <ListItem button onClick={() => {
-              handleCloseDrawer();
-              history.push('/my-courses')
-            }}
-              className={clsx(classes.secondSection, { [classes.closedItem]: !open })}
-            >
-              <ListItemIcon
-                style={{
-                  color: 'white',
-                  maxWidth: 32,
-                  marginBottom: 8,
-                  justifyContent: 'center',
-                  position: 'relative'
-                }}
-                className={clsx({
-                  [classes.isActive]:
-                    ('My Courses' === props.userChoosenLevel || location.pathname === '/my-courses') && !openDrawer.componentId && location.pathname !== '/information' && open,
-                  [classes.isActiveClosed]:
-                    ('My Courses' === props.userChoosenLevel || location.pathname === '/my-courses') && !openDrawer.componentId && location.pathname !== '/information' && !open,
-                })}>
-                <img
-                  className={
-                    clsx(
-                      classes.iconImg,
-                      {
-                        [classes.extraWidth]: open,
-                        [classes.extraWidthClosed]: !open
-                      }
-                    )
-                  }
-                  src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/General/SPP.svg`}
-                  alt={'My Courses'}
-                  style={{maxWidth: 45}}
-                />
-              </ListItemIcon>
-              <Collapse in={open}>
-                <ListItemText style={{ color: 'white', whiteSpace: 'normal', textAlign: 'center', minWidth: 208, textShadow: 'rgb(0 0 0 / 55%) 1px 1px 8px' }} primaryTypographyProps={{ variant: "body2", style: { fontSize: 16 } }} primary='My Courses' />
-              </Collapse>
-              {open ? null : <Typography variant='body2' className={classes.miniLabel}>My Courses</Typography>}
-            </ListItem>
-              : null
-          }
           {firstSection.map((section) => (
             <ListItem onClick={section.cb} button key={section.text} className={clsx(classes.secondSection, { [classes.closedItem]: !open })}>
               <ListItemIcon

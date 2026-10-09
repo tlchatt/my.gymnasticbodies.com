@@ -13,7 +13,6 @@ import WelcomeHead from '../../Components/WelcomePageComp/Head'
 import BluePrints from '../../Components/WelcomePageComp/BluePrints'
 import NutsAndBolts from '../../Components/WelcomePageComp/NutsAndBolts'
 import Articles from '../../Components/WelcomePageComp/Articles'
-import Ad from '../../Components/WelcomePageComp/AllAccessAd';
 import NonLegacyModal from '../../Components/NonLegacyModal'
 
 const useStyles = makeStyles({
@@ -59,9 +58,7 @@ const WelcomePage = (props) => {
           }
           <BluePrints/>
           <NutsAndBolts handleModal={handleModal}/>
-          {
-            props.isAllAccessUser ? <Articles /> : <Ad/>
-          }
+          <Articles />
         </Grid>
         <NonLegacyModal open={modalInfo.isOPen} close={handleClose} courseTitle={modalInfo.title} mediaId={modalInfo.mediaId} subText={modalInfo.subText} />
       </GridContainer>
@@ -71,8 +68,7 @@ const WelcomePage = (props) => {
 
 const mapStateToProps = state => {
   return {
-    name: state.login.name,
-    isAllAccessUser: state.login.isAllAccessUser
+    name: state.login.name
   }
 }
 

@@ -30,7 +30,6 @@ const LoginSuccess = (state, action) => {
     loading: false,
     fail: false,
     integratedPlans: action.userState.integratedPlans,
-    isAllAccessUser: action.userState.isAllAccessUser,
     UserId: action.userData.cid,
     timezone: action.timezone,
     isAdmin: action.userState.isAdmin ? action.userState.isAdmin : null,
@@ -40,7 +39,6 @@ const LoginSuccess = (state, action) => {
     section: sectionFromCode(action.userState.levelId),
     lastName: action.userState.lname,
     showAllAccessSite: action.userState.showAllAccessSite,
-    guidedPlanAccessLevels: action.userState.guidedPlanAccessLevels,
     postAWS: action.userData.postAWS,
     // Neon UUID for ${REACT_APP_API_NEW} requests. For postAWS users this equals UserId;
     // for legacy users it comes from registerWPass (or the /api/user/id resolver later).
@@ -52,14 +50,12 @@ const LoginSuccess = (state, action) => {
 
 const WelcomeSuccess = (state, action) => {
   return updateObject(state, {
-    isAllAccessUser: action.paylod.isAllAccessUser,
     isAdmin: action.paylod.isAdmin ? action.paylod.isAdmin : null,
     userLevel: action.paylod.userLevel,
     levelId: action.paylod.levelId,
     section: sectionFromCode(action.paylod.levelId),
     lastName: action.paylod.lname,
     showAllAccessSite: action.paylod.showAllAccessSite,
-    guidedPlanAccessLevels: action.payload.guidedPlanAccessLevels,
   });
 }
 

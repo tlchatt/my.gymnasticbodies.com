@@ -59,8 +59,7 @@ const Rounds = (props) => {
     checkForFirstLogged,
     hideSettings,
     hideRefresh,
-    isBuildYourOwn,
-    isWorkoutAccessable
+    isBuildYourOwn
   } = props;
 
   const resetAll = () => {
@@ -84,7 +83,7 @@ const Rounds = (props) => {
               <SettingsIcon style={{ fontSize: 28 }} />
             </IconButton>
         }
-        <ButtonGroup isBuildYourOwn={isBuildYourOwn} min={1} max={5} isRounds={true} current={rounds} largeText={true} dateKey={dateKey} disabled={isLogged || checkForFirstLogged || isWorkoutAccessable} />
+        <ButtonGroup isBuildYourOwn={isBuildYourOwn} min={1} max={5} isRounds={true} current={rounds} largeText={true} dateKey={dateKey} disabled={isLogged || checkForFirstLogged} />
         <Typography className={clsx(classes.verticalText, {[classes.isBYO] : isBuildYourOwn})} variant='h6' >
           Rounds
         </Typography>

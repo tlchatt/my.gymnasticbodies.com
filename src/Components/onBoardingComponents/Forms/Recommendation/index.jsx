@@ -167,22 +167,9 @@ const Recommendation = (props) => {
           variant='contained'
           color='primary'
           className={classes.gfButtonLarge}
-          onClick={
-            myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag)
-              ? handleSubmit
-              : (e) => {}
-          }
-          component={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? 'button' : LinkRef}
-          to={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? undefined : '/class-finder'}
+          onClick={myReco.current ? handleSubmit : (e) => {}}
         >
-          {
-            myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ?
-              `Add ${myReco.current ? Recommendations[myReco.current].title : ''} To Schedule`
-              : 'Update Plan'
-          }
-
-
-
+          {`Add ${myReco.current ? Recommendations[myReco.current].title : ''} To Schedule`}
         </Button>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={[ classes.alignCenter].join(' ')}>
@@ -198,19 +185,13 @@ const Recommendation = (props) => {
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    userAccessLevels: state.login.integratedPlans ? state.login.integratedPlans.userAccessLevels : [],
-  }
-}
-
 const mapDispatchToProps = dispatch => {
   return {
     ChooseLevel: (data) => dispatch(actions.ChooseLevel(data))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Recommendation);
+export default connect(null, mapDispatchToProps)(Recommendation);
 
 
 

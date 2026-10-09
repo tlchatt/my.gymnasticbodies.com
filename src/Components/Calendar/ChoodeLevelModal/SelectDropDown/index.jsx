@@ -24,7 +24,6 @@ export default function NativeSelects(props) {
           week: 'week',
           id: 'week-native-simple',
         }}
-        disabled={!props.disabled}
         style={props.style}
         >
           {options.map((item, index) => <option key={index} value={index + 1}>{item}</option> )}

@@ -46,7 +46,6 @@ const PickLevel = (obj) => [
   {
     levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level-intro.jpg',
     levelName: 'intro',
-    levelTagAccess: 1235,
     levelId: 0,
     planId: 1,
     showWeekIndexes: true,
@@ -56,7 +55,6 @@ const PickLevel = (obj) => [
   {
     levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level1.jpg',
     levelName: 'levelOne',
-    levelTagAccess: 1215,
     levelId: 1,
     planId: 2,
     selectedIndex: 1
@@ -64,7 +62,6 @@ const PickLevel = (obj) => [
   {
     levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level2.jpg',
     levelName: 'levelTwo',
-    levelTagAccess: 1219,
     levelId: 2,
     planId: 3,
     selectedIndex: 1
@@ -72,7 +69,6 @@ const PickLevel = (obj) => [
   {
     levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level3.jpg',
     levelName: 'levelThree',
-    levelTagAccess: 1223,
     levelId: 3,
     planId:4,
     selectedIndex: 1
@@ -80,7 +76,6 @@ const PickLevel = (obj) => [
   {
     levelImg: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/onboard-level4.jpg',
     levelName: 'levelFour',
-    levelTagAccess: 1227,
     levelId: 4,
     planId:5,
     selectedIndex: 1
@@ -90,7 +85,7 @@ const PickLevel = (obj) => [
 const ChooseLevelModal = (props) => {
   const [selecetedLevel, setSelectedLevel] = useState();
   const [newWeekIndex, setNewWeekIndex] = useState();
-  const { level, userAccessLevels, weekIndex } = props.levelAccess ? props.levelAccess : {level: '' , userAccessLevels: [], weekIndex: '' }
+  const { level, weekIndex } = props.levelAccess ? props.levelAccess : {level: '' , weekIndex: '' }
   const classes = useSytles();
 
   const plansArray = PickLevel(props.levelAccess);
@@ -150,13 +145,11 @@ const ChooseLevelModal = (props) => {
                   selected={selecetedLevel === levelData.levelId}
                   imageURL={levelData.levelImg}
                   onClick={() => setSelectedLevel(levelData.levelId)}
-                  hasAccess={userAccessLevels.includes(levelData.levelTagAccess)}
                 />
                 {
                   levelData.showWeekIndexes
                     ? <WeekSelect
                         selectedIndex={levelData.selectedIndex}
-                        disabled={userAccessLevels.includes(levelData.levelTagAccess)}
                         value={newWeekIndex}
                         handleWeekIndex={e => setNewWeekIndex(e.target.value)}
                       />
@@ -178,7 +171,7 @@ const ChooseLevelModal = (props) => {
           variant='contained'
           color="primary"
           autoFocus
-          disabled={userAccessLevels?.length <=0}
+          disabled={selecetedLevel === undefined || selecetedLevel === ''}
         >
           Add to Calendar
         </Button>
@@ -186,7 +179,6 @@ const ChooseLevelModal = (props) => {
     </Dialog>
   );
 }
-// userAccessLevels
 const mapStateToProps = state => {
   return {
     levelAccess: state.login.integratedPlans,

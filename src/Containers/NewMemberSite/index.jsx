@@ -27,7 +27,6 @@ import EqiupmentList from '../EqiupmentList'
 import Advocates from '../Advocates';
 import Information from '../Information';
 import HowTo from '../HowTo';
-import MyCourses from '../MyCourses';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -121,7 +120,6 @@ export default function FreeMembers() {
   const hasGuidedLevel = Number.isInteger(levelId) && levelId >= 0 && levelId <= 4;
   // The InitialPage chooser shows when the user is in Guided but hasn't picked a level yet.
   const showingChooser = (section || 'guided') === 'guided' && !hasGuidedLevel;
-  const isAllAccessUser = useSelector(state => state.login.isAllAccessUser)
 
   const firstAndLast = [getCalanderDate(timeZone, 'MMMM DD')[0], getCalanderDate(timeZone, 'MMMM DD')[6]];
   const location = useLocation();
@@ -204,13 +202,6 @@ export default function FreeMembers() {
               <AvatarDropDown />
             </Grid>
             <Switch>
-              <Route path="/my-courses" exact>
-                {
-                  isAllAccessUser
-                    ? <Redirect to="/" />
-                    : <MyCourses basicLayout />
-                }
-              </Route>
               <Route path="/learn-more/:route" component={HowTo} exact />
               <Route path="/information" exact>
                 <Information basicLayout />

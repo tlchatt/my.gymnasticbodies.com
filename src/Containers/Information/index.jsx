@@ -40,7 +40,7 @@ const infoLinks = [
   {
     title: 'Courses',
     imageUrl: 'https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/Welcome+Page+assets/rings.jpg',
-    link: "/my-courses",
+    link: "/course-library",
     isExternalLink: false
   }
 ]
