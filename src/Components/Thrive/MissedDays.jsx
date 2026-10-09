@@ -45,6 +45,7 @@ const MissedDays = props => {
       var config = {
         method: 'get',
         url: `${NEWAPI}/api/user/workout/thrive?userId=${encodeURIComponent(userId)}&view=missedlog`,
+        headers: { 'Authorization': `Bearer ${webToken}` },
       };
       axios(config).then(res => {
         let obj = res.data
@@ -55,7 +56,7 @@ const MissedDays = props => {
       }).catch(err => Sentry.captureException(err))
     }
     getUserData();
-  }, [userId, open, NEWAPI]);
+  }, [userId, open, NEWAPI, webToken]);
 
   const handleSwitches = (e,day) => {
     let newArray = _.cloneDeep(missedDays);
@@ -81,6 +82,7 @@ const MissedDays = props => {
     var config = {
       method: 'post',
       url: `${NEWAPI}/api/user/workout/thrive`,
+      headers: { 'Authorization': `Bearer ${webToken}` },
       data: { userId, op: 'log-missed', days },
     };
 

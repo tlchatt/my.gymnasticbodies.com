@@ -10010,7 +10010,8 @@ export const updateData = (data) => (dispatch, getState) => {
     }
 
     Axios.get(NEWAPI + '/api/user/userStatus', {
-        params: userData
+        params: userData,
+        headers: { "Authorization": `Bearer ${state.login.webToken}` }
     }, config)
         .then(res => {
             // console.log("res is:", res)

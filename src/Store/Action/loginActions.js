@@ -77,7 +77,10 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
   const neonUserId = await dispatch(ensureNeonUserId());
   if (!neonUserId) return;
   try {
-    const res = await fetch(`${NEWAPI}/api/user/workout/standing?userId=${encodeURIComponent(neonUserId)}`);
+    const token = getState().login.webToken || localStorage.getItem('authToken');
+    const res = await fetch(`${NEWAPI}/api/user/workout/standing?userId=${encodeURIComponent(neonUserId)}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     if (!res.ok) {
       // Silent failure leaves the hardcoded 'Advanced One' defaults in place.
       logEvent('my.workout.fetch_error', { data: { section: 'standing', status: res.status } });

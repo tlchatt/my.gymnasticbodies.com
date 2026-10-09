@@ -688,7 +688,8 @@ export const handleProgression = (exerciseId, masterySet, date, isLevels, purpos
   /* create a exportted function for the following */
   const config = {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${userData.webToken}`
     }
   }
   let dataToPost = {

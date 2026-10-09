@@ -19,6 +19,7 @@ export default function CurrentLocationTracker() {
   const auth = useSelector((s) => s.login.auth);
   const reduxNeonId = useSelector((s) => s.login.neonUserId);
   const section = useSelector((s) => s.login.section);
+  const webToken = useSelector((s) => s.login.webToken);
 
   const neonUserId = validId(reduxNeonId)
     || (typeof localStorage !== 'undefined' ? validId(localStorage.getItem('neonUserId')) : null)
@@ -39,7 +40,9 @@ export default function CurrentLocationTracker() {
     restoreStartedRef.current = true;
     if (location.pathname !== '/') { setRestoreDone(true); return; }
 
-    fetch(`${NEWAPI}/api/user/userStatus?userId=${encodeURIComponent(neonUserId)}&type=current_location`)
+    fetch(`${NEWAPI}/api/user/userStatus?userId=${encodeURIComponent(neonUserId)}&type=current_location`, {
+      headers: { 'Authorization': `Bearer ${webToken}` },
+    })
       .then((r) => (r.ok ? r.json() : null))
       .then((res) => {
         const data = res && res[0] && res[0].settings && res[0].settings.data;
@@ -49,7 +52,7 @@ export default function CurrentLocationTracker() {
       })
       .catch(() => {})
       .finally(() => setRestoreDone(true));
-  }, [auth, neonUserId, location.pathname, history]);
+  }, [auth, neonUserId, location.pathname, history, webToken]);
 
   // Record the current location whenever it changes (after the initial restore), debounced
   // so rapid navigation coalesces into a single write.
@@ -63,7 +66,7 @@ export default function CurrentLocationTracker() {
     timerRef.current = setTimeout(() => {
       fetch(`${NEWAPI}/api/user/userStatus`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${webToken}` },
         body: JSON.stringify({ userId: neonUserId, type: 'current_location', data: { path, section: savedSection } }),
       }).catch(() => {});
     }, 600);
@@ -71,7 +74,7 @@ export default function CurrentLocationTracker() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [restoreDone, location.pathname, section, auth, neonUserId]);
+  }, [restoreDone, location.pathname, section, auth, neonUserId, webToken]);
 
   return null;
 }

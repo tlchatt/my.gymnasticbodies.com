@@ -297,7 +297,8 @@ export const logAllBeginnerWorkoutNew = (dateIndex, dateKey, courseIds = []) => 
   // console.log("date", date)//2025-12-31
   const config = {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${webToken}`
     }
   }
   let data = {
@@ -424,7 +425,8 @@ export const removeBeginnerWorkoutLogNew = (dateIndex, dateKey, courseIds = []) 
   });
   const config = {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${webToken}`
     }
   }
   console.log("newWorkoutData in DELETE:", newWorkoutData)
@@ -541,7 +543,7 @@ export const setSection = (section) => (dispatch) => {
 export const setWhiteboardLevel = (level) => (dispatch, getState) => {
   const lvl = Number(level);
   if (!Number.isFinite(lvl) || lvl < 1 || lvl > 5) return;
-  const config = { headers: { "Content-Type": "application/json" } };
+  const config = { headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getState().login.webToken}` } };
   Axios.post(NEWAPI + '/api/user/workout/autopilot', {
     userId: neonIdOf(getState()), op: 'set-level', level: lvl,
   }, config).then(() => {
@@ -3245,7 +3247,8 @@ export const getLevelPlanNew = (type) => (dispatch, getState) => {//userLevel: "
   let data = dispatch(getData())
   console.log("data in levels is:", data)
   Axios.get(NEWAPI + '/api/user/userStatus', {
-    params: userData
+    params: userData,
+    headers: { "Authorization": `Bearer ${webToken}` }
   }, config)
     .then(res => {
       let logs = res.data.filter(obj => obj.logs).map(obj => obj.logs)[0];//getting only the logs from response data
@@ -3585,7 +3588,8 @@ export const ManageDificultyNew = (workoutIndex, dateKey, dateKeyIndex, exercise
 
   const config = {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${webToken}`
     }
   }
   let dataToPost = {
@@ -3664,7 +3668,8 @@ export const LogLegacyNew = (exerciseId, mobilityStatus, autoProg, steps, logLis
 
   const config = {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${webToken}`
     }
   }
   Axios.post(NEWAPI + '/api/user/log', dataToPost, config)
@@ -3751,7 +3756,8 @@ export const SaveNotesLevelsNew = (notes, dateKey, workoutIndex, section) => (di
     }
     const config = {
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${webToken}`
       }
     }
     dispatch(showToast('Your notes have been saved.', 'success'))
@@ -3808,7 +3814,8 @@ export const GetAllWorkoutInfo = (dateKey, workoutIndex, dateKeyIndex) => (dispa
           }
         }
         Axios.get(NEWAPI + '/api/user/log', {
-          params: userData
+          params: userData,
+          headers: { "Authorization": `Bearer ${webToken}` }
         }, config)
           .then(res => {
             let logs = res.data[0].logs
