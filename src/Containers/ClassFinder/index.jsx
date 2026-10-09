@@ -1,31 +1,39 @@
-import React, {useState} from 'react';
-import { Grid, makeStyles, Divider, Hidden } from '@material-ui/core';
+import React, {useState, useEffect} from 'react';
+import { useDispatch } from 'react-redux';
+import { Grid, makeStyles, Hidden } from '@material-ui/core';
+import { FetchClassFinder } from '../../Store/Action';
 
 // Util Components
 import GridContainer from '../../Components/UtilComponents/Mui-GridContainer';
 import Container from '../../Components/UtilComponents/Container';
 
 // Custom Compnents
-import Calendar from '../../Components/Calendar';
 import ClassFinderGrid from '../../Components/ClassFinderComponents/ClassFinderGrid';
 import Filters from '../../Components/ClassFinderComponents/Filter'
 import MobileFilter from '../../Components/ClassFinderComponents/Filter/FilterDrawer'
 
 
 const useStyles = makeStyles(theme => ({
-  divider: {
-    width: '100%',
-  },
   padding: {
     padding: '0 8px 8px 8px '
   },
   background: {
-    background: '#eeeeee'
+    background: '#eeeeee',
+    // Own row inside NewMemberSite's header grid; without it the page shares a row with
+    // the header cells and is squeezed to ~130px on phones.
+    minWidth: '100%',
   }
 }));
 
 const ClassFinder = props => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  // The page's one data fetch: course catalog + the member's own week (My Schedule).
+  useEffect(() => {
+    dispatch(FetchClassFinder());
+  }, [dispatch]);
+
   const initialState = {
     difficulty: {
       Beginner: false,
@@ -83,8 +91,6 @@ const ClassFinder = props => {
   return (
     <Container addedClasses={classes.background}>
       <GridContainer elevation={2} addbackground={true}>
-        <Calendar/>
-        <Divider className={classes.divider} />
         <Grid container>
           <Hidden only={['xs', 'sm']}>
             <Grid item className={classes.padding} xs={false} sm={false} md={3} lg={3} xl={3}>

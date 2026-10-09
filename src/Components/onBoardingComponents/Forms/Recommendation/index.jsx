@@ -172,9 +172,8 @@ const Recommendation = (props) => {
               ? handleSubmit
               : (e) => {}
           }
-          component={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? 'button' : 'a'}
-          href={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? null : 'https://www.gymnasticbodies.com/class-finder/'}
-          target={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? null : '_blank'}
+          component={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? 'button' : LinkRef}
+          to={myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ? undefined : '/class-finder'}
         >
           {
             myReco.current && props.userAccessLevels.includes(Recommendations[myReco.current].levelAccesTag) ?

@@ -12,7 +12,7 @@ import { ensureNeonUserId } from '../../Store/Action/loginActions';
 
 import { getCalanderDate } from '../../Components/UtilComponents/GetCurrentWeek';
 import Drawer from '../../Components/FreeMemeberComp/Drawer';
-import MobileDrawer from '../../Components/FreeMemeberComp/Drawer/MobileDrawer';
+import MobileDrawer, { CLOSED_WIDTH } from '../../Components/FreeMemeberComp/Drawer/MobileDrawer';
 import Select from '../../Components/FreeMemeberComp/Select'
 import AvatarDropDown from '../../Components/FreeMemeberComp/AvatarDrop';
 import AutoPilot from '../../Components/FreeMemeberComp/AutoPilot';
@@ -51,8 +51,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up(813)]: {
       marginLeft: theme.spacing(8) + 1,
     },
-    [theme.breakpoints.down(426)]: {
-      marginLeft: theme.spacing(7) + 1,
+    // Phones use MobileDrawer, whose closed icon bar is CLOSED_WIDTH wide.
+    [theme.breakpoints.down(813)]: {
+      marginLeft: CLOSED_WIDTH,
     },
   },
   forceColor: {

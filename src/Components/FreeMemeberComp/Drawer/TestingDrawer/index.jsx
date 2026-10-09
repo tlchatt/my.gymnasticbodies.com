@@ -33,7 +33,7 @@ const TestingDrawer = props => {
       case "FitnessQuiz":
         return <FitnessQuiz handleClose={toggle} />;
       case "Courses":
-        return <CourseLibrary basicLayout />;
+        return <CourseLibrary basicLayout handleClose={handleClose} />;
       case "Thrive":
         return <Thrive open={open} />;
       case "History":

@@ -26,6 +26,8 @@ import TestingDrawer from '../TestingDrawer';
 
 
 const drawerWidth = 180;
+// Closed (icon bar) width. NewMemberSite's isMobileStyles offsets the page by the same amount.
+export const CLOSED_WIDTH = 81;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,10 +79,8 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
-    },
+    // Wide enough for the always-visible icon labels (miniLabel) to wrap without overflowing.
+    width: CLOSED_WIDTH,
     background: 'linear-gradient(173deg, rgba(255,89,2,1) 39%, rgba(255,203,121,1) 100%)',
     paddingTop: 0
   },
@@ -119,6 +119,22 @@ const useStyles = makeStyles((theme) => ({
     }),
   },
   pointer: { cursor: 'pointer' },
+  closedItem: {
+    paddingLeft: 2,
+    paddingRight: 2,
+  },
+  // Label under each icon while the bar is closed. Black on the bar's orange gradient:
+  // 6.7:1 at its darkest stop (#FF5902) — white text there is only 3.1:1.
+  miniLabel: {
+    color: '#000000',
+    fontSize: 12,
+    lineHeight: '14px',
+    letterSpacing: 0.2,
+    textAlign: 'center',
+    whiteSpace: 'normal',
+    overflowWrap: 'anywhere',
+    width: '100%',
+  },
   iconImg: {
     maxWidth: 35,
   },
@@ -437,7 +453,7 @@ export default function MobileDrawer(props) {
     {
       text: 'Courses',
       cb: () => handleCallBackFunction('Courses'),
-      imageName: 'nutrition.png',
+      imageName: 'Courses.png',
       ids: [],
       isActive: () => {
         if (openDrawer.componentId === 'Courses') {
@@ -518,7 +534,7 @@ export default function MobileDrawer(props) {
               handleCloseDrawer();
               history.push('/my-courses')
             }}
-              className={classes.secondSection}
+              className={clsx(classes.secondSection, { [classes.closedItem]: !open })}
             >
               <ListItemIcon
                 style={{
@@ -552,11 +568,12 @@ export default function MobileDrawer(props) {
               <Collapse in={open}>
                 <ListItemText style={{ color: 'white', whiteSpace: 'normal', textAlign: 'center', minWidth: 208, textShadow: 'rgb(0 0 0 / 55%) 1px 1px 8px' }} primaryTypographyProps={{ variant: "body2", style: { fontSize: 16 } }} primary='My Courses' />
               </Collapse>
+              {open ? null : <Typography variant='body2' className={classes.miniLabel}>My Courses</Typography>}
             </ListItem>
               : null
           }
           {firstSection.map((section) => (
-            <ListItem onClick={section.cb} button key={section.text} className={classes.secondSection}>
+            <ListItem onClick={section.cb} button key={section.text} className={clsx(classes.secondSection, { [classes.closedItem]: !open })}>
               <ListItemIcon
                 style={{ color: 'white', maxWidth: 32, marginBottom: 8, justifyContent: 'center', position: 'relative' }}
                 className={clsx({
@@ -580,6 +597,7 @@ export default function MobileDrawer(props) {
               <Collapse in={open}>
                 <ListItemText style={{ color: 'white', whiteSpace: 'normal', textAlign: 'center', minWidth: 208 }} primaryTypographyProps={{ variant: "body2", style: { fontSize: 16 } }} primary={section.text} />
               </Collapse>
+              {open ? null : <Typography variant='body2' className={classes.miniLabel}>{section.text}</Typography>}
             </ListItem>
           ))}
         </List>

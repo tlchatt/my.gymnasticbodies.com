@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { Grid, makeStyles, Divider, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 
@@ -29,72 +29,22 @@ const useStyles = makeStyles(theme => ({
 
 const ClassFinderGrid = props => {
   const classes = useStyles();
-  // eslint-disable-next-line
-  const [children, setChildren] = useState([]);
+  const { filterArray, Checked, paramFilter, courseList } = props;
 
-  const { filterArray, Checked } = props;
+  // Derived during render: category page (rehab / strengthen / mobilize) first, then
+  // every active filter group must match. Array fields match any checked key.
+  const categoryList = paramFilter && ['rehab', 'strengthen', 'mobilize'].includes(paramFilter)
+    ? courseList.filter(({ wp_postid }) => allIds[paramFilter].includes(wp_postid))
+    : courseList;
 
-  const filterCourses = (courseList = props.courseList) => {
-    let itemsArray;
-    if (filterArray.length) {
-      itemsArray = courseList.map(a => ({ ...a, MySchedule: a.mySchedule }));
-
-      itemsArray.forEach(course => {
-        course.show = filterArray.every(type => {
-          if (Array.isArray(course[type])) {
-            let checkedKeys = Object.keys(Checked[type]);
-
-            checkedKeys = checkedKeys.filter(key => Checked[type][key])
-
-            return course[type].some(attr => checkedKeys.indexOf(attr) >= 0)
-          }
-          else {
-            return Checked[type][course[type]]
-          }
-        })
-      });
-
-      itemsArray = itemsArray.filter(i => i.show === true)
+  const children = categoryList.filter(course => filterArray.every(type => {
+    const value = type === 'MySchedule' ? course.mySchedule : course[type];
+    if (Array.isArray(value)) {
+      const checkedKeys = Object.keys(Checked[type]).filter(key => Checked[type][key]);
+      return value.some(attr => checkedKeys.indexOf(attr) >= 0);
     }
-    else {
-      if (props.paramFilter && ['rehab', 'strengthen', 'mobilize' ].includes(props.paramFilter)) {
-        let arr = props.courseList.filter(({ wp_postid }) => allIds[props.paramFilter].includes(wp_postid));
-        return arr
-      }
-      return props.courseList;
-    }
-    return itemsArray;
-  }
-
-  useEffect(() => {
-    if (props.paramFilter && ['rehab', 'strengthen', 'mobilize' ].includes(props.paramFilter) ) {
-      let arr = props.courseList.filter(({ wp_postid }) => allIds[props.paramFilter].includes(wp_postid));
-      setChildren(filterCourses(arr));
-    }
-    else {
-      setChildren(filterCourses());
-    }
-    // eslint-disable-next-line
-  }, [filterArray, props.courseList]);
-
-  useEffect(() => {
-    if (props.paramFilter && ['rehab', 'strengthen', 'mobilize' ].includes(props.paramFilter)) {
-      let arr = props.courseList.filter(({ wp_postid }) => allIds[props.paramFilter].includes(wp_postid));
-
-      if (filterArray.length) {
-        setChildren(filterCourses(arr))
-      }
-      else setChildren(arr);
-    }
-    else {
-      if (filterArray.length) {
-        setChildren(filterCourses())
-      }
-      else setChildren(props.courseList);
-    }
-    // eslint-disable-next-line
-  }, [props.courseList, props.paramFilter])
-
+    return !!Checked[type][value];
+  }));
 
   return (
     <Aux>
@@ -106,9 +56,9 @@ const ClassFinderGrid = props => {
           <Divider className={classes.divider}/>
         </Grid>
         {
-          children.map((courseInfo, index) => <CourseCards
+          children.map(courseInfo => <CourseCards
             courseInfo={courseInfo}
-            key={index}
+            key={courseInfo.wp_postid}
             img={courseInfo.image_url}
             addClass={courseInfo.show ? 'fadeIn' : 'fadeOut'}
           />)

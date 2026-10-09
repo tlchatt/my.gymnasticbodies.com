@@ -3472,6 +3472,8 @@ const CourseLibrary = (props) => {
       return;
     }
     if (row.customAction === 'classFinder') {
+      // Opened from the side-bar Courses panel: close the panel so it doesn't cover the page.
+      if (props.handleClose) props.handleClose();
       history.push('/class-finder');
       return;
     }

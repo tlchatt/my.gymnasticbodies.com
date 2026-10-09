@@ -83,7 +83,9 @@ export default function CourseCards(props) {
       <Card className={classes.root}>
         <img onClick={() => setOpen(true)} src={`https://6z1gtynqfxcjjwix.public.blob.vercel-storage.com/CourseIcons/${CourseInfo.image_url}`} className={classes.media} alt="" />
         {
-          CourseInfo.wp_postid === 59257
+          // Stretch Series has no schedulable class of its own; Jefferson Curl has no Neon
+          // class id (AWS reused 60101 for an Elements day), so neither can be scheduled.
+          CourseInfo.wp_postid === 59257 || typeof CourseInfo.wp_postid !== 'number'
             ? null
             : <IconButton
                 className={classes.button}

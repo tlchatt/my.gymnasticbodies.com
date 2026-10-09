@@ -30,29 +30,19 @@ const useStyles = makeStyles(theme => ({
   fixPadding: {
     paddingTop: 4
   },
+  // In-flow button above the results. It used to be fixed to the left screen edge, where
+  // the member site's side icon bar now covers it.
   floatingButton: {
-    position: "fixed",
-    top: '51%',
-    zIndex: 999,
-    transform: 'rotate(90deg)',
+    margin: '16px 8px 0',
     letterSpacing: '2px',
-    transition: 'all 0.25s ease-in-out',
-    right: '85.65%',
-    [theme.breakpoints.up('768')]: {
-      right: '92.65%'
-    },
-    [theme.breakpoints.down('414')]: {
-      right: '85.65%',
-    },
   },
   drawer: {
     maxWidth: 250,
     padding: '0 8px',
   },
-  transition: {
-    left: 225,
-    zIndex: 99999
-  }
+  // No longer raised above the open drawer (it sat over the filter list); the drawer
+  // closes by tapping outside it.
+  transition: {}
 }));
 
 const ClassFinderGridDrawer = props => {
