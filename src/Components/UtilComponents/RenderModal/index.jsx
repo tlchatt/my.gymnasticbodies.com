@@ -3,6 +3,7 @@ import { connect, useSelector } from 'react-redux';
 import NonLegacyModal from '../../NonLegacyModal';
 import LegacyModal from '../../LegacyWorkoutModal';
 import {getCalanderDate} from '../../UtilComponents/GetCurrentWeek'
+import { legacyNameToId } from '../../../Store/util';
 
 const ModalRender = (props) => {
   const [CourseInfo, setCourseInfo] = useState(props.CourseInfo);
@@ -57,7 +58,18 @@ const ModalRender = (props) => {
     )
   }
 
-  if (CourseInfo && CourseInfo.legacy_course === "false" && CourseInfo.classInfo) {
+  // A legacy course opens the progression modal only when Neon has its program
+  // (legacyNameToId -> byo/program courseId). The Stretch Series courses (Front Split,
+  // Middle Split, Thoracic Bridge) were legacy programs on AWS but are follow-along video
+  // classes in Neon, so they open as a video like everywhere else, not an empty program.
+  const hasNeonProgram = !!(CourseInfo && CourseInfo.classInfo
+    && legacyNameToId[(CourseInfo.classInfo.title || '').replace('Foundation ', '')]);
+  const isLegacyProgram = !!(CourseInfo && CourseInfo.legacy_course === "true" && hasNeonProgram);
+
+  const isVideoCourse = !!(CourseInfo && (CourseInfo.legacy_course === "false"
+    || (CourseInfo.legacy_course === "true" && !hasNeonProgram)));
+
+  if (isVideoCourse && CourseInfo.classInfo) {
     modal = (
       <NonLegacyModal
         open={props.open}
@@ -87,7 +99,7 @@ const ModalRender = (props) => {
   }
   // for legacy courses
   // this is a test comment
-  else if (CourseInfo && CourseInfo.legacy_course === "true" && CourseInfo.classInfo) {
+  else if (isLegacyProgram) {
     modal = <LegacyModal courseName={CourseInfo.classInfo.title} open={props.open} close={props.close} date={ props.currentDayIndex + 1 ? getCalanderDate(timeZone)[props.currentDayIndex] : null }/>;
   }
   return modal;
