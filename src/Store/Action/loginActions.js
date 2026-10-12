@@ -81,6 +81,12 @@ export const fetchUserStanding = () => async (dispatch, getState) => {
     const res = await fetch(`${NEWAPI}/api/user/workout/standing?userId=${encodeURIComponent(neonUserId)}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
+    // A 401 means the sign-in is no longer valid — end it, as the axios interceptor does.
+    if (res.status === 401) {
+      logEvent('my.auth.session_expired', { data: { url: 'workout/standing', status: 401 } });
+      dispatch(fourceLogoutFail());
+      return;
+    }
     if (!res.ok) {
       // Silent failure leaves the hardcoded 'Advanced One' defaults in place.
       logEvent('my.workout.fetch_error', { data: { section: 'standing', status: res.status } });
